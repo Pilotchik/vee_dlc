@@ -2,6 +2,30 @@
 
 class Forms_model extends CI_Model{
 	
+	function getAllTypeReg()
+	{
+		$sql="SELECT `id`,`name` FROM `new_type_reg`";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		return $data;
+	}
+
+	function getTypeReg($type_r = 1)
+	{
+		$sql="SELECT `name` FROM `new_type_reg` where `id`='$type_r'";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		return $data[0]['name'];
+	}
+
+	function getUserName($author_id="")
+	{
+		$sql="SELECT `lastname`,`firstname` FROM `new_persons` where `id`='$author_id'";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		return $data[0]['lastname']." ".$data[0]['firstname'];
+	}
+
 	function getAllForms($active="0")
 	{
 		if ($active==0)
@@ -73,24 +97,58 @@ class Forms_model extends CI_Model{
 		return $data;
 	}
 
-	function createForm()
+	function createForm($title = "",$type_r = 1,$desc = "",$access = 1,$user_id = 1)
 	{
-		$title=$this->input->post('f_title');
-		$type_r=$this->input->post('f_type_r');
-		$desc=$this->input->post('f_description');
-		$access=$this->input->post('f_access');
-		$user=$this->session->userdata('user_id');
-		$sql = "INSERT INTO `new_forms` (`title`,`type_r`,`author_id`,`date`,`description`,`active`,`access`) VALUES ('$title','$type_r','$user',NOW(),'$desc','1','$access')";
+		$sql = "INSERT INTO `new_forms` (`title`,`type_r`,`author_id`,`date`,`description`,`active`,`access`) VALUES ('$title','$type_r','$user_id',NOW(),'$desc','1','$access')";
 		$data = $this->db->query($sql);
 		return $data;
 	}
 
-	function getAllQuests($form_id="")
+	function getFormIDOverTitleAndDesc($title = "",$desc = "")
 	{
-		$sql="SELECT * FROM `new_form_quests` where `form_id`='$form_id' AND `del`='0'";
+		$sql="SELECT `id` FROM `new_forms` WHERE `title`='$title' AND `description`='$desc' AND `active`='1' AND `del`='0' LIMIT 1";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
+		$data = $query->result_array();
+		return $data[0]['id'];
+	}
+
+	function createMainSite($form_id = 1,$title = "Главная страница",$numb = 0)
+	{
+		$sql = "INSERT INTO `new_form_quests` (`title`,`type`,`form_id`,`numb`) VALUES ('$title','0','$form_id','$numb')";
+		$data = $this->db->query($sql);
 		return $data;
+	}
+
+	//Получение максимального номера страницы опроса
+	function getMaxSiteNumbOverFormID($form_id = 1)
+	{
+		$sql="SELECT MAX(`numb`) as `i` FROM `new_form_quests` WHERE `form_id`='$form_id' AND `type`='0' AND `del`='0'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['i'];
+	}
+
+	//Функция для нахождения всех страниц опроса
+	function getAllSitesOverFormID($form_id = 1)
+	{
+		$sql="SELECT `id`,`numb`,`title` FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' AND `type`='0' ORDER BY `numb`";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	//Функция для выборки всех вопросов на указанной странице
+	function getAllQuestsOverSiteID($form_id = 1,$site_id = 1)
+	{
+		$sql="SELECT * FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' AND `site`='$site_id' ORDER BY `numb`";
+		$query = $this->db->query($sql);
+		return $query->result_array();	
+	}
+
+	function getAllQuests($form_id = 1)
+	{
+		$sql="SELECT * FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' ORDER BY `site`,`numb`";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 
 	function getAllActiveQuests($form_id="")
@@ -125,35 +183,36 @@ class Forms_model extends CI_Model{
 		return $data[0]['type_r'];	
 	}	
 
-	function editQuest()
+	function editQuest($id_c = 1,$value = "",$param = "title")
 	{
-		$id_c=$this->input->post('c_id');
-		$value=$this->input->post('c_value');
-		$param=$this->input->post('c_param');
 		$sql = "UPDATE `new_form_quests` SET `$param` = '$value' where `id`='$id_c'";
 		$data = $this->db->query($sql);
-		return $data;
 	}
 
-	function delQuest()
+	function delQuest($quest_id = 1)
 	{
-		$id_c=$this->input->post('c_id');
-		$sql = "UPDATE `new_form_quests` SET `del` = '1' where `id`='$id_c'";
+		$sql = "UPDATE `new_form_quests` SET `del` = '1' where `id`='$quest_id'";
 		$data = $this->db->query($sql);
-		return $data;
 	}
 
-	function createQuest($form_id="")
+	function getMainSiteIdOverFormId($form_id = 1)
 	{
-		$title=$this->input->post('f_title');
-		$subtitle=$this->input->post('f_subtitle');
-		$type=$this->input->post('f_type');
-		$option1=$this->input->post('f_option1');
-		$option2=$this->input->post('f_option2');
-		$option3=$this->input->post('f_option3');
-		$req=$this->input->post('f_req');
+		$sql = "SELECT `id` FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' AND `numb`='0' AND `type`='0' LIMIT 1";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['id'];
+	}
+
+	function updateQuestSite($quest_id = 1,$main_site_id = 1)
+	{
+		$sql = "UPDATE `new_form_quests` SET `site` = '$main_site_id' WHERE `site`='$quest_id'";
+		$data = $this->db->query($sql);
+	}
+
+	function createQuest($form_id = 1, $title = "",$subtitle = "",$type = 1,$option1 = "",$option2 = "",$option3 = "",$req = 1,$site = 1)
+	{
 		if ($req == 'on')	{$req=1;}	else	{$req=0;}
-		$sql = "INSERT INTO `new_form_quests` (`title`,`subtitle`,`type`,`required`,`option1`,`option2`,`option3`,`active`,`del`,`form_id`) VALUES ('$title','$subtitle','$type','$req','$option1','$option2','$option3','1','0','$form_id')";
+		$sql = "INSERT INTO `new_form_quests` (`title`,`subtitle`,`type`,`required`,`option1`,`option2`,`option3`,`active`,`del`,`form_id`,`site`) VALUES ('$title','$subtitle','$type','$req','$option1','$option2','$option3','1','0','$form_id','$site')";
 		$data = $this->db->query($sql);
 		return $data;
 	}
