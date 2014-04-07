@@ -57,8 +57,15 @@ class Forms extends CI_Controller {
 				$now_time=time();
 				$this->forms_model->createFormResult($form_id,$now_time);	
 			}
+			//Получение названия опроса
 			$data['form_name']=$this->forms_model->getFormName($form_id);
-			$data['quests'] = $this->forms_model->getFormQuests($form_id,$this->session->userdata('user_id'));
+			//Получение всех страниц опроса
+			$data['sites'] = $this->forms_model->getAllSitesOverFormID($form_id);
+			//Для каждой страницы получить её вопросы
+			foreach ($data['sites'] as $key) 
+			{
+				$data['quests'][$key['id']]  = $this->forms_model->getFormSiteQuests($form_id,$this->session->userdata('user_id'),$key['id']);
+			}
 			$data['form_id'] = $form_id;
 			$this->load->view('forms/forms_play_view',$data);
 		}
@@ -199,7 +206,14 @@ class Forms extends CI_Controller {
 					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j]>0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
 						//echo $data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
 					}
 				}
@@ -252,7 +266,14 @@ class Forms extends CI_Controller {
 					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] > 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
 						//echo $key['id']." -> ".$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
 					}
 				}

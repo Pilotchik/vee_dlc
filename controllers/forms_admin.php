@@ -93,7 +93,7 @@ class Forms_admin extends CI_Controller {
 			$this->forms_model->createForm($title,$type_r,$desc,$access,$user_id);
 			//Найти идентификатор созданного опроса
 			$form_id = $this->forms_model->getFormIDOverTitleAndDesc($title,$desc);
-			//Создать в опросе страницу с номером 0
+			//Создать в опросе страницу с номером 0 и типом 0
 			$this->forms_model->createMainSite($form_id,"Главная страница",0);
 			$this->_add_to_log("Создан опрос \"".$this->input->post('f_title')."\"");
 			$error = "Опрос создан";

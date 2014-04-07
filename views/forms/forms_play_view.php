@@ -1,0 +1,434 @@
+<html>
+	<head>
+		<title>Система тестирования</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
+		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
+		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() 
+			{ 	
+				$('#root3').css("display", "none");
+			}
+			);
+
+			var req = [];
+			var sdan = [];
+			var quest_value = [];
+
+			function func_ok(site_numb,type)	
+			{
+				var k = 0;
+				for (var i in req[site_numb]) 
+				{
+				    if (sdan.indexOf(req[site_numb][i])>=0) {k++;}
+				}
+				if (k==req[site_numb].length)
+				{
+					if (type == 'end')
+					{
+						$('#myModalConfirm').modal('show');
+					}
+					else
+					{
+						return 1;
+					}
+				}
+				else
+				{
+					$('#modal_message').html('Не все обязательные вопросы были выполнены!');
+					$('#myModalAlert').modal('show');
+					//alert("Не все обязательные вопросы были выполнены!");
+					for (var i in req[site_numb]) 
+					{
+				   		if (sdan.indexOf(req[site_numb][i])<0) 
+				   		{
+				   			$('.rootid').eq(req[site_numb][i]).css({"background":"#e75480"});
+				   		}
+					}
+					return 0;
+				}
+			}
+
+			function sendForm()
+			{
+				document.testForm.submit();
+			}
+			
+			function postAjax(id_q,value,nomer)
+			{
+				sdan.push(nomer);
+				var nom = parseInt(nomer);
+				str='input[name='+nomer+'_'+value+']';
+				str_class=nomer+'_class';
+				if($(str).prop("checked"))
+				{
+					quest_value[nomer].push(value);
+					if (quest_value[nomer].length > max_args[nomer])
+					{
+						alert('Вы выбрали слишком много пунктов');
+						//Заблокировать все чекбоксы
+						$(str).removeAttr('checked');
+						$(str_class).attr('disabled', 'disabled');
+					}
+					else
+					{
+						//Заблокировать конкретный чекбокс
+						$(str).attr('disabled', 'disabled');
+						$('.rootid').eq(nom).css({"background":"#bef574"});
+						var quest_id=id_q;
+						$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
+						if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+						else
+						{
+							eval('var obj='+data);
+							if (obj.answer==0)
+							{
+								alert('Ответ не сохранился');
+							}
+						}
+						})
+					}
+				}
+			}
+
+			function postAjax_radio(id_q,value,nomer)
+			{
+				sdan.push(nomer);
+				var nom = parseInt(nomer);
+				$('.rootid').eq(nom).css({"background":"#bef574"});
+				var quest_id=id_q;
+				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
+				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+				else{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}})
+			}
+
+			function postAjax2(id_q,value,nomer)
+			{
+				sdan.push(nomer);
+				str='.rad'+nomer;
+				$(str).removeAttr("checked");
+				var nom = parseInt(nomer);
+				$('.rootid').eq(nom).css({"background":"#bef574"});
+				value=$(value).val();
+				var quest_id=id_q;
+				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
+				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+				else
+				{
+					eval('var obj='+data);
+					if (obj.answer==0)
+					{
+						alert('Ответ не сохранился');
+					}
+				}
+				})
+			}
+
+			function postAjax3(id_q,strk,stlb,nomer)
+			{
+				sdan.push(nomer);
+				var nom = parseInt(nomer);
+				$('.rootid').eq(nom).css({"background":"#bef574"});
+				var quest_id=id_q;
+				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?php echo $form_id; ?>},function(data,status){
+				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+				else
+				{
+					eval('var obj='+data);
+					if (obj.answer==0)
+					{
+						alert('Ответ не сохранился');
+					}
+				}
+				})
+			}
+
+			function next_site(curr_id,next_id,site_numb)
+			{
+				//Проверить, на все ли обязательные вопросы конкретной страницы ответил пользователь
+				if (func_ok(site_numb) == 1)
+				{
+					//Скрыть текущую страницу
+					$("#site"+curr_id).css("display", "none");
+					//Отобразить следующую
+					$("#site"+next_id).slideToggle("slow");
+				}
+			}
+
+			var max_args = [];
+
+			<?php
+				$i = 0;
+				foreach ($sites as $key2) 
+				{
+					foreach($quests[$key2['id']] as $key)
+					{
+						if ($key['type'] == 4)
+						{
+							echo "$(function() {
+    						$( \"#slider$i\" ).slider({
+								value:1,
+								min: 1,
+      							max:".$key['option3'].",
+								step: 1,
+								slide: function( event, ui ) {";?>
+									sdan.push(<?php echo $i; ?>);
+									var nom = parseInt(<?php echo $i; ?>);
+									$('.rootid').eq(nom).css({"background":"#bef574"});
+									var quest_id=<?php echo $key['id'];?>;
+									$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:ui.value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
+										if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+										else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}})
+							<?php echo "}
+						    });
+					  		});";
+						}
+
+						echo "max_args[$i] = 100; quest_value[$i] = [];";
+
+						if ($key['type']==2 && $key['option3']!=0)
+						{
+							echo "max_args[$i] = ".$key['option3']."; ";
+						}
+
+						$i++;
+					}
+				}
+			?>
+
+		</script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<link href="<?php echo base_url()?>css/styles.css" rel="stylesheet" type="text/css" />
+		<link href="<?php echo base_url()?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<style>
+			input {width:20px;}
+		</style>
+	</head>
+	<body>
+		<?php require_once(APPPATH.'views/require_modal_metrika.php');?>
+		<!-- Модальное окно с сообщениями -->
+				<div id="myModalConfirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ 					<div class="modal-header">
+    					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    					<h3 id="myModalLabel">Подтверждение</h3>
+  					</div>
+  					<div class="modal-body">
+  						<p>Вы уверены, что хотите завершить анкетирование?</p>
+  					</div>
+  					<div class="modal-footer">
+    					<button class="btn btn-success" style="width:100px" onClick="sendForm()">Да</button>
+    					<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+  					</div>
+				</div>
+
+				<div id="myModalAlert" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ 					<div class="modal-header">
+    					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    					<h3 id="myModalLabel">Внимание!</h3>
+  					</div>
+  					<div class="modal-body">
+  						<p><div id="modal_message"></div></p>
+  					</div>
+  					<div class="modal-footer">
+    					<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+  					</div>
+				</div>
+		<!--Конец модального окна -->
+		<center>
+		<div id="root" style="width:800;margin:30px 0 10px 0;">
+			<h3><?= $form_name ?></h3>
+		</div>
+		<form autocomplete="off" action="<?php echo base_url();?>forms/form_itog/<?php echo $form_id;?>" method="post" name="testForm" id="testFormId"></form>
+		<?php
+		$site_numb = 0;
+		//Создать JS массив req с количеством требуемых вопросов на странице
+		?>
+		<script>
+			var req = new Array(<?= count($sites) ?>);
+		</script>
+		<?php	
+		//Номер вопроса	
+		$i = 0;
+		foreach ($sites as $key2) 
+		{
+			//Объявить массив для обязательных вопросов страницы в массиве обязательных вопросов опроса
+			?>
+			<script>
+				req[<?= $site_numb ?>] = [];
+			</script>
+			<?php
+			//Если страница не является первой, то при загрузке опроса не отображать её контент
+			$style = ($site_numb == 0 ? " " : "display:none;");
+			?>
+			<div style="margin-bottom:30px;<?= $style ?>"; id="site<?= $key2['id'] ?>">
+				<div id="root" style="width:800;margin:30px 0 10px 0;">
+					<h4><?= $key2['title'] ?></h4>
+				</div>
+				<?php
+				//status_type6 = статус наличия на странице выбора перехода на другую страницу
+				//если этот статус будет равен 0 после цикла по вопросам, то отображать форму завершения опроса
+				$status_type6 = 0;
+				//Число вопросов на странице
+				$chislo_vopr = count($quests[$key2['id']]);
+				//просмотр всех вопросов страницы
+				foreach($quests[$key2['id']] as $key)
+				{
+					//Номер вопроса по порядку
+					$nom=$i+1;
+					//Если вопрос является обязательным, то добавить его в JS-массив
+					$req = "";
+					if ($key['required'] == 1)
+					{
+						$req="<span class=\"label label-important\">*</span>";
+						?>
+						<script>
+							req[<?= $site_numb ?>].push(<?= $i ?>);
+						</script>
+						<?php
+					}
+					?>
+					<center>
+					<div id="root" class="rootid" style="width:800;margin:10px 0 0 0;">
+						<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
+						<h3><?= $key['title'] ?></h3>
+						<div class="alert" style="margin:5px 0 5px 0;"><?= $key['subtitle'] ?></div>
+					<?php
+					if ($key['type'] == 1)
+					{
+						//Массив элементов (разбиение строки по запятой и пробелу)
+						$arr_elem = explode(", ",$key['option1']);
+						?>
+						<table style="font-size:11px;">
+						<?php
+						for($k=0;$k<count($arr_elem);$k++)
+						{
+							?>
+							<tr>
+								<td align="right">
+									<input type="radio" name="q<?= $nom ?>" value="<?= $k ?>" class="rad<?= $i ?>" onClick="postAjax_radio(<?= $key['id'] ?>,<?= $k ?>,<?= $i ?>)">
+								</td>
+								<td align="left">
+									<?= $arr_elem[$k] ?>
+								</td>
+							</tr>
+							<?php
+						}
+						//Если предусмотрена возможность указания собственной версии
+						if ($key['own_version'] == 1)
+						{
+							?>
+							<tr>
+								<td align="right">
+									Или укажите свой вариант:
+								</td>
+								<td align="left">
+									<input type="text" id="text<?= $key['id'] ?>" style="width:200px;" onChange="postAjax2(<?= $key['id'] ?>, text<?= $key['id'] ?>, <?= $i ?>)">
+								</td>
+							</tr>
+							<?php
+						}
+						?>
+						</table>
+						<?php
+					}
+					if ($key['type'] == 2)
+					{
+						$arr_elem = explode(", ",$key['option1']);
+						?>
+						<table style=font-size:11px;>
+						<?php
+						for($k=0;$k<count($arr_elem);$k++)
+						{
+							echo "<tr><td align=right><input type=checkbox name=".$i."_"."$k class=".$i."_class onClick=postAjax(".$key['id'].",$k,$i)></td><td align=left>".$arr_elem[$k]."</td></tr>";
+						}
+						if ($key['own_version']==1)
+						{
+							echo "<tr><td align=right>Или укажите свой вариант:</td><td align=left><input type=text id=text".$key['id']." style=\"width:200px;\" onChange=postAjax2(".$key['id'].",text".$key['id'].",$i)></td></tr>";
+						}
+						?>
+						</table>
+						<?php
+					}
+					if ($key['type'] == 3)
+					{
+						echo "<textarea cols=\"60\" rows=\"3\" id=\"text".$key['id']."\" onChange=postAjax2(".$key['id'].",text".$key['id'].",$i)></textarea>";
+					}
+					if ($key['type'] == 4)
+					{
+						?>
+						<table width="100%"" style="font-size:11px;"">
+							<tr>
+								<td align="center"><?= $key['option1'] ?></td>
+								<td width="70%" align="center"><div id="slider<?= $i ?>"></div></td>
+								<td align="center"><?= $key['option2'] ?></td>
+							</tr>
+						</table>
+						<?php
+					}
+					if ($key['type'] == 5)
+					{
+						$arr_elem_str = explode(", ",$key['option1']);
+						$arr_elem_stlb = explode(", ",$key['option2']);
+						?>
+						<table class="sortable" id="groups" style="font-size:10px;width=100%">
+							<tr>
+								<td>&nbsp;</td>
+						<?php
+						for ($k=0;$k<count($arr_elem_stlb);$k++)
+						{
+							echo "<td>".$arr_elem_stlb[$k]."</td>";
+						}
+						echo "</tr>";
+						for ($k=0;$k<count($arr_elem_str);$k++)
+						{
+							echo "<tr><td>".$arr_elem_str[$k]."</td>";
+							for ($j=0;$j<count($arr_elem_stlb);$j++)
+							{
+								echo "<td><input type=radio name=".$i."er$k value=$k onClick=postAjax3(".$key['id'].",$k,$j,$i)></td>";
+							}
+							?></tr><?php
+						}
+						?></table><?php
+					}
+					if ($key['type'] == 6)
+					{
+						$status_type6++;
+						$arr_elem_id = explode(", ",$key['option1']);
+						$arr_elem_str = explode(", ",$key['option2']);
+						for ($k=0;$k<count($arr_elem_id);$k++)
+						{
+							?>
+							<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-primary" value="<?= $arr_elem_str[$k] ?>" onClick="next_site(<?= $key2['id'] ?>, <?= $arr_elem_id[$k] ?>, <?= $site_numb ?>)"><br>
+							<?php
+						}
+					}
+					?>
+					<br />
+					</div>
+					<?php
+					$i++;
+				}
+				//Если на странице не было вопросов типа 6 (выбор страницы), то добавить окончание опроса
+				if ($status_type6 == 0)
+				{
+					?>
+					<center>
+					<div id="root" style="width:800;margin:10px 0 0 0;">
+						<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-inverse" value="Завершить" onClick="javascript: func_ok(<?= $site_numb ?>,'end')">
+					</div>
+					</center>
+					<?php
+				}
+				?>
+			</div>
+			<!-- конец страницы -->
+			<?php
+			$site_numb++;
+		}
+		?>
+		
+	</body>
+</html>

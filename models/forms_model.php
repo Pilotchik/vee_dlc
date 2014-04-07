@@ -153,7 +153,7 @@ class Forms_model extends CI_Model{
 
 	function getAllActiveQuests($form_id="")
 	{
-		$sql="SELECT * FROM `new_form_quests` where `form_id`='$form_id' AND `del`='0' AND `active`='1'";
+		$sql="SELECT * FROM `new_form_quests` where `form_id`='$form_id' AND `del`='0' AND `type`!=0 AND `type`!=6 AND `active`='1'";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;
@@ -233,8 +233,14 @@ class Forms_model extends CI_Model{
 	{
 		$sql="SELECT * FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' AND `id` NOT IN (SELECT `quest_id` FROM `new_form_answers` WHERE `res_id` IN (SELECT `id` FROM `new_form_results` WHERE `person_id` = '$user_id'))";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data;
+		return $query->result_array();
+	}
+
+	function getFormSiteQuests($form_id="",$user_id="",$site_id = 1)
+	{
+		$sql="SELECT * FROM `new_form_quests` WHERE `form_id`='$form_id' AND `del`='0' AND `active`='1' AND `site`='$site_id' AND `id` NOT IN (SELECT `quest_id` FROM `new_form_answers` WHERE `res_id` IN (SELECT `id` FROM `new_form_results` WHERE `person_id` = '$user_id'))";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 
 	//Проверка наличия записи о результате

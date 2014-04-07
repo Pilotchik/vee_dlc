@@ -190,8 +190,8 @@
 					{
 						if (i != 1 && option1_text.length > 0)
 						{
-							option1_text = option1_text + ",";
-							option2_text = option2_text + ",";
+							option1_text = option1_text + ", ";
+							option2_text = option2_text + ", ";
 						}
 						option1_text = option1_text + $("#check_siteid"+i).val();
 						option2_text = option2_text + $("#check_sitedesc"+i).val();
