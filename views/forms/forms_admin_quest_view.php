@@ -184,7 +184,7 @@
 			{
 				var option1_text = ""
 				var option2_text = ""
-				for(var i=1; i <= <?= count($sites) ?>; i++)
+				for(var i=1; i <= <?php echo count($sites); ?>; i++)
 				{
 					if ($("#check_sites"+i).attr("checked"))
 					{
@@ -201,15 +201,14 @@
 				$("#check_siteoption2").val(option2_text);
 				document.createFormSiteType6.submit();
 			}
-		</script>
-		
+		</script>	
 	</head>
 	<body>
-		<form action="<?php echo base_url();?>forms_admin/quest_del/<?php echo $form_id;?>" method="post" name="delForm">
+		<form action="<?= base_url() ?>forms_admin/quest_del/<?= $form_id ?>" method="post" name="delForm">
 			<input type="hidden" name="c_id" id="questDelId">
 		</form>
 
-		<form action="<?php echo base_url();?>forms_admin/quest_site_del/<?php echo $form_id;?>" method="post" name="delSiteForm">
+		<form action="<?= base_url() ?>forms_admin/quest_site_del/<?php echo $form_id;?>" method="post" name="delSiteForm">
 			<input type="hidden" name="c_id" id="questDelSiteId">
 		</form>
 		
@@ -225,7 +224,7 @@
     			<h3 id="myModalLabel">Создание нового вопроса</b></h3>
   			</div>
   			<div class="modal-body">
-  				<form action="<?php echo base_url()?>forms_admin/quest_create/<?php echo $form_id;?>" method="post" name="createForm" autocomplete="off" enctype="multipart/form-data">
+  				<form action="<?php echo base_url(); ?>forms_admin/quest_create/<?php echo $form_id;?>" method="post" name="createForm" autocomplete="off" enctype="multipart/form-data">
 				<table border="0" cellpadding="5" cellspacing="0" width="100%">
 					<tr>
 						<td align="right" width="40%">Тип вопроса</td>
@@ -248,7 +247,7 @@
 								$j = 1;
 								foreach ($sites as $key)
 								{
-									?> <option value="<?= $key['id'] ?>"><?= $j ?>. <?= $key['title'] ?> <?php
+									?> <option value="<?php echo $key['id']; ?>"><?php echo $j; ?>. <?php echo $key['title']; ?> <?php
 									$j++;
 								}
 								?>
@@ -328,13 +327,14 @@
   			</div>
 		</div>
 
+		
 		<div id="myModalCreateSite" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  			<div class="modal-header">
     			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     			<h3 id="myModalLabel">Создание новой страницы</b></h3>
   			</div>
   			<div class="modal-body">
-  				<form action="<?php echo base_url()?>forms_admin/site_create/<?php echo $form_id;?>" method="post" name="createFormSite" autocomplete="off" enctype="multipart/form-data">
+  				<form action="<?php echo base_url(); ?>forms_admin/site_create/<?php echo $form_id;?>" method="post" name="createFormSite" autocomplete="off" enctype="multipart/form-data">
 				<table border="0" cellpadding="5" cellspacing="0" width="100%">
 					<tr>
 						<td align="right" width="40%">Заголовок страницы</td>
@@ -359,7 +359,7 @@
     			<h3 id="myModalLabel">Создание группы выбора страницы</b></h3>
   			</div>
   			<div class="modal-body">
-  				<form action="<?php echo base_url()?>forms_admin/quest_create/<?php echo $form_id;?>" method="post" name="createFormSiteType6" autocomplete="off" enctype="multipart/form-data">
+  				<form action="<?php echo base_url(); ?>forms_admin/quest_create/<?php echo $form_id;?>" method="post" name="createFormSiteType6" autocomplete="off" enctype="multipart/form-data">
 				<table border="0" cellpadding="5" cellspacing="0" width="100%">
 					<tr>
 						<td align="right" width="40%" colspan="2">Выбор страницы, на которую будет помещена группа</td>
@@ -369,7 +369,7 @@
 								$j = 1;
 								foreach ($sites as $key)
 								{
-									?> <option value="<?= $key['id'] ?>"><?= $j ?>. <?= $key['title'] ?> <?php
+									?> <option value="<?php echo $key['id']; ?>"><?php echo $j; ?>. <?php echo $key['title']; ?> <?php
 									$j++;
 								}
 								?>
@@ -388,14 +388,14 @@
 						?> 
 						<tr>
 							<td>
-								<input type="checkbox" id="check_sites<?= $j ?>" /> 
-								<input type="hidden" name="site_id" id="check_siteid<?= $j ?>" value="<?= $key['id'] ?>" />
+								<input type="checkbox" id="check_sites<?php echo $j; ?>" /> 
+								<input type="hidden" name="site_id" id="check_siteid<?php echo $j; ?>" value="<?php echo $key['id']; ?>" />
 							</td>
 							<td>
-								<?= $key['title'] ?>
+								<?php echo $key['title']; ?>
 							</td>
 							<td>
-								<input type="text" style="width:100%;height: 30px;line-height: 30px;" name="site_desc" id="check_sitedesc<?= $j ?>" placeholder="Текст-пояснение" />
+								<input type="text" style="width:100%;height: 30px;line-height: 30px;" name="site_desc" id="check_sitedesc<?php echo $j; ?>" placeholder="Текст-пояснение" />
 							</td>
 						</tr>
 						<?php
@@ -426,6 +426,7 @@
   			</div>
 		</div>
 
+		
 		<!--
 
 		Редактирование параметров опроса
@@ -438,7 +439,7 @@
     			<h3>Редактирование параметров вопроса</h3>
   			</div>
   			<div class="modal-body">
-  				<form action="<?php echo base_url()?>forms_admin/quest_edit/<?php echo $form_id;?>" method="post" name="createFormSite" autocomplete="off" enctype="multipart/form-data">
+  				<form action="<?php echo base_url(); ?>forms_admin/quest_edit/<?php echo $form_id;?>" method="post" name="createFormSite" autocomplete="off" enctype="multipart/form-data">
 				<table border="0" cellpadding="5" cellspacing="0" width="100%">
 					<tr>
 						<td align="right" width="40%"><span id="questEditText"></span></td>
@@ -469,7 +470,7 @@
     			<h3>Изменение страницы вопроса</h3>
   			</div>
   			<div class="modal-body">
-  				<form action="<?php echo base_url()?>forms_admin/quest_edit/<?php echo $form_id;?>" method="post" name="EditQuestSiteForm" autocomplete="off" enctype="multipart/form-data">
+  				<form action="<?php echo base_url(); ?>forms_admin/quest_edit/<?php echo $form_id;?>" method="post" name="EditQuestSiteForm" autocomplete="off" enctype="multipart/form-data">
 				<table border="0" cellpadding="5" cellspacing="0" width="100%">
 					<tr>
 						<td align="right" width="40%"><span id="questEditSiteTitle"></span></td>
@@ -479,7 +480,7 @@
 								$j = 1;
 								foreach ($sites as $key)
 								{
-									?> <option value="<?= $key['id'] ?>"><?= $j ?>. <?= $key['title'] ?> <?php
+									?> <option value="<?php echo $key['id']; ?>"><?php echo $j; ?>. <?php echo $key['title']; ?> <?php
 									$j++;
 								}
 								?>
@@ -496,7 +497,7 @@
     			<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
   			</div>
 		</div>
-
+		
 		<?php require_once(APPPATH.'views/require_modal_metrika.php');?>
 		<div id="main">
 			<?php require_once(APPPATH.'views/require_main_menu.php');?>
@@ -505,14 +506,15 @@
   				<li class="active">Вопросы анкеты "<?php echo $form_name;?>"</li>
 			</ul>
 			<?php 
+
 			$j = 1;
 			foreach ($sites as $key2)
 			{
 				?>
 				<h3>
-					<?= $j ?>. <span id="site<?= $key2['id'] ?>"><?= $key2['title'] ?> (ID <?= $key2['id'] ?>)</span> 
-					<button class="btn" onClick="func_edit(<?= $key2['id'] ?>,'site')">Изменить</button>
-					<button class="btn btn-danger" onClick="func_del_site(<?= $key2['id'] ?>)"><i class="icon-remove"></i> Удалить</button>
+					<?php echo $j; ?>. <span id="site<?php echo $key2['id']; ?>"><?php echo $key2['title']; ?> (ID <?php echo $key2['id']; ?>)</span> 
+					<button class="btn" onClick="func_edit(<?php echo $key2['id']; ?>,'site')">Изменить</button>
+					<button class="btn btn-danger" onClick="func_del_site(<?php echo $key2['id']; ?>)"><i class="icon-remove"></i> Удалить</button>
 				</h3>
 				<?php 
 				$j++;
@@ -536,10 +538,10 @@
 						</thead>
 						<tbody>
 						<?php
-						$i=1;
+						$i = 1;
 						foreach ($quests[$key2['id']] as $key)
 						{
-							$id_q=$key['id'];
+							$id_q = $key['id'];
 							$plus = $key['numb'] + 1;
 							$minus = $key['numb'] - 1;
 							?>
@@ -555,7 +557,7 @@
 								else
 								{
 									?>
-									<td><i class="icon-circle-arrow-down" onClick="func_edit_number(<?= $id_q.",".$plus?>)"></i></td>
+									<td><i class="icon-circle-arrow-down" onClick="func_edit_number(<?= $id_q.",".$plus ?>)"></i></td>
 									<?php	
 								}
 
@@ -572,80 +574,99 @@
 									<?php	
 								}
 								?>
-								<td><div onClick="func_del(<?= $id_q ?>)"><i class="icon-remove"></i></div></td>
-								<td><div onClick="func_edit_quest_site(<?= $id_q ?>)"><i class="icon-file"></i></div></td>
-								<td width="25%"><div onClick="func_edit(<?= $id_q ?>,'title')" id="title<?= $key['id'] ?>"><?= $key['title'] ?></div></td>
-								<td><div onClick="func_edit(<?= $id_q ?>,'subtitle')" id="subtitle<?= $key['id'] ?>"><?= $key['subtitle'] ?></div></td>
-							<?
-							switch ($key['type']) 
-							{
-								case 1:	$type="Выбор одного";	break;
-								case 2:	$type="Выбор нескольких";	break;
-								case 3:	$type="Текст";	break;
-								case 4:	$type="Шкала";	break;
-								case 5:	$type="Сетка";	break;
-								case 6:	$type="Выбор страницы";	break;
-								default:	$type="Неизвестный тип";
-							}
-							$req_type = ($key['required'] == 0 ? "Нет" : "Да");
-							$active_name = ($key['active'] == 0 ? "<i class=\"icon-eye-close\"></i>" : "<i class=\"icon-eye-open\"></i>");
-							//Если тип >= 3, то варианта "Своя версия" быть не может
-							if ($key['type'] < 3)
-							{
-								$own_version = "<td align=center><div onClick=\"func_edit_own($id_q)\">".($key['own_version'] == 0 ? "Нет" : "Да")."</div></td>";
-							}
-							else
-							{
-								$own_version = "<td align=center bgcolor=black>&nbsp;</td>";
-							}
-							?>
+								<td>
+									<div onClick="func_del(<?= $key['id'] ?>)"><i class="icon-remove"></i></div>
+								</td>
+								<td>
+									<div onClick="func_edit_quest_site(<?= $key['id'] ?>)"><i class="icon-file"></i></div>
+								</td>
+
+								<td width="25%">
+									<div onClick="func_edit(<?= $key['id'] ?>,'title')" id="title<?= $key['id'] ?>"><?= $key['title'] ?></div>
+								</td>
+
+								<td>
+									<div onClick="func_edit(<?= $key['id'] ?>,'subtitle')" id="subtitle<?= $key['id'] ?>">
+										<?= $key['subtitle'] ?>
+									</div>
+									
+								</td>
+								<?php
+								switch ($key['type']) 
+								{
+									case 1:	$type="Выбор одного";	break;
+									case 2:	$type="Выбор нескольких";	break;
+									case 3:	$type="Текст";	break;
+									case 4:	$type="Шкала";	break;
+									case 5:	$type="Сетка";	break;
+									case 6:	$type="Выбор страницы";	break;
+									default:	$type="Неизвестный тип";
+								}
+								$req_type = ($key['required'] == 0 ? "Нет" : "Да");
+								$active_name = ($key['active'] == 0 ? "<i class=\"icon-eye-close\"></i>" : "<i class=\"icon-eye-open\"></i>");
+
+								//Если тип >= 3, то варианта "Своя версия" быть не может
+								if ($key['type'] < 3)
+								{
+									$own_version = "<td align=center><div onClick=\"func_edit_own($id_q)\">".($key['own_version'] == 0 ? "Нет" : "Да")."</div></td>";
+								}
+								else
+								{
+									$own_version = "<td align=center bgcolor=black>&nbsp;</td>";
+								}
+
+								?>
 							<td><?= $type ?></td>
-							<td><div onClick="func_edit_required(<?= $id_q ?>)"><?= $req_type ?></div></td>
-							<td><div onClick="func_edit_active(<?= $id_q ?>)"><?= $active_name ?></div></td>
-							<?= $own_version ?>
-							<?
+							<td><div onClick="func_edit_required(<?php echo $id_q; ?>)"><?php echo $req_type; ?></div></td>
+							<td><div onClick="func_edit_active(<?php echo $id_q; ?>)"><?php echo $active_name; ?></div></td>
+							<?php echo $own_version; ?>
+							<?php
 							if ($key['type'] < 3)
 							{
 								?>
 								<td colspan="3"><div onClick="func_edit(<?= $id_q ?>,'option1')" id="option1<?= $key['id'] ?>"><?= $key['option1'] ?></div></td>
-								<?
+								<?php
 							}
 							if ($key['type'] == 3)
 							{
 								?>
 								<td colspan="3" bgcolor="black">&nbsp;</td>
-								<?
+								<?php
 							}
 							if ($key['type'] == 4)
 							{
 								?>
-								<td><div onClick="func_edit(<?= $id_q ?>,'option1')" id="option1<?= $key['id'] ?>"><?= $key['option1'] ?></div></td>
-								<td><div onClick="func_edit(<?= $id_q ?>,'option2')" id="option2<?= $key['id'] ?>"><?= $key['option2'] ?></div></td>
-								<td><div onClick="func_edit(<?= $id_q ?>,'option3')" id="option3<?= $key['id'] ?>"><?= $key['option3'] ?></div></td>
-								<?
+								<td><div onClick="func_edit(<?= $id_q; ?>,'option1')" id="option1<?php echo $key['id']; ?>"><?php echo $key['option1']; ?></div></td>
+								<td><div onClick="func_edit(<?= $id_q; ?>,'option2')" id="option2<?php echo $key['id']; ?>"><?php echo $key['option2']; ?></div></td>
+								<td><div onClick="func_edit(<?= $id_q; ?>,'option3')" id="option3<?php echo $key['id']; ?>"><?php echo $key['option3']; ?></div></td>
+								<?php
 							}
 							if ($key['type'] == 5 || $key['type'] == 6)
 							{
 								?>
-								<td><div onClick="func_edit(<?= $id_q ?>,'option1')" id="option1<?= $key['id'] ?>"><?= $key['option1'] ?></div></td>
-								<td><div onClick="func_edit(<?= $id_q ?>,'option2')" id="option2<?= $key['id'] ?>"><?= $key['option2'] ?></div></td>
+								<td><div onClick="func_edit(<?= $id_q ?>,'option1')" id="option1<?php echo $key['id']; ?>"><?php echo $key['option1']; ?></div></td>
+								<td><div onClick="func_edit(<?= $id_q ?>,'option2')" id="option2<?php echo $key['id']; ?>"><?php echo $key['option2']; ?></div></td>
 								<td bgcolor="black"></td>
-								<?
+								<?php
 							}
-
+							
 							?>
 								
 							</tr>
-							<?
-							$i++;
-						}?>
+							<?php
+
+							$i = $i + 1;
+						}
+						?>
 						</tbody>
 					</table>
-				<?php
+					<?php
 				}
 				else
 				{
-					?> Вопросов на данной странице нет <?php
+					?> 
+					Вопросов на данной странице нет 
+					<?php
 				}
 			}
 			?>
@@ -675,3 +696,4 @@
 		</div>
 	</body>
 </html>
+?>

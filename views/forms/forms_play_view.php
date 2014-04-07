@@ -197,6 +197,17 @@
 				}
 			?>
 
+			function func_remove_tr(tr_id,req_status,table_id)
+			{
+				if (req_status == 1)
+				{
+					if ($("#"+table_id+" tr").size()>2)
+					{
+						$("#"+tr_id).remove();
+					}
+				}
+			}
+
 		</script>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
   		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -373,7 +384,7 @@
 						$arr_elem_str = explode(", ",$key['option1']);
 						$arr_elem_stlb = explode(", ",$key['option2']);
 						?>
-						<table class="sortable" id="groups" style="font-size:10px;width=100%">
+						<table class="sortable" id="table_<?= $i ?>" style="font-size:10px;width=100%">
 							<tr>
 								<td>&nbsp;</td>
 						<?php
@@ -381,15 +392,28 @@
 						{
 							echo "<td>".$arr_elem_stlb[$k]."</td>";
 						}
-						echo "</tr>";
+						?>
+						<td>Не оценить</td>
+						</tr>
+						<?php
 						for ($k=0;$k<count($arr_elem_str);$k++)
 						{
-							echo "<tr><td>".$arr_elem_str[$k]."</td>";
+							?>
+							<tr id="tr_<?= $i ?>_<?= $k ?>">
+								<td><?= $arr_elem_str[$k] ?></td>
+							<?php
 							for ($j=0;$j<count($arr_elem_stlb);$j++)
 							{
-								echo "<td><input type=radio name=".$i."er$k value=$k onClick=postAjax3(".$key['id'].",$k,$j,$i)></td>";
+								?>
+								<td>
+									<input type="radio" name="<?= $i ?>er<?= $k ?>" value="<?= $k ?>" onClick="postAjax3(<?= $key['id'] ?>,<?= $k ?>,<?= $j ?>,<?= $i ?>)">
+								</td>
+								<?php
 							}
-							?></tr><?php
+							?>
+							<td><div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')"><i class="icon-remove"></i></div></td>
+							</tr>
+							<?php
 						}
 						?></table><?php
 					}
