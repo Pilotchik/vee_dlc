@@ -209,10 +209,14 @@ class Forms_model extends CI_Model{
 		$data = $this->db->query($sql);
 	}
 
-	function createQuest($form_id = 1, $title = "",$subtitle = "",$type = 1,$option1 = "",$option2 = "",$option3 = "",$req = 1,$site = 1)
+	function createQuest($form_id = 1, $title = "",$subtitle = "",$type = 1,$option1 = "",$option2 = "",$option3 = "",$req = 1,$site = 1,$numb = 1)
 	{
+		if ($type == 6)
+		{
+			$numb = 10;
+		}
 		if ($req == 'on')	{$req=1;}	else	{$req=0;}
-		$sql = "INSERT INTO `new_form_quests` (`title`,`subtitle`,`type`,`required`,`option1`,`option2`,`option3`,`active`,`del`,`form_id`,`site`) VALUES ('$title','$subtitle','$type','$req','$option1','$option2','$option3','1','0','$form_id','$site')";
+		$sql = "INSERT INTO `new_form_quests` (`title`,`subtitle`,`type`,`required`,`option1`,`option2`,`option3`,`active`,`del`,`form_id`,`site`,`numb`) VALUES ('$title','$subtitle','$type','$req','$option1','$option2','$option3','1','0','$form_id','$site','$numb')";
 		$data = $this->db->query($sql);
 		return $data;
 	}
