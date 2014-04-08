@@ -1,7 +1,11 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<title>Система тестирования</title>
+		<title>ВОС.Анкетирование</title>
+		<script type="text/javascript" src="//vk.com/js/api/openapi.js?111"></script>
+		<script type="text/javascript">
+		  VK.init({apiId: 2849330, onlyWidgets: true});
+		</script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
@@ -26,7 +30,7 @@
 			<?php require_once(APPPATH.'views/require_main_menu.php');?>
 			<ul class="breadcrumb">
 				<li><a href="<?php echo base_url();?>forms">Опросы</a> <span class="divider">/</span></li>
-  				<li class="active">Результаты опроса "<?php echo $form_name;?>". Тип доступа к результатам: <?php echo ($form_access == 1 ? "Публичный" : "Анонимный")?></li>
+  				<li class="active">Результаты опроса "<?= $form_name ?>". Тип доступа к результатам: <?php echo ($form_access == 1 ? "Публичный" : "Анонимный")?></li>
 			</ul>
 			<?php
 			$i=0;
@@ -516,6 +520,10 @@
 			<?php
 		}
 		?>
+		<div id="vk_comments" style="margin:20px auto;"></div>
+		<script type="text/javascript">
+		VK.Widgets.Comments("vk_comments", {limit: 30, width: "520", attach: "graffiti,photo,link"});
+		</script>
 		</div>
 	</body>
 </html>

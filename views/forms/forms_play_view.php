@@ -5,10 +5,21 @@
 		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
+		<script type="text/javascript" src="<?php echo base_url()?>js/bootstrap-popover.js"></script>
+		
 		<script type="text/javascript">
 			$(document).ready(function() 
 			{ 	
 				$('#root3').css("display", "none");
+				$(function() {
+				$('.what1').popover({
+				placement: "top",
+				trigger: "click",
+				html: true
+				});
+				});
+
+
 			}
 			);
 
@@ -208,56 +219,28 @@
 				}
 			}
 
-			//Обработка нажатия на ячейке для заданий типа 7 (сетка с селекторами)
-			function click_grid(id,step)	
+			function closePopover()
 			{
-				var val = $("#div_"+id).html();	//получаем значение ячейки
-				//формируем код текстового поля
-				var code = '<select onChange="fix_grid(\''+id+'\','+step+')" id="sel_'+id+'"><option value="?"></option><option value="?">Не знаю</option>';
-				for (i = 0; i <= step; i++)
-				{
-					if (i != val)
-					{
-						code += '<option value="'+i+'">'+i+'</option>';
-					}
-					else
-					{
-						code += '<option value="'+i+'" selected>'+i+'</option>';
-					}
-				}
-				code += '</select>';
-				//удаляем содержимое ячейки, вставляем в нее сформированное поле
-				$("#td_"+id).html(code);
-				$("#sel"+id).click();
+				$('.what1').popover('hide');
 			}
 
 			//Функция обработки SELECT`а и отправки данных в БД
-			function fix_grid(id,step)
+			function fix_grid_pop(i,k,j,oz)
 			{
-				var user_select = $("#sel_"+id).val();
-				if ( user_select != "?")
-				{
-					//Разбить строку id на массив по делителю "_"
-					id_array = id.split("_");
-					//Получение номера вопроса
-					nomer = id_array[0];
-					var nom = parseInt(nomer);
-					//Добавление вопроса в список сданных (для проверки его обязательности)
-					sdan.push(nom);
-					//Изменение цвета фона вопроса
-					$('.rootid').eq(nom).css({"background":"#bef574"});
-					//Получить id вопроса
-					var quest_id = $("#quest_id_"+nomer).html();
-					strk = id_array[1];
-					stlb = id_array[2];
-					//Отправить данные в БД
-					$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?= $form_id ?>,val3:user_select},function(data,status){
-					if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
-					else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
-					})
-				}
-				var code = '<div  style="cursor:pointer;font-weight: bold;font-size: 14px;" id="div_'+id+'" onClick="click_grid(\''+id+'\','+step+')">'+$("#sel_"+id).val()+'</div>';
-				$("#td_"+id).html(code);
+				//Добавление вопроса в список сданных (для проверки его обязательности)
+				sdan.push(i);
+				//Изменение цвета фона вопроса
+				$('.rootid').eq(i).css({"background":"#bef574"});
+				//Получить id вопроса
+				var quest_id = $("#quest_id_"+i).html();
+				//Отправить данные в БД
+				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:k,val2:j,form_id:<?= $form_id ?>,val3:oz},function(data,status){
+				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+				else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
+				})
+				id = i+"_"+k+"_"+j;
+				$("#a_"+id).html('<span style="cursor:pointer;font-weight: bold;font-size: 14px;">'+oz+'</span>');
+				$('.what1').popover('hide');
 			}
 
 		</script>
@@ -505,9 +488,19 @@
 									{
 										?>
 										<td id="td_<?= $i ?>_<?= $k ?>_<?= $j ?>">
-											<div  style="cursor:pointer;" id="div_<?= $i ?>_<?= $k ?>_<?= $j ?>" onClick="click_grid('<?= $i ?>_<?= $k ?>_<?= $j ?>',<?= $step ?>)">
-												?
-											</div>
+											<?php
+											$popover_body = "";
+											for ($oz = 0;$oz <= $step; $oz++)
+											{
+												//$popover_body = $popover_body."<button class='btn btn-small' onClick='fix_grid_pop(".$i."_".$k."_".$j.",".$oz.")'>".$oz."</button>";
+												$popover_body = $popover_body."<button class='btn btn-small' onClick='fix_grid_pop($i,$k,$j,$oz)'>".$oz."</button>";
+											}
+											?>
+											<a class="what1" data-toggle="popover" data-placement="bottom" data-content="
+											<div class=btn-group data-toggle=buttons-radio>
+												<button class='btn btn-small' onClick='closePopover()'>?</button>
+												<?= $popover_body ?>
+											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>"><i class="icon-question-sign"></i></a>
 										</td>
 										<?php
 									}
