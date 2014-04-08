@@ -164,13 +164,23 @@
 					$("#quest_desc").html('Укажите ваше ощущение в соответствие со шкалой.');
 					$("#create_quest_option_table").slideToggle("slow");
 				}
-				if (type == 5) 
+				//Тип 5 - сетка с радио-кнопками, тип7 - сетка с селекторами
+				if (type == 5 || type == 7) 
 				{
 					$("#option1_").slideToggle("slow");
 					$("#option1_desc").html('Введите через запятую названия строк');
 					$("#option2_").slideToggle("slow");
 					$("#option2_desc").html('Введите через запятую названия столбцов');
-					$("#quest_desc").html('Выберите для каждой строки наиболее подходящий столбец');
+					if (type == 5)
+					{
+						$("#quest_desc").html('Выберите для каждой строки наиболее подходящий столбец');
+					}
+					else
+					{
+						$("#quest_desc").html('Укажите для каждого столбца степень соответствия элемента строки');	
+						$("#option3_").slideToggle("slow");
+						$("#option3_desc").html('Укажите количество пунктов соответствия');
+					}
 					$("#create_quest_option_table").slideToggle("slow");
 				}
 
@@ -235,7 +245,8 @@
 								<option value="2">Выбор нескольких
 								<option value="3">Текст
 								<option value="4">Шкала
-								<option value="5">Сетка
+								<option value="5">Сетка с радио
+								<option value="7">Сетка-соответствие
 							</select>
 						</td>
 					</tr>
@@ -598,7 +609,8 @@
 									case 2:	$type="Выбор нескольких";	break;
 									case 3:	$type="Текст";	break;
 									case 4:	$type="Шкала";	break;
-									case 5:	$type="Сетка";	break;
+									case 5:	$type="Сетка с переключателем";	break;
+									case 7:	$type="Сетка-соответствие";	break;
 									case 6:	$type="Выбор страницы";	break;
 									default:	$type="Неизвестный тип";
 								}
@@ -633,7 +645,7 @@
 								<td colspan="3" bgcolor="black">&nbsp;</td>
 								<?php
 							}
-							if ($key['type'] == 4)
+							if ($key['type'] == 4 || $key['type'] == 7)
 							{
 								?>
 								<td><div onClick="func_edit(<?= $id_q; ?>,'option1')" id="option1<?php echo $key['id']; ?>"><?php echo $key['option1']; ?></div></td>

@@ -225,10 +225,13 @@
 						echo "Cвой вариант: $stroka";
 					}
 				}
-				if ($type==3)
+				if ($type == 3)
 				{
-					echo "<table class=\"sortable\" id=\"groups\" style=\"font-size:11px;width=100%\">
-				<tr><td align=center>Ответ</td>";
+					?>
+					<table class="sortable" id="groups" style="font-size:11px;width=100%">
+						<tr>
+							<td>Ответ</td>
+							<?php
 				if ($form_access == 1)
 				{
 					echo "<td align=center width=30%>Пользователь</td>";
@@ -357,42 +360,160 @@
 				{
 					$arr_elem_str = explode(", ",$key['option1']);
 					$arr_elem_stlb = explode(", ",$key['option2']);
-				echo "<table class=\"sortable\" id=\"groups\" style=\"font-size:11px;width=100%\"><tr><td>&nbsp;</td>";
-				for ($k=0;$k<count($arr_elem_stlb);$k++)
-				{
-					if ($form_access == 1)
+					echo "<table class=\"sortable\" id=\"groups\" style=\"font-size:11px;width=100%\"><tr><td>&nbsp;</td>";
+					for ($k=0;$k<count($arr_elem_stlb);$k++)
 					{
-						echo "<td colspan=2>".$arr_elem_stlb[$k]."</td>";
-					}
-					else
-					{
-						echo "<td>".$arr_elem_stlb[$k]."</td>";
-					}
-				}
-				echo "</tr>";
-				for ($k=0;$k<count($arr_elem_str);$k++)
-				{
-					echo "<tr><td>".$arr_elem_str[$k]."</td>";
-					if ($form_access == 1)
-					{
-						for ($j=0;$j<count($arr_elem_stlb);$j++)
+						if ($form_access == 1)
 						{
-							echo "<td>".$quest_options1[$key['id']]['proz_stlb'][$k][$j]."%</td><td>".$quest_options1[$key['id']]['users_setka'][$k][$j]."</td>";
+							echo "<td colspan=2>".$arr_elem_stlb[$k]."</td>";
 						}
-					}
-					else
-					{
-						for ($j=0;$j<count($arr_elem_stlb);$j++)
+						else
 						{
-							echo "<td>".$quest_options1[$key['id']]['proz_stlb'][$k][$j]."%</td>";
+							echo "<td>".$arr_elem_stlb[$k]."</td>";
 						}
 					}
 					echo "</tr>";
+					for ($k=0;$k<count($arr_elem_str);$k++)
+					{
+						echo "<tr><td>".$arr_elem_str[$k]."</td>";
+						if ($form_access == 1)
+						{
+							for ($j=0;$j<count($arr_elem_stlb);$j++)
+							{
+								echo "<td>".$quest_options1[$key['id']]['proz_stlb'][$k][$j]."%</td><td>".$quest_options1[$key['id']]['users_setka'][$k][$j]."</td>";
+							}
+						}
+						else
+						{
+							for ($j=0;$j<count($arr_elem_stlb);$j++)
+							{
+								echo "<td>".$quest_options1[$key['id']]['proz_stlb'][$k][$j]."%</td>";
+							}
+						}
+						echo "</tr>";
+					}
+					echo "</table>";
 				}
-				echo "</table>";
-			}
-			echo "</div><br><br>";
-			$i++;
+				//Сетка с селекторами
+				if ($type == 7)
+				{
+					$arr_elem_str = explode(", ",$key['option1']);
+					$arr_elem_stlb = explode(", ",$key['option2']);
+					?>
+					<table class="sortable" id="groups" style="font-size:11px;width=100%">
+						<tr>
+							<td>Параметр</td>
+							<?php
+							for ($k = 0; $k < count($arr_elem_stlb); $k++)
+							{
+								?>
+								<td><?= $arr_elem_stlb[$k] ?></td>
+								<?php
+							}
+							?>
+							<td>AVG</td>
+						</tr>
+					<?php
+					$str_punkts = "";
+					$str_res_all = "";
+					$str_course = array();
+					for ($j = 1;$j < 5;$j++)
+					{
+						$str_course[$j] = "";
+					}
+					for ($k = 0;$k < count($arr_elem_str);$k++)
+					{
+						?>
+						<tr>
+							<td><?= $arr_elem_str[$k] ?></td>
+							<?php
+							//Наращиваем строку с пунктами
+							$str_punkts = $str_punkts."'".$arr_elem_str[$k]."',";
+							for ($j = 0;$j < count($arr_elem_stlb);$j++)
+							{
+								?>
+								<td><?= $quest_options1[$key['id']]['cell_avg'][$k][$j] ?></td>
+								<?php
+							}
+							?>
+							<td><?= $quest_options1[$key['id']]['avg_str'][$k] ?></td>
+						</tr>	
+						<?php
+						$str_res_all = $str_res_all.$quest_options1[$key['id']]['avg_str'][$k].",";
+						if ($form_ou == 1)
+						{
+							for ($j = 1;$j < 5;$j++)
+							{
+								$str_course[$j] = $str_course[$j].round($quest_options1[$key['id']]['row_avg_kurs'][$k][$j],2).",";
+							}
+						}
+					}
+					for ($j = 1;$j < 5;$j++)
+					{
+						$str_course[$j] = substr($str_course[$j],0,-1);
+					}
+					$str_punkts = substr($str_punkts,0,-1);
+					$str_res_all = substr($str_res_all, 0,-1);
+					?>
+					</table>
+					
+					<script type="text/javascript">
+      					google.load("visualization", "1", {packages:["corechart"]});
+      					google.setOnLoadCallback(drawCharta<?= $i ?>);
+      					function drawCharta<?= $i ?>() 
+      					{
+        					var data = google.visualization.arrayToDataTable([
+          						['Параметр', <?= $str_punkts ?>],
+          						['Все',  <?= $str_res_all ?>]
+        						]);
+
+        						var options = {
+          						title: <?= "'".$key['title']."'" ?>,
+          						legend: {position: 'top',textStyle: {fontSize: 12}},
+          						hAxis: {title: 'Курсы', titleTextStyle: {color: 'red'}}
+        						};
+
+        						var chart = new google.visualization.ColumnChart(document.getElementById('chart_diva'+<?= $i ?>));
+        						chart.draw(data, options);
+     				 	}
+   					</script>
+   					<div id="chart_diva<?= $i ?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
+    				<?php
+    				if ($form_ou == 1)
+    				{
+    					?>
+    					<script type="text/javascript">
+      						google.load("visualization", "1", {packages:["corechart"]});
+      						google.setOnLoadCallback(drawChartb<?= $i ?>);
+      						function drawChartb<?= $i ?>() {
+        						var data = google.visualization.arrayToDataTable([
+          						['Курс', <?= $str_punkts ?>],
+          						['1 курс',  <?= $str_course[1] ?>],
+          						['2 курс',  <?= $str_course[2] ?>],
+          						['3 курс',  <?= $str_course[3] ?>],
+          						['4 курс',  <?= $str_course[4] ?>]
+        					]);
+
+        						var options = {
+          						title: <?php echo "'".$key['title']."'";?>,
+          						legend: {position: 'top',textStyle: {fontSize: 12}},
+          						hAxis: {title: 'Курсы', titleTextStyle: {color: 'red'}}
+        						};
+
+        						var chart = new google.visualization.ColumnChart(document.getElementById('chart_divb'+<?= $i ?>));
+        						chart.draw(data, options);
+     			 			}
+    					</script>
+    					<div id="chart_divb<?= $i ?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
+    					<?php
+    				}
+				}
+				//Конец обработки сетки с селекторами
+
+				$i++;
+				?>
+			</div><br><br>
+			<?php
 		}
 		?>
 		</div>

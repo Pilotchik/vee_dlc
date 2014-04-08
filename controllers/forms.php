@@ -78,19 +78,25 @@ class Forms extends CI_Controller {
 	//Функция автосохранения
 	function autosave()
 	{
+		//Проверка введённых данных
 		$this->form_validation->set_rules('id_q', 'ID', 'trim|required|xss_clean|is_natural_no_zero');
 		$this->form_validation->set_rules('val', 'Значение1', 'trim|required|xss_clean');
 		$this->form_validation->set_rules('val2', 'Значение2', 'trim|xss_clean');
+		$this->form_validation->set_rules('val3', 'Значение2', 'trim|xss_clean|is_natural');
 		$this->form_validation->set_rules('form_id', 'Опрос', 'trim|required|xss_clean|is_natural_no_zero');
-		$user_id=$this->session->userdata('user_id');
+		//Получение идентификатора пользователя
+		$user_id = $this->session->userdata('user_id');
+		//Если введённые данные верны, то их обработка
 		if ($this->form_validation->run() == TRUE)
 		{
-			$id_q=$this->input->post('id_q');
-			$value=$this->input->post('val');
-			$value2=$this->input->post('val2');
-			$form_id=$this->input->post('form_id');
+			$id_q = $this->input->post('id_q');
+			$value = $this->input->post('val');
+			$value2 = $this->input->post('val2');
+			$value3 = $this->input->post('val3');
+			$form_id = $this->input->post('form_id');
 			$res_id = $this->forms_model->getResId($form_id,$user_id);
 			$type_q = $this->forms_model->getTypeQuest($id_q);
+			$temp = "";
 			if ($type_q == 1 || $type_q == 3 || $type_q == 4)
 			{
 				//Проверка существования записи
@@ -126,7 +132,24 @@ class Forms extends CI_Controller {
 					$k="upd";
 				}
 			}
-			echo json_encode(array('answer'=>1,'type'=>$k,'q_type'=>$type_q));
+			$temp = $id_q;
+			if ($type_q == 7)
+			{
+				
+				//Проверка существования записи со строкой и столбцом
+				$check = $this->forms_model->getCheckAnswerSetkaSelect($id_q,$res_id,$value,$value2);
+				if ($check == 0)
+				{
+					$this->forms_model->insertAnswerSetkaSelect($id_q,$res_id,$value,$value2,$value3);
+					$k="ins";
+				}
+				else
+				{
+					$this->forms_model->updateAnswerSetkaSelect($id_q,$res_id,$value,$value2,$value3);
+					$k="upd";
+				}
+			}
+			echo json_encode(array('answer'=>1,'type'=>$k,'q_type'=>$type_q,'option'=>$temp));
 		}
 		else
 		{
@@ -203,7 +226,14 @@ class Forms extends CI_Controller {
 				}
 				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
 				{
-					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					if ($data['quest_options1'][$key['id']]['summ'] > 0)
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					}
+					else
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
+					}
 					for ($j=1;$j<5;$j++)
 					{
 						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j]>0)
@@ -376,11 +406,58 @@ class Forms extends CI_Controller {
 				{
 					for($j=0;$j<count($data['quest_options1'][$key['id']]['stolb']);$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j]=round(($data['quest_options1'][$key['id']]['summ_stlb'][$i][$j]/$data['quest_options1'][$key['id']]['summ_str'][$i])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_str'][$i] > 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j]=round(($data['quest_options1'][$key['id']]['summ_stlb'][$i][$j]/$data['quest_options1'][$key['id']]['summ_str'][$i])*100,2);	
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j] = 0;
+						}		
 					}
 				}
 			}
-			//print_r($data['quest_options1'][$key['id']]);
+			//Сетка с селекторами
+			if ($key['type'] == 7)
+			{
+				//получение массива строк
+				$data['quest_options1'][$key['id']]['stroka']=explode(", ",$key['option1']);
+				//получение массива столбцов
+				$data['quest_options1'][$key['id']]['stolb']=explode(", ",$key['option2']);
+				for($i = 0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				{
+					//Определяем среднее значение для всей строки (все курсы)
+					$data['quest_options1'][$key['id']]['row_summ'][$i] = 0;
+					for($k = 1;$k < 5;$k++)
+					{
+						$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] = 0;
+						$data['quest_options1'][$key['id']]['users_count'][$i][$k] = 0;
+					}
+					for($j=0; $j < count($data['quest_options1'][$key['id']]['stolb']); $j++)
+					{
+						//Определяем средний балл по каждой строке и столбцу 
+						$data['quest_options1'][$key['id']]['cell_avg'][$i][$j] = round($this->forms_model->getAVGOptionResultSetkaSelector($key['id'],$i,$j),3);
+						//увеличить сумму всей строки на найденное среднее значение для строки и столбца
+						$data['quest_options1'][$key['id']]['row_summ'][$i] += $data['quest_options1'][$key['id']]['cell_avg'][$i][$j];
+						//Пересчёт средних значений для каждого курса
+						for($k = 1;$k < 5;$k++)
+						{
+							//Увеличить сумму ряда на среднее значение
+							$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] += round($this->forms_model->getAVGOptionResultSetkaSelectorKurs($key['id'],$i,$j,$k),3);
+						}
+					}
+				}
+				//Средние значения для каждой строки
+				for($i=0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				{
+					for($k = 1;$k < 5;$k++)
+					{
+						$data['quest_options1'][$key['id']]['row_avg_kurs'][$i][$k] = round($data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k]/count($data['quest_options1'][$key['id']]['stolb']),3);
+					}
+					//Найти среднее значение строки: поделить накопленное значение на количество столбцов
+					$data['quest_options1'][$key['id']]['avg_str'][$i] = round($data['quest_options1'][$key['id']]['row_summ'][$i]/count($data['quest_options1'][$key['id']]['stolb']),3);
+				}
+			}
 		}
 		$data['error']="";
 		$this->load->view('forms/forms_one_result_view',$data);

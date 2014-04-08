@@ -49,7 +49,7 @@ class Forms_model extends CI_Model{
 		}
 		else
 		{
-			$sql="SELECT * FROM `new_forms` where `active`='1' AND `type_r`='$type_r' and `del`='0' ORDER BY `date` ASC";	
+			$sql="SELECT * FROM `new_forms` where `active`='1' AND `type_r` in ('$type_r','3') AND `del`='0' ORDER BY `date` ASC";	
 		}
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
@@ -304,10 +304,33 @@ class Forms_model extends CI_Model{
 		return $data;
 	}
 
+	//Создание записи об ответе
+	function insertAnswerSetkaSelect($id_q = 1,$res_id = 1,$value = "",$value2 = "",$value3 = 0)
+	{
+		$sql = "INSERT INTO `new_form_answers` (`quest_id`,`res_id`,`answer`,`option`,`option_7`) VALUES ('$id_q','$res_id','$value','$value2','$value3')";
+		$this->db->query($sql);
+	}
+
+	//Обновление записи об ответе
+	function updateAnswerSetkaSelect($id_q = 1,$res_id = 1,$value = "",$value2 = "",$value3 = 0)
+	{
+		$sql="UPDATE `new_form_answers` SET `option_7` = '$value3' WHERE `quest_id`='$id_q' AND `res_id`='$res_id' AND `answer` = '$value' AND `option` = '$value2'";
+		$this->db->query($sql);
+	}
+
 	//Проверка, сдавался ли вопрос
 	function getCheckAnswerSetka($id_q="",$res_id="",$value="")
 	{
 		$sql="SELECT * FROM `new_form_answers` WHERE `quest_id`='$id_q' AND `res_id`='$res_id' AND `answer`='$value'";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		return count($data);
+	}
+
+	//Проверка давался ли ответ для вопроса типа "сетка с селекторами"
+	function getCheckAnswerSetkaSelect($id_q = 1,$res_id = 1,$value = 0,$value2 = 0)
+	{
+		$sql="SELECT `id` FROM `new_form_answers` WHERE `quest_id`='$id_q' AND `res_id`='$res_id' AND `answer`='$value' AND `option`='$value2' LIMIT 1";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return count($data);
@@ -424,6 +447,42 @@ class Forms_model extends CI_Model{
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return count($data);
+	}
+
+	//Получение среднего значения результата на пересечении строки и столбца
+	function getAVGOptionResultSetkaSelector($quest_id = 1,$answer = 0,$option = 0)
+	{
+		$sql="SELECT AVG(`option_7`) as avg FROM `new_form_answers` WHERE `quest_id`='$quest_id' AND `answer`='$answer' AND `option`='$option'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['avg'];
+	}
+
+	//Посчитать среднее значение ячейки для каждого курса
+	function getAVGOptionResultSetkaSelectorKurs($quest_id = 1,$answer = 0,$option = 0,$kurs = 1)
+	{
+		$kurs = $kurs."__";
+		$sql="SELECT `id` FROM `new_numbers` WHERE `type_r`='1' AND `name_numb` LIKE '$kurs' ORDER BY `name_numb` ASC";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		$numbers="(";
+		foreach ($data as $key)
+		{
+			$numbers=$numbers.$key['id'].",";
+		}
+		$numbers=substr($numbers, 0, -1);
+		$numbers = $numbers.")";
+		$sql="SELECT AVG(`option_7`) as avg FROM `new_form_answers` WHERE `quest_id`='$quest_id' AND `answer`='$answer' AND `option`='$option' AND `res_id` IN (SELECT `id` FROM `new_form_results` WHERE `person_id` IN (SELECT `id` FROM `new_persons` WHERE `numbgr` in $numbers))";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		if (isset($data[0]['avg']))
+		{
+			return $data[0]['avg'];
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	//Получение ID пользователей, ответивших на сетку

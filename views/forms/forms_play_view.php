@@ -208,6 +208,58 @@
 				}
 			}
 
+			//Обработка нажатия на ячейке для заданий типа 7 (сетка с селекторами)
+			function click_grid(id,step)	
+			{
+				var val = $("#div_"+id).html();	//получаем значение ячейки
+				//формируем код текстового поля
+				var code = '<select onChange="fix_grid(\''+id+'\','+step+')" id="sel_'+id+'"><option value="?"></option><option value="?">Не знаю</option>';
+				for (i = 0; i <= step; i++)
+				{
+					if (i != val)
+					{
+						code += '<option value="'+i+'">'+i+'</option>';
+					}
+					else
+					{
+						code += '<option value="'+i+'" selected>'+i+'</option>';
+					}
+				}
+				code += '</select>';
+				//удаляем содержимое ячейки, вставляем в нее сформированное поле
+				$("#td_"+id).html(code);
+				$("#sel"+id).click();
+			}
+
+			//Функция обработки SELECT`а и отправки данных в БД
+			function fix_grid(id,step)
+			{
+				var user_select = $("#sel_"+id).val();
+				if ( user_select != "?")
+				{
+					//Разбить строку id на массив по делителю "_"
+					id_array = id.split("_");
+					//Получение номера вопроса
+					nomer = id_array[0];
+					var nom = parseInt(nomer);
+					//Добавление вопроса в список сданных (для проверки его обязательности)
+					sdan.push(nom);
+					//Изменение цвета фона вопроса
+					$('.rootid').eq(nom).css({"background":"#bef574"});
+					//Получить id вопроса
+					var quest_id = $("#quest_id_"+nomer).html();
+					strk = id_array[1];
+					stlb = id_array[2];
+					//Отправить данные в БД
+					$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?= $form_id ?>,val3:user_select},function(data,status){
+					if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+					else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
+					})
+				}
+				var code = '<div  style="cursor:pointer;font-weight: bold;font-size: 14px;" id="div_'+id+'" onClick="click_grid(\''+id+'\','+step+')">'+$("#sel_"+id).val()+'</div>';
+				$("#td_"+id).html(code);
+			}
+
 		</script>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
   		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -305,6 +357,7 @@
 					<div id="root" class="rootid" style="width:800;margin:10px 0 0 0;">
 						<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
 						<h3><?= $key['title'] ?></h3>
+						<span style="display:none;" id="quest_id_<?= $i ?>"><?= $key['id'] ?></span>
 						<div class="alert" style="margin:5px 0 5px 0;"><?= $key['subtitle'] ?></div>
 					<?php
 					if ($key['type'] == 1)
@@ -379,6 +432,7 @@
 						</table>
 						<?php
 					}
+					//Сетка с радиокнопками-переключателями
 					if ($key['type'] == 5)
 					{
 						$arr_elem_str = explode(", ",$key['option1']);
@@ -411,11 +465,62 @@
 								<?php
 							}
 							?>
-							<td><div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')"><i class="icon-remove"></i></div></td>
+							<td><div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')" style="cursor:pointer;"><i class="icon-remove"></i></div></td>
 							</tr>
 							<?php
 						}
 						?></table><?php
+					}
+					//Сетка с селекторами в ячейках
+					if ($key['type'] == 7)
+					{
+						//Получение массива строк таблицы
+						$arr_elem_str = explode(", ",$key['option1']);
+						//Получение массива столбцов
+						$arr_elem_stlb = explode(", ",$key['option2']);
+						//Получение степени соответствия
+						$step = $key['option3'];
+						?>
+						<table class="sortable" id="table_<?= $i ?>" style="font-size:10px;width=100%">
+							<tr>
+								<td>&nbsp;</td>
+								<?php
+								for ($k=0;$k<count($arr_elem_stlb);$k++)
+								{
+									?>
+									<td><?= $arr_elem_stlb[$k] ?></td>
+									<?php
+								}
+								?>
+								<td>Не оценить</td>
+							</tr>
+							<?php
+							for ($k=0;$k<count($arr_elem_str);$k++)
+							{
+								?>
+								<tr id="tr_<?= $i ?>_<?= $k ?>">
+									<td><?= $arr_elem_str[$k] ?></td>
+									<?php
+									for ($j=0;$j<count($arr_elem_stlb);$j++)
+									{
+										?>
+										<td id="td_<?= $i ?>_<?= $k ?>_<?= $j ?>">
+											<div  style="cursor:pointer;" id="div_<?= $i ?>_<?= $k ?>_<?= $j ?>" onClick="click_grid('<?= $i ?>_<?= $k ?>_<?= $j ?>',<?= $step ?>)">
+												?
+											</div>
+										</td>
+										<?php
+									}
+									?>
+									<td>
+										<div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')" style="cursor:pointer;"><i class="icon-remove"></i></div>
+									</td>
+								</tr>
+								<?php
+							}
+							?>
+						</table>
+						<?php
 					}
 					if ($key['type'] == 6)
 					{
@@ -425,7 +530,7 @@
 						for ($k=0;$k<count($arr_elem_id);$k++)
 						{
 							?>
-							<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-primary" value="<?= $arr_elem_str[$k] ?>" onClick="next_site(<?= $key2['id'] ?>, <?= $arr_elem_id[$k] ?>, <?= $site_numb ?>)"><br>
+							<input type="button" style="width:350px;margin:10px 0 10px 0;" class="btn btn-primary" value="<?= $arr_elem_str[$k] ?>" onClick="next_site(<?= $key2['id'] ?>, <?= $arr_elem_id[$k] ?>, <?= $site_numb ?>)"><br>
 							<?php
 						}
 					}

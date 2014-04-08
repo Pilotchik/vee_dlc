@@ -133,7 +133,7 @@ class Forms_admin extends CI_Controller {
 			$value=$this->input->post('c_value');
 			$param=$this->input->post('c_param');
 			$this->forms_model->editQuest($id_c,$value,$param);
-			$error = "Вопрос анкеты обновлён";
+			$error = "";
 		}
 		$this->quest_view($error);
 	}
