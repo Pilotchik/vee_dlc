@@ -169,7 +169,7 @@ class Forms extends CI_Controller {
 		if ($check == 0)
 		{
 			//запись времени об окончании анкетирования
-			$now_time=time();
+			$now_time = time();
 			$user_id=$this->session->userdata('user_id');
 			$this->forms_model->updateFormResult($user_id,$form_id,$now_time);
 		}

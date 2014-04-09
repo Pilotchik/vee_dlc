@@ -72,11 +72,43 @@ class Stat_site extends CI_Controller {
 		$data['log_3']=$this->stat_site_model->getLogs($time1,$time2,3);
 		//Получение количества скорректированных результатов
 		$data['proz_corr']=$this->stat_site_model->getCountCorr();
-		$temp=$this->stat_site_model->getCountCorrPlus();
-		$temp=ceil(($temp/$data['proz_corr'])*100);
-		$data['proz_corr_plus']=$temp;
+		$temp = $this->stat_site_model->getCountCorrPlus();
+		$temp = ceil(($temp/$data['proz_corr'])*100);
+		$data['proz_corr_plus'] = $temp;
+		
+		/*--------Коэффициент качества --------*/
+
+		//Коээфициенты качества
+		$data['qual_statuses'] = $this->stat_site_model->getQualStatuses();
+		//Количество коэффициентов качества
+		$data['qual_statuses_count'] = count($data['qual_statuses']);
+		//Распределение коэффициента качества
+		$data['qual_statuses_spreading'] = array();
+		for ($i = 0; $i < 20; $i++)
+		{
+			$data['qual_statuses_spreading'][$i] = 0;
+		}
+		foreach ($data['qual_statuses'] as $key) 
+		{
+			for ($i = 0; $i < 10; $i++)
+			{
+				if ($key['qual_status'] > $i*20 && $key['qual_status'] <= ($i+1)*20)
+				{
+					$data['qual_statuses_spreading'][$i] += 1;
+					break;
+				}
+			}	
+		}
+		$data['qual_statuses_spreading_string'] = "";
+		for ($i = 0; $i < 10; $i++)
+		{
+			$j = $i*20;
+			$data['qual_statuses_spreading_string'] .= "['".$j."',".$data['qual_statuses_spreading'][$i]."],";
+		}
+		$data['qual_statuses_spreading_string'] = substr($data['qual_statuses_spreading_string'],0,-1);
 		//Количество активных пользователей, начинающиеся с vk_
 		$data['vk_users']=$this->stat_site_model->getVkUsers();
+		
 		//Количество активных пользователей, которые зарегистрировались не через ВКонтакте
 		$data['nvk_users']=$this->stat_site_model->getNotVkUsers();
 		//Получение количества тестов в указанном диапазоне дат

@@ -208,6 +208,7 @@
 				}
 			?>
 
+
 			function func_remove_tr(tr_id,req_status,table_id)
 			{
 				if (req_status == 1)
@@ -216,6 +217,10 @@
 					{
 						$("#"+tr_id).remove();
 					}
+				}
+				else
+				{
+					$("#"+tr_id).remove();
 				}
 			}
 
@@ -230,7 +235,7 @@
 				//Добавление вопроса в список сданных (для проверки его обязательности)
 				sdan.push(i);
 				//Изменение цвета фона вопроса
-				$('.rootid').eq(i).css({"background":"#bef574"});
+				$('.rootid').eq(i).css({"background":"#2ECC71"});
 				//Получить id вопроса
 				var quest_id = $("#quest_id_"+i).html();
 				//Отправить данные в БД
@@ -284,7 +289,7 @@
 				</div>
 		<!--Конец модального окна -->
 		<center>
-		<div id="root" style="width:800;margin:30px 0 10px 0;">
+		<div id="root" style="width:90%;margin:30px 0 10px 0;">
 			<h3><?= $form_name ?></h3>
 		</div>
 		<form autocomplete="off" action="<?php echo base_url();?>forms/form_itog/<?php echo $form_id;?>" method="post" name="testForm" id="testFormId"></form>
@@ -310,7 +315,7 @@
 			$style = ($site_numb == 0 ? " " : "display:none;");
 			?>
 			<div style="margin-bottom:30px;<?= $style ?>"; id="site<?= $key2['id'] ?>">
-				<div id="root" style="width:800;margin:30px 0 10px 0;">
+				<div id="root" style="width:90%;margin:30px 0 10px 0;">
 					<h4><?= $key2['title'] ?></h4>
 				</div>
 				<?php
@@ -337,7 +342,7 @@
 					}
 					?>
 					<center>
-					<div id="root" class="rootid" style="width:800;margin:10px 0 0 0;">
+					<div id="root" class="rootid" style="width:90%;margin:10px 0 0 0;">
 						<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
 						<h3><?= $key['title'] ?></h3>
 						<span style="display:none;" id="quest_id_<?= $i ?>"><?= $key['id'] ?></span>
@@ -496,8 +501,8 @@
 												$popover_body = $popover_body."<button class='btn btn-small' onClick='fix_grid_pop($i,$k,$j,$oz)'>".$oz."</button>";
 											}
 											?>
-											<a class="what1" data-toggle="popover" data-placement="bottom" data-content="
-											<div class=btn-group data-toggle=buttons-radio>
+											<a class="what1" style="cursor:pointer;" data-toggle="popover" data-placement="bottom" data-content="
+											Оценка: <div class=btn-group data-toggle=buttons-radio>
 												<button class='btn btn-small' onClick='closePopover()'>?</button>
 												<?= $popover_body ?>
 											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>"><i class="icon-question-sign"></i></a>

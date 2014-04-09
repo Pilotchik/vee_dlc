@@ -389,9 +389,9 @@ class Stat extends CI_Controller {
 			foreach ($students as $key) 
 			{
 				//Относительный результат каждого
-				$summ[$key['id']]['balls']=round($summ[$key['id']]['summ']/$m,2);
+				$summ[$key['id']]['balls'] = round($summ[$key['id']]['summ']/$m,2);
 				//Заполнение распределения
-				$temp=$summ[$key['id']]['balls']*100;
+				$temp = $summ[$key['id']]['balls']*100;
 				//Формирование данных длая графика распределения
 				
 				for ($i=0;$i<10;$i++)
@@ -469,9 +469,9 @@ class Stat extends CI_Controller {
 			{
 				foreach ($quests as $key2)
 				{
-					$zadanie[$key2['id']]['disp']=$zadanie[$key2['id']]['balls']*(1-$zadanie[$key2['id']]['balls']);
+					$zadanie[$key2['id']]['disp'] = $zadanie[$key2['id']]['balls']*(1-$zadanie[$key2['id']]['balls']);
 					//Стандартное отклонение по заданиям
-						$zadanie[$key2['id']]['otkl']=sqrt($zadanie[$key2['id']]['disp']);
+						$zadanie[$key2['id']]['otkl'] = sqrt($zadanie[$key2['id']]['disp']);
 				}
 			}
 			//Корелляционная связь задания с суммой баллов за весь тест (по Пирсону)
@@ -536,7 +536,9 @@ class Stat extends CI_Controller {
 					}
 				}
 			}
+			
 			/*------Вычисление коэффициента качества теста */
+
 			//Отношение забракованных ко всем заданиям (с округлением до 2 знаков после запятой)
 			$valid_coeff = round(($bad_quests['edit']/count($zadanie))*100,2);
 			//коэффициент равномерности распределения заданий по уровню сложности
@@ -562,8 +564,10 @@ class Stat extends CI_Controller {
 			//Коэффициент качества теста
 			$data['valid_coeff'] = $diff_var + $valid_coeff;
 
-			/*------Конец вычисления коэффициента валидности */
-			$this->stat_model->editStatDate($this->uri->segment(3));
+			/*------Конец вычисления коэффициента качества */
+
+			//Запись времени и коэффициента качества заданий
+			$this->stat_model->editStatParams($this->uri->segment(3),$data['valid_coeff']);
 			$data['raspr'] = $raspr;
 			$data['bad_quests'] = $bad_quests;
 			$data['korel'] = $korel;

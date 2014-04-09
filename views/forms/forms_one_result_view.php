@@ -522,7 +522,7 @@
 		?>
 		<div id="vk_comments" style="margin:20px auto;"></div>
 		<script type="text/javascript">
-		VK.Widgets.Comments("vk_comments", {limit: 30, width: "520", attach: "graffiti,photo,link"});
+		VK.Widgets.Comments("vk_comments", {limit: 30, width: "700", attach: "graffiti,photo,link"});
 		</script>
 		</div>
 	</body>

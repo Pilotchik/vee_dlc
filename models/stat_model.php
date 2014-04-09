@@ -156,12 +156,11 @@ class Stat_model extends CI_Model{
 	}
 		
 	//Запись даты последнего сбора статистики
-	function editStatDate($test_id="")
+	function editStatParams($test_id = 1, $qual_status = 0)
 	{
 		$date_t=date("Y.m.d H:i");
-		$sql="UPDATE `new_razd` SET `stat_date`='$date_t' WHERE `id`='$test_id'";
-		$data = $this->db->query($sql);
-		return $data;	
+		$sql="UPDATE `new_razd` SET `stat_date`='$date_t',`qual_status`='$qual_status' WHERE `id`='$test_id'";
+		$this->db->query($sql);
 	}
 
 	function updateTestMultiplicity($razd_id="",$abs="",$time_avg="")

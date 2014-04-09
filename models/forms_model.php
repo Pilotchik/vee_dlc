@@ -511,7 +511,7 @@ class Forms_model extends CI_Model{
 		$now_time=time();
 		$type="Пройден опрос \"".$form_name."\"";
 		$date_t=date("Y.m.d H:i");
-		$sql = "INSERT INTO `new_log` (`user`,`date`,`type`,`time`) VALUES ('$name','$date_t','$type','$now_time')";
+		$sql = "INSERT INTO `new_log` (`user`,`date`,`type`,`time`,`status`) VALUES ('$name','$date_t','$type','$now_time','1')";
 		$data = $this->db->query($sql);
 		return $data;
 	}
