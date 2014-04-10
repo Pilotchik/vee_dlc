@@ -84,9 +84,11 @@ class Stat_site extends CI_Controller {
 		$data['qual_statuses_count'] = count($data['qual_statuses']);
 		//Распределение коэффициента качества
 		$data['qual_statuses_spreading'] = array();
-		for ($i = 0; $i < 20; $i++)
+		$data['qual_statuses_equability'] = array();
+		for ($i = 0; $i < 10; $i++)
 		{
 			$data['qual_statuses_spreading'][$i] = 0;
+			$data['qual_statuses_equability'][$i] = 0;
 		}
 		foreach ($data['qual_statuses'] as $key) 
 		{
@@ -97,15 +99,19 @@ class Stat_site extends CI_Controller {
 					$data['qual_statuses_spreading'][$i] += 1;
 					break;
 				}
+				if ($key['equability'] > $i*20 && $key['equability'] <= ($i+1)*20)
+				{
+					$data['qual_statuses_equability'][$i] += 1;			
+				}
 			}	
 		}
-		$data['qual_statuses_spreading_string'] = "";
+		$data['qual_statuses_string'] = "";
 		for ($i = 0; $i < 10; $i++)
 		{
 			$j = $i*20;
-			$data['qual_statuses_spreading_string'] .= "['".$j."',".$data['qual_statuses_spreading'][$i]."],";
+			$data['qual_statuses_string'] .= "['".$j."',".$data['qual_statuses_spreading'][$i].",".$data['qual_statuses_equability'][$i]."],";
 		}
-		$data['qual_statuses_spreading_string'] = substr($data['qual_statuses_spreading_string'],0,-1);
+		$data['qual_statuses_string'] = substr($data['qual_statuses_string'],0,-1);
 		//Количество активных пользователей, начинающиеся с vk_
 		$data['vk_users']=$this->stat_site_model->getVkUsers();
 		

@@ -130,7 +130,7 @@ class Stat_site_model extends CI_Model{
 
 	function getQualStatuses()
 	{
-		$sql = "SELECT `qual_status` FROM `new_razd` WHERE `del`='0' AND `active`='1' AND `qual_status`>0 AND `qual_status`!='100'";
+		$sql = "SELECT `qual_status`,`equability` FROM `new_razd` WHERE `del`='0' AND `active`='1' AND `qual_status`>0 AND `qual_status`!='100'";
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
 		return $data;

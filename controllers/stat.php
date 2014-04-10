@@ -559,15 +559,15 @@ class Stat extends CI_Controller {
 			$diff_disp = round($diff_disp/4,2);
 			//3. Стандартное отклонение - корень из дисперсии
 			$diff_otkl = round(sqrt($diff_disp),2);
-			//4. Коэффициент вариации
-			$diff_var = round(($diff_otkl/$diff_avg)*100,2);
+			//4. Коэффициент вариации (степень равномерности)
+			$equability = round(($diff_otkl/$diff_avg)*100,2);
 			//Коэффициент качества теста
-			$data['valid_coeff'] = $diff_var + $valid_coeff;
+			$data['valid_coeff'] = $equability + $valid_coeff;
 
 			/*------Конец вычисления коэффициента качества */
 
-			//Запись времени и коэффициента качества заданий
-			$this->stat_model->editStatParams($this->uri->segment(3),$data['valid_coeff']);
+			//Запись времени, коэффициента качества заданий и коэффициента вариации (для измерения степень равномерности распределения заданий по уровням сложности)
+			$this->stat_model->editStatParams($this->uri->segment(3),$data['valid_coeff'],$equability);
 			$data['raspr'] = $raspr;
 			$data['bad_quests'] = $bad_quests;
 			$data['korel'] = $korel;
