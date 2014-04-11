@@ -99,7 +99,7 @@ class Stat_site extends CI_Controller {
 					$data['qual_statuses_spreading'][$i] += 1;
 					break;
 				}
-				if ($key['equability'] > $i*20 && $key['equability'] <= ($i+1)*20)
+				if ($key['equability'] > $i*20 && $key['equability'] <= ($i+1)*20 && $key['equability'] <= 100)
 				{
 					$data['qual_statuses_equability'][$i] += 1;			
 				}

@@ -260,11 +260,12 @@ class Forms_admin extends CI_Controller {
 
 	function view_one_result()
 	{
-		$form_id = $this->uri->segment(3);
+				$form_id = $this->uri->segment(3);
+		$data['title'] = "ВОС.Результаты анкетирования";
 		$data['form_name']=$this->forms_model->getFormName($form_id);
-		$data['form_access']=$this->forms_model->getFormAccess($form_id);
 		//Получить ID образовательное учреждение
 		$data['form_ou']=$this->forms_model->getFormOU($form_id);
+		$data['form_access']=$this->forms_model->getFormAccess($form_id);
 		$data['form_id'] = $form_id;
 		$data['form_quests'] = $this->forms_model->getAllActiveQuests($form_id);
 		foreach($data['form_quests'] as $key)
@@ -306,10 +307,24 @@ class Forms_admin extends CI_Controller {
 				}
 				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
 				{
-					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					if ($data['quest_options1'][$key['id']]['summ'] > 0)
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					}
+					else
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
+					}
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j]>0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
 						//echo $data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
 					}
 				}
@@ -362,7 +377,14 @@ class Forms_admin extends CI_Controller {
 					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] > 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
 						//echo $key['id']." -> ".$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
 					}
 				}
@@ -412,10 +434,25 @@ class Forms_admin extends CI_Controller {
 				}
 				for($i=1;$i<=$key['option3'];$i++)
 				{
-					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					if ($data['quest_options1'][$key['id']]['summ'] != 0)
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					}
+					else
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
+					}
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] != 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);	
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
+						
 					}
 				}
 			}
@@ -465,11 +502,58 @@ class Forms_admin extends CI_Controller {
 				{
 					for($j=0;$j<count($data['quest_options1'][$key['id']]['stolb']);$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j]=round(($data['quest_options1'][$key['id']]['summ_stlb'][$i][$j]/$data['quest_options1'][$key['id']]['summ_str'][$i])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_str'][$i] > 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j]=round(($data['quest_options1'][$key['id']]['summ_stlb'][$i][$j]/$data['quest_options1'][$key['id']]['summ_str'][$i])*100,2);	
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j] = 0;
+						}		
 					}
 				}
 			}
-			//print_r($data['quest_options1'][$key['id']]);
+			//Сетка с селекторами
+			if ($key['type'] == 7)
+			{
+				//получение массива строк
+				$data['quest_options1'][$key['id']]['stroka']=explode(", ",$key['option1']);
+				//получение массива столбцов
+				$data['quest_options1'][$key['id']]['stolb']=explode(", ",$key['option2']);
+				for($i = 0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				{
+					//Определяем среднее значение для всей строки (все курсы)
+					$data['quest_options1'][$key['id']]['row_summ'][$i] = 0;
+					for($k = 1;$k < 5;$k++)
+					{
+						$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] = 0;
+						$data['quest_options1'][$key['id']]['users_count'][$i][$k] = 0;
+					}
+					for($j=0; $j < count($data['quest_options1'][$key['id']]['stolb']); $j++)
+					{
+						//Определяем средний балл по каждой строке и столбцу 
+						$data['quest_options1'][$key['id']]['cell_avg'][$i][$j] = round($this->forms_model->getAVGOptionResultSetkaSelector($key['id'],$i,$j),3);
+						//увеличить сумму всей строки на найденное среднее значение для строки и столбца
+						$data['quest_options1'][$key['id']]['row_summ'][$i] += $data['quest_options1'][$key['id']]['cell_avg'][$i][$j];
+						//Пересчёт средних значений для каждого курса
+						for($k = 1;$k < 5;$k++)
+						{
+							//Увеличить сумму ряда на среднее значение
+							$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] += round($this->forms_model->getAVGOptionResultSetkaSelectorKurs($key['id'],$i,$j,$k),3);
+						}
+					}
+				}
+				//Средние значения для каждой строки
+				for($i=0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				{
+					for($k = 1;$k < 5;$k++)
+					{
+						$data['quest_options1'][$key['id']]['row_avg_kurs'][$i][$k] = round($data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k]/count($data['quest_options1'][$key['id']]['stolb']),3);
+					}
+					//Найти среднее значение строки: поделить накопленное значение на количество столбцов
+					$data['quest_options1'][$key['id']]['avg_str'][$i] = round($data['quest_options1'][$key['id']]['row_summ'][$i]/count($data['quest_options1'][$key['id']]['stolb']),3);
+				}
+			}
 		}
 		$data['error']="";
 		$this->load->view('forms/forms_one_result_view',$data);

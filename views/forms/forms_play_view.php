@@ -86,7 +86,7 @@
 					{
 						//Заблокировать конкретный чекбокс
 						$(str).attr('disabled', 'disabled');
-						$('.rootid').eq(nom).css({"background":"#bef574"});
+						$('.rootid').eq(nom).css({"background":"#2ECC71"});
 						var quest_id=id_q;
 						$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 						if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -120,7 +120,7 @@
 				str='.rad'+nomer;
 				$(str).removeAttr("checked");
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#bef574"});
+				$('.rootid').eq(nom).css({"background":"#2ECC71"});
 				value=$(value).val();
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
@@ -140,7 +140,7 @@
 			{
 				sdan.push(nomer);
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#bef574"});
+				$('.rootid').eq(nom).css({"background":"#2ECC71"});
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?php echo $form_id; ?>},function(data,status){
 				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -186,7 +186,7 @@
 								slide: function( event, ui ) {";?>
 									sdan.push(<?php echo $i; ?>);
 									var nom = parseInt(<?php echo $i; ?>);
-									$('.rootid').eq(nom).css({"background":"#bef574"});
+									$('.rootid').eq(nom).css({"background":"#2ECC71"});
 									var quest_id=<?php echo $key['id'];?>;
 									$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:ui.value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 										if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}

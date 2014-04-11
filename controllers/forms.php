@@ -181,6 +181,7 @@ class Forms extends CI_Controller {
 	function view_one_result()
 	{
 		$form_id = $this->uri->segment(3);
+		$data['title'] = "ВОС.Результаты анкетирования";
 		$data['form_name']=$this->forms_model->getFormName($form_id);
 		//Получить ID образовательное учреждение
 		$data['form_ou']=$this->forms_model->getFormOU($form_id);
