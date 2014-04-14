@@ -54,7 +54,7 @@
 					{
 				   		if (sdan.indexOf(req[site_numb][i])<0) 
 				   		{
-				   			$('.rootid').eq(req[site_numb][i]).css({"background":"#e75480"});
+				   			$('.rootid').eq(req[site_numb][i]).css({"background":"#eedc82"});
 				   		}
 					}
 					return 0;
@@ -68,7 +68,7 @@
 			
 			function postAjax(id_q,value,nomer)
 			{
-				sdan.push(nomer);
+				if (!(nomer in sdan)) {sdan.push(nomer);}
 				var nom = parseInt(nomer);
 				str='input[name='+nomer+'_'+value+']';
 				str_class=nomer+'_class';
@@ -81,33 +81,42 @@
 						//Заблокировать все чекбоксы
 						$(str).removeAttr('checked');
 						$(str_class).attr('disabled', 'disabled');
+						quest_value[nomer].splice(quest_value[nomer].indexOf(value), 1);
 					}
 					else
 					{
 						//Заблокировать конкретный чекбокс
-						$(str).attr('disabled', 'disabled');
-						$('.rootid').eq(nom).css({"background":"#2ECC71"});
+						//$(str).attr('disabled', 'disabled');
+						$('.rootid').eq(nom).css({"background":"#6b8e23"});
 						var quest_id=id_q;
-						$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
+						$.post ('<?= base_url() ?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?= $form_id ?>},function(data,status){
 						if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
-						else
-						{
-							eval('var obj='+data);
-							if (obj.answer==0)
-							{
-								alert('Ответ не сохранился');
-							}
-						}
-						})
+						else {eval('var obj='+data); if (obj.answer==0)	{alert('Ответ не сохранился');}	}})
 					}
 				}
+				else
+				{
+					//удалить значение из массива
+					quest_value[nomer].splice(quest_value[nomer].indexOf(value), 1);
+					//удалить значение из БД
+					$.post ('<?= base_url() ?>forms/autosave2',{id_q:id_q,val:value,form_id:<?= $form_id ?>},function(data,status){
+					if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+					else {eval('var obj='+data); if (obj.answer==0)	{alert('Ответ не сохранился');}	}})
+					//если оказалось, что массив стал пустым, то удалить номер вопроса из массива сданных sdan
+					if (quest_value[nomer].length == 0)
+					{
+						sdan.splice(sdan.indexOf(nomer), 1);
+						$('.rootid').eq(nom).css({"background":"white"});
+					}
+				}
+				console.log(sdan);
 			}
 
 			function postAjax_radio(id_q,value,nomer)
 			{
 				sdan.push(nomer);
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#bef574"});
+				$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -120,7 +129,7 @@
 				str='.rad'+nomer;
 				$(str).removeAttr("checked");
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#2ECC71"});
+				$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				value=$(value).val();
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
@@ -140,7 +149,7 @@
 			{
 				sdan.push(nomer);
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#2ECC71"});
+				$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?php echo $form_id; ?>},function(data,status){
 				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -186,7 +195,7 @@
 								slide: function( event, ui ) {";?>
 									sdan.push(<?php echo $i; ?>);
 									var nom = parseInt(<?php echo $i; ?>);
-									$('.rootid').eq(nom).css({"background":"#2ECC71"});
+									$('.rootid').eq(nom).css({"background":"#6b8e23"});
 									var quest_id=<?php echo $key['id'];?>;
 									$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:ui.value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 										if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -198,7 +207,7 @@
 
 						echo "max_args[$i] = 100; quest_value[$i] = [];";
 
-						if ($key['type']==2 && $key['option3']!=0)
+						if ($key['type'] == 2 && $key['option3']!= 0)
 						{
 							echo "max_args[$i] = ".$key['option3']."; ";
 						}
@@ -235,7 +244,7 @@
 				//Добавление вопроса в список сданных (для проверки его обязательности)
 				sdan.push(i);
 				//Изменение цвета фона вопроса
-				$('.rootid').eq(i).css({"background":"#2ECC71"});
+				$('.rootid').eq(i).css({"background":"#6b8e23"});
 				//Получить id вопроса
 				var quest_id = $("#quest_id_"+i).html();
 				//Отправить данные в БД
@@ -397,7 +406,7 @@
 					{
 						$arr_elem = explode(", ",$key['option1']);
 						?>
-						<table style=font-size:11px;>
+						<table style="font-size:12px;">
 						<?php
 						for($k=0;$k<count($arr_elem);$k++)
 						{
@@ -550,7 +559,7 @@
 				{
 					?>
 					<center>
-					<div id="root" style="width:800;margin:10px 0 0 0;">
+					<div id="root" style="width:90%;margin:10px 0 0 0;">
 						<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-inverse" value="Завершить" onClick="javascript: func_ok(<?= $site_numb ?>,'end')">
 					</div>
 					</center>

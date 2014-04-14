@@ -158,6 +158,31 @@ class Forms extends CI_Controller {
 		}
 	}
 
+	function autosave2()
+	{
+		//Проверка введённых данных
+		$this->form_validation->set_rules('id_q', 'ID', 'trim|required|xss_clean|is_natural_no_zero');
+		$this->form_validation->set_rules('val', 'Значение1', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('form_id', 'Опрос', 'trim|required|xss_clean|is_natural_no_zero');
+		//Получение идентификатора пользователя
+		$user_id = $this->session->userdata('user_id');
+		//Если введённые данные верны, то их обработка
+		if ($this->form_validation->run() == TRUE)
+		{
+			$id_q = $this->input->post('id_q');
+			$value = $this->input->post('val');
+			$form_id = $this->input->post('form_id');
+			$res_id = $this->forms_model->getResId($form_id,$user_id);
+			//удалить элемент из базы
+			$this->forms_model->delUserAnswer($id_q,$res_id,$value);
+			echo json_encode(array('answer'=>1, 'option'=>"del"));
+		}
+		else
+		{
+			echo json_encode(array('answer'=>0));
+		}
+	}
+
 	function form_itog()
 	{
 		$form_id = $this->uri->segment(3);

@@ -467,6 +467,12 @@ class Forms_model extends CI_Model{
 		return $query->result_array();
 	}
 
+	function delUserAnswer($id_q = 1,$res_id = 1,$value = 1)
+	{
+		$sql = "DELETE FROM `new_form_answers` WHERE `res_id`='$res_id' AND `quest_id`='$id_q' AND `answer`='$value'";
+		$this->db->query($sql);
+	}
+
 	function getUserByResId($res_id="")
 	{
 		$sql="SELECT `person_id` FROM `new_form_results` WHERE `id` ='$res_id'";
