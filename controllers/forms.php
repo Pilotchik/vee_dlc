@@ -26,6 +26,7 @@ class Forms extends CI_Controller {
 	function index()
 	{
 		$data['error'] = "";
+		$data['title'] = "ВОС.Анкетирование";
 		$type_r = $this->session->userdata('type_r');
 		$data['open_forms']=$this->forms_model->getTypeRForms($type_r);
 		foreach ($data['open_forms'] as $key)
@@ -262,16 +263,35 @@ class Forms extends CI_Controller {
 					$i++;
 				}
 			}
+			//Выбор нескольких
 			if ($key['type'] == 2)
 			{
-				$data['quest_options1'][$key['id']]['quest']=explode(", ",$key['option1']);
-				$data['quest_options1'][$key['id']]['summ'] = 0;
+				//Массив значений
+				$data['quest_options1'][$key['id']]['quest'] = explode(", ",$key['option1']);
 				$data['quest_options1'][$key['id']]['summ'] = $this->forms_model->getCountUniqOptionResult($key['id']);
+				
+				$count_punkts = (int) $key['option3'];
+				
 				//Сумма по курсам
 				for($j=1;$j<5;$j++)
 				{
 					$data['quest_options1'][$key['id']]['summ_kurs'][$j] = 0;
 				}
+
+				//Получить мощность ответа каждого пользователя, если у вопроса было ограничение на количество отмечаемых пунктов
+				if ($count_punkts > 0)
+				{
+					$user_answer_balls = array();
+					//получить все res_id, которые участвовали в ответе на вопрос
+					$all_quest_res = $this->forms_model->getAllResIdOptionResult($key['id']);
+					//Для каждого res_id определить количество ответов 
+					foreach ($all_quest_res as $key2) 
+					{
+						$count_answers = $this->forms_model->getCountUserAnswers($key['id'],$key2['res_id']);
+						$user_answer_balls[$key2['res_id']] = round($count_punkts/$count_answers,2);
+					}
+				}
+
 				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
 				{
 					$data['quest_options1'][$key['id']]['answers'][$i]=$this->forms_model->getCountOptionResult($key['id'],$i);
@@ -291,6 +311,20 @@ class Forms extends CI_Controller {
 						}
 						$data['quest_options1'][$key['id']]['users'][$i]=substr($user_string, 0, -2);
 					}
+					
+					if ($count_punkts > 0)
+					{
+						$data['quest_options1'][$key['id']]['ball_answers'][$i] = 0;
+						//Найти все res_id, на этот вопрос и отмечал этот пункт
+						$all_punkt_res = $this->forms_model->getPunktResIdOptionResult($key['id'],$i);
+						//Увеличить количество баллов на цену ответа каждого пользователя
+						foreach ($all_punkt_res as $key2) 
+						{
+							//количество ответов пользователя в вопросе	
+							$data['quest_options1'][$key['id']]['ball_answers'][$i] += $user_answer_balls[$key2['res_id']];
+						}
+					}
+
 				}
 				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
 				{
@@ -321,6 +355,7 @@ class Forms extends CI_Controller {
 					}
 					$i++;
 				}
+
 			}
 			//Шкала
 			if ($key['type'] == 4)
@@ -354,10 +389,25 @@ class Forms extends CI_Controller {
 				}
 				for($i=1;$i<=$key['option3'];$i++)
 				{
-					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					if ($data['quest_options1'][$key['id']]['summ'] != 0)
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
+					}
+					else
+					{
+						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
+					}
 					for ($j=1;$j<5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
+						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] != 0)
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);	
+						}
+						else
+						{
+							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
+						}
+						
 					}
 				}
 			}

@@ -225,8 +225,15 @@ class Forms_model extends CI_Model{
 	{
 		$sql="SELECT `end` FROM `new_form_results` WHERE `form_id`='$form_id' AND `person_id`='$user_id'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['end'];
+		$data = $query->result_array();
+		if (isset($data[0]))
+		{
+			return $data[0]['end'];
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	function getFormQuests($form_id="",$user_id="")
@@ -375,8 +382,15 @@ class Forms_model extends CI_Model{
 	{
 		$sql="SELECT * FROM `new_form_answers` WHERE `quest_id`='$quest_id' AND `answer`='$answer'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return count($data);
+		$data = $query->result_array();
+		if (isset($data))
+		{
+			return count($data);	
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	//Посчитать, сколько человек ответило для каждого курса
@@ -405,7 +419,14 @@ class Forms_model extends CI_Model{
 		$sql="SELECT DISTINCT `res_id` FROM `new_form_answers` WHERE `quest_id`='$quest_id'";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
-		return count($data);
+		if (isset($data))
+		{
+			return count($data);	
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	//Получение ID пользователей, которые отвечали на вопросы
@@ -421,8 +442,29 @@ class Forms_model extends CI_Model{
 	{
 		$sql="SELECT `person_id` FROM `new_form_results` WHERE `id` IN (SELECT `res_id` FROM `new_form_answers` WHERE `quest_id`='$quest_id' AND `answer`='$answer')";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data;	
+		return $query->result_array();
+	}
+
+	function getAllResIdOptionResult($quest_id = 1)
+	{
+		$sql="SELECT DISTINCT `res_id` FROM `new_form_answers` WHERE `quest_id`='$quest_id'";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	function getCountUserAnswers($quest_id = 1,$res_id = 1)
+	{
+		$sql="SELECT COUNT(`id`) as `cnt` FROM `new_form_answers` WHERE `quest_id` = '$quest_id' AND `res_id` = '$res_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['cnt'];
+	}
+
+	function getPunktResIdOptionResult($quest_id = 1,$answer = 1)
+	{
+		$sql = "SELECT `res_id` FROM `new_form_answers` WHERE `quest_id`='$quest_id' AND `answer`='$answer'";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 
 	function getUserByResId($res_id="")
@@ -448,6 +490,8 @@ class Forms_model extends CI_Model{
 		$data=$query->result_array();
 		return count($data);
 	}
+
+
 
 	//Получение среднего значения результата на пересечении строки и столбца
 	function getAVGOptionResultSetkaSelector($quest_id = 1,$answer = 0,$option = 0)

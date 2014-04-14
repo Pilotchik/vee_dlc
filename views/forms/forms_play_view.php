@@ -343,7 +343,14 @@
 					?>
 					<center>
 					<div id="root" class="rootid" style="width:90%;margin:10px 0 0 0;">
-						<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
+						<?php 
+						if ($key['type'] != 6)
+						{
+							?>
+							<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
+							<?php
+						}
+						?>
 						<h3><?= $key['title'] ?></h3>
 						<span style="display:none;" id="quest_id_<?= $i ?>"><?= $key['id'] ?></span>
 						<div class="alert" style="margin:5px 0 5px 0;"><?= $key['subtitle'] ?></div>

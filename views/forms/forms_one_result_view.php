@@ -12,6 +12,8 @@
 </style>
 <script>
 $( window ).load(function() {
+	$('#preload').slideToggle("slow");
+	$('#accordion').slideToggle("slow");
     $('.collapse').collapse('hide');
 });
 </script>
@@ -21,7 +23,19 @@ $( window ).load(function() {
 		<li><a href="<?php echo base_url();?>forms">Опросы</a></li>
 		<li class="active">Результаты опроса "<?= $form_name ?>". Тип доступа к результатам: <?= ($form_access == 1 ? "Публичный" : "Анонимный") ?></li>
 	</ul>
-	<div class="panel-group" id="accordion">
+	
+	<div id="preload">
+		<center>
+			<br />
+			<h1>Пожалуйста, подождите...</h1>
+			<img src="<?= base_url() ?>images/preload.gif" style="margin:10 auto;margin-bottom:20px;">
+			<br>
+			Происходит обработка данных. Процесс может занять некоторое время.
+			<br /><br />
+		</center>
+	</div>
+
+	<div class="panel-group" id="accordion" style="display:none;">
 	<?php
 	$i=0;
 	$n_id=0;
@@ -126,14 +140,46 @@ $( window ).load(function() {
 						var options = {
   						title: <?php echo "'".$key['title']."'";?>,
   						legend: {position: 'top',textStyle: {fontSize: 12}},
-  						hAxis: {title: 'Курсы', titleTextStyle: {color: 'red'}}
+  						//hAxis: {title: 'Курсы', titleTextStyle: {color: 'red'}}
 						};
 
 						var chart = new google.visualization.ColumnChart(document.getElementById('chart_diva'+<?php echo $i;?>));
 						chart.draw(data, options);
 				 		}
 				</script>
+				<div id="chart_diva<?php echo $i;?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
 				<?php
+				if ($key['option3'] > 0)
+				{
+					$balls_punkts = "";
+					for($k=0;$k<count($arr_elem);$k++)
+					{
+						$balls_punkts = $balls_punkts.$quest_options1[$key['id']]['ball_answers'][$k].",";
+					}
+					$balls_punkts = substr($balls_punkts,0,-1);
+					?>
+					<script type="text/javascript">
+						google.load("visualization", "1", {packages:["corechart"]});
+						google.setOnLoadCallback(drawCharta2<?= $i ?>);
+							function drawCharta2<?= $i ?>() {
+							var data = google.visualization.arrayToDataTable([
+	  						['Курс', <?= $str_punkts ?>],
+	  						['Все',  <?= $balls_punkts ?>]
+							]);
+
+							var options = {
+	  						title: <?php echo "'".$key['title'].". По мощности ответа.'";?>,
+	  						legend: {position: 'top',textStyle: {fontSize: 12}},
+	  						//hAxis: {title: 'Курсы', titleTextStyle: {color: 'red'}}
+							};
+
+							var chart = new google.visualization.ColumnChart(document.getElementById('chart_diva2'+<?= $i ?>));
+							chart.draw(data, options);
+					 		}
+					</script>
+					<div id="chart_diva2<?= $i ?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
+					<?php
+				}
 			}
 			else
 			{
@@ -157,7 +203,9 @@ $( window ).load(function() {
 						chart.draw(data, options);
 				 		}
 				</script>
+				<div id="chart_diva<?php echo $i;?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
 				<?php
+
 			}
 			if ($form_ou == 1)
 			{
@@ -184,14 +232,6 @@ $( window ).load(function() {
 						chart.draw(data, options);
 			 			}
 				</script>
-				<?php
-			}
-			?>
-			<div id="chart_diva<?php echo $i;?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
-			<?php
-			if ($form_ou == 1)
-			{
-				?>
 				<div id="chart_divb<?php echo $i;?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
 				<?php
 			}
