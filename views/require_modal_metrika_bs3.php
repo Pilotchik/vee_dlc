@@ -1,21 +1,22 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="<?= base_url() ?>images/favi.png" type="image/x-icon">
 		<title><?= (isset($title) ? $title : "ВОС");  ?></title>
 		<script type="text/javascript" src="//vk.com/js/api/openapi.js?111"></script>
 		<script type="text/javascript">
 		  VK.init({apiId: 2849330, onlyWidgets: true});
 		</script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
+		<script type="text/javascript" src="<?= base_url() ?>js/jquery.min.js"></script>
+		<script type="text/javascript" src="<?= base_url() ?>js/sorttable.js"></script>
+		<script type="text/javascript" src="<?= base_url() ?>js/hltable.js"></script>
+		<script type="text/javascript" src="<?= base_url() ?>js/ui.datepicker.js"></script>
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<link href="<?php echo base_url()?>css/bootstrap3.min.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/styles.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="<?php echo base_url()?>js/bootstrap3.min.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/bootstrap-typeahead.js"></script>
-
-		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<link href="<?= base_url() ?>css/bootstrap3.min.css" rel="stylesheet" type="text/css" />
+		<link href="<?= base_url() ?>css/styles.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="<?= base_url() ?>js/bootstrap3.min.js"></script>
+		<script type="text/javascript" src="<?= base_url() ?>js/bootstrap-typeahead.js"></script>
 	</head>
 	<body>
 			<script> 
@@ -62,7 +63,7 @@
 		        				<h4 class="modal-title">Информационное сообщение</h4>
 		      				</div>
 		      				<div class="modal-body">
-		        				<p><?= $error ?></p>
+		        				<p style="text-align: center;text-indent: 0px;"><?= $error ?></p>
 		      				</div>
 		      				<div class="modal-footer">
 		        				<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>

@@ -590,6 +590,46 @@ class Forms_model extends CI_Model{
 		return count($data);
 	}
 
+	function getTypeQuestOverID($quest_id = 1)
+	{
+		$sql="SELECT `type` FROM `new_form_quests` WHERE `id`='$quest_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['type'];
+	}
+
+	function getOwnQuestOverID($quest_id = 1)
+	{
+		$sql="SELECT `own_version` FROM `new_form_quests` WHERE `id`='$quest_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['own_version'];
+	}
+
+	function getOption1QuestOverID($quest_id = 1)
+	{
+		$sql="SELECT `option1` FROM `new_form_quests` WHERE `id`='$quest_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['option1'];
+	}
+
+	function getOption2QuestOverID($quest_id = 1)
+	{
+		$sql="SELECT `option2` FROM `new_form_quests` WHERE `id`='$quest_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['option2'];
+	}
+
+	function getOption3QuestOverID($quest_id = 1)
+	{
+		$sql="SELECT `option3` FROM `new_form_quests` WHERE `id`='$quest_id'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['option3'];
+	}
+
 }
 
 ?>

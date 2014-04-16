@@ -168,5 +168,5 @@
 			?>
 			</div>
 		</div>
-	</body>
-</html>
+
+<?php require_once "require_header.php";?>

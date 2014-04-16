@@ -32,6 +32,7 @@ class Stat_site extends CI_Controller {
 	//Функция отображения страницы c выбором диапазона статистики
 	function index()
 	{
+		$data['title'] = "ВОС.Журнал системы";
 		$range=$this->input->get('range');
 		if ($range!='')
 		{

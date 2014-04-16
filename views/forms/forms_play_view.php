@@ -422,7 +422,9 @@
 					}
 					if ($key['type'] == 3)
 					{
-						echo "<textarea cols=\"60\" rows=\"3\" id=\"text".$key['id']."\" onChange=postAjax2(".$key['id'].",text".$key['id'].",$i)></textarea>";
+						?>
+						<textarea rows="3" id="text<?= $key['id'] ?>" onChange="postAjax2(<?= $key['id'] ?>,text<?= $key['id'] ?>,<?= $i ?>)" style="width:400px;"></textarea>
+						<?php
 					}
 					if ($key['type'] == 4)
 					{

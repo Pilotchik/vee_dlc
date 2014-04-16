@@ -203,7 +203,7 @@
 					echo "<td><center>
 					<form action=\"";
 					echo base_url();
-					echo "forms_admin/quest_view/$id_c\" method=\"post\" name=\"edit$id_c\">
+					echo "forms_admin/quest_view/$id_c\" method=\"get\" name=\"edit$id_c\">
 						<input style=\"width:90px;margin:0 0 0 0;font-size:10px;\" class=\"btn btn-inverse\" type=\"submit\" value=\"Просмотр\">
 					</form></td>";
 					echo "<td align=center><div onClick=\"javascript: func_del($id_c)\"><i class=\"icon-remove\"></i></div></td>";

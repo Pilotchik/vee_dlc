@@ -214,96 +214,78 @@ class Forms extends CI_Controller {
 		$data['form_access']=$this->forms_model->getFormAccess($form_id);
 		$data['form_id'] = $form_id;
 		$data['form_quests'] = $this->forms_model->getAllActiveQuests($form_id);
-		foreach($data['form_quests'] as $key)
+		$data['error']="";
+		$this->load->view('forms/forms_one_result_view',$data);
+	}
+
+	function loadgraph()
+	{
+		$this->form_validation->set_rules('q_id', '', 'trim|xss_clean|is_natural_no_zero');
+		if ($this->form_validation->run() == TRUE)
 		{
-			$data['quest_options1'][$key['id']]['type'] = $key['type'];
-			//Выбор одного
-			if ($key['type'] == 1)
+			$quest_id = $this->input->post('q_id');
+			$q_type = $this->forms_model->getTypeQuestOverID($quest_id);
+			$q_own = $this->forms_model->getOwnQuestOverID($quest_id);
+			$option1 = $this->forms_model->getOption1QuestOverID($quest_id);
+			$option2 = $this->forms_model->getOption2QuestOverID($quest_id);
+			$option3 = $this->forms_model->getOption3QuestOverID($quest_id);
+			$punkts = array();
+			$columns = array();
+			$proz = array();
+			$proz_kurs = array();
+			for($j = 1;$j < 5;$j++) {$proz_kurs[$j] = array();}
+			$other_version = array();
+			//Выбор одного пункта
+			if ($q_type == 1)
 			{
-				$data['quest_options1'][$key['id']]['quest']=explode(", ",$key['option1']);
+				//Получение списка пунктов для ответа
+				$punkts = explode(", ",$option1);
 				//Общая сумма
-				$data['quest_options1'][$key['id']]['summ'] = 0;
+				$summ = 0;
 				//Сумма по курсам
-				for($j=1;$j<5;$j++)
-				{
-					$data['quest_options1'][$key['id']]['summ_kurs'][$j] = 0;
-				}
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
+				for($j = 1;$j < 5;$j++)	{$summ_kurs[$j] = 0;}
+				for($i = 0;$i < count($punkts);$i++)
 				{
 					//Получение количества ответов на элемент вопроса
-					$data['quest_options1'][$key['id']]['answers'][$i]=$this->forms_model->getCountOptionResult($key['id'],$i);
-					$data['quest_options1'][$key['id']]['summ']+=$data['quest_options1'][$key['id']]['answers'][$i];
+					$answers[$i] = $this->forms_model->getCountOptionResult($quest_id,$i);
+					//Увеличить количество голосов по пункту
+					$summ += $answers[$i];
 					//Получение количества для каждого курса
-					for($j=1;$j<5;$j++)
+					for($j = 1;$j < 5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['answers_kurs'][$j][$i] = $this->forms_model->getCountOptionKursResult($key['id'],$i,$j);
-						$data['quest_options1'][$key['id']]['summ_kurs'][$j] += $data['quest_options1'][$key['id']]['answers_kurs'][$j][$i];
+						$answers_kurs[$j][$i] = $this->forms_model->getCountOptionKursResult($quest_id,$i,$j);
+						$summ_kurs[$j] += $answers_kurs[$j][$i];
 					}
-					if ($data['form_access'] == 1)
-					{
-						$users_array=$this->forms_model->getAllUsersOptionResult($key['id'],$i);
-						$user_string = "";
-						foreach ($users_array as $key2)
-						{
-							//echo $user_string."<br>";
-							$user_string=$user_string.$this->forms_model->getUser($key2['person_id']).", ";
-						}
-						$data['quest_options1'][$key['id']]['users'][$i]=substr($user_string, 0, -2);
-					}
-				}
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
-				{
-					if ($data['quest_options1'][$key['id']]['summ'] > 0)
-					{
-						$data['quest_options1'][$key['id']]['proz'][$i] = round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
-					}
-					else
-					{
-						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
-					}
-					for ($j=1;$j<5;$j++)
-					{
-						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j]>0)
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
-						}
-						else
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
-						}
-						//echo $data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
-					}
-				}
-				$other=$this->forms_model->getOtherTestResult($key['id']);
-				$i=0;
-				foreach ($other as $key2)
-				{
-					$data['quest_options1'][$key['id']]['other_answers'][$i]=$key2['answer'];
-					if ($data['form_access'] == 1)
-					{
-						$user=$this->forms_model->getUsersOptionResult($key['id'],$key2['answer']);
-						$user_name=$this->forms_model->getUser($user);
-						$data['quest_options1'][$key['id']]['other_user'][$i]=$user_name;
-					}
-					$i++;
-				}
-			}
-			//Выбор нескольких
-			if ($key['type'] == 2)
-			{
-				//Массив значений
-				$data['quest_options1'][$key['id']]['quest'] = explode(", ",$key['option1']);
-				$data['quest_options1'][$key['id']]['summ'] = $this->forms_model->getCountUniqOptionResult($key['id']);
-				
-				$count_punkts = (int) $key['option3'];
-				
-				//Сумма по курсам
-				for($j=1;$j<5;$j++)
-				{
-					$data['quest_options1'][$key['id']]['summ_kurs'][$j] = 0;
 				}
 
+				for($i = 0;$i < count($punkts);$i++)
+				{
+					$proz[$i] = ($summ > 0 ? round(($answers[$i]/$summ)*100,2) : 0);
+					for ($j = 1;$j < 5;$j++)
+					{
+						$proz_kurs[$j][$i] = ($summ_kurs[$j] > 0 ? round(($answers_kurs[$j][$i]/$summ_kurs[$j])*100,2) : 0);
+					}
+				}
+				$other_version = $this->forms_model->getOtherTestResult($quest_id);
+			}
+			
+			//Выбор нескольких
+			if ($q_type == 2)
+			{
+				//punkts
+				//proz
+				//proz_kurs
+				//Массив значений
+				$punkts = explode(", ",$option1);
+				$summ = $this->forms_model->getCountUniqOptionResult($quest_id);
+				
+				$count_punkts = (int) $option3;
+				
+				//Сумма по курсам
+				for($j = 1;$j < 5;$j++)	{$summ_kurs[$j] = 0;}
+
 				//Получить мощность ответа каждого пользователя, если у вопроса было ограничение на количество отмечаемых пунктов
+				/*
 				if ($count_punkts > 0)
 				{
 					$user_answer_balls = array();
@@ -312,31 +294,24 @@ class Forms extends CI_Controller {
 					//Для каждого res_id определить количество ответов 
 					foreach ($all_quest_res as $key2) 
 					{
-						$count_answers = $this->forms_model->getCountUserAnswers($key['id'],$key2['res_id']);
+						$count_answers = $this->forms_model->getCountUserAnswers($quest_id,$key2['res_id']);
 						$user_answer_balls[$key2['res_id']] = round($count_punkts/$count_answers,2);
 					}
 				}
+				*/
 
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
+				for($i = 0;$i < count($punkts);$i++)
 				{
-					$data['quest_options1'][$key['id']]['answers'][$i]=$this->forms_model->getCountOptionResult($key['id'],$i);
+					$answers[$i] = $this->forms_model->getCountOptionResult($quest_id,$i);
+
 					//Получение количества для каждого курса
-					for($j=1;$j<5;$j++)
+					for($j = 1;$j < 5;$j++)
 					{
-						$data['quest_options1'][$key['id']]['answers_kurs'][$j][$i] = $this->forms_model->getCountOptionKursResult($key['id'],$i,$j);
-						$data['quest_options1'][$key['id']]['summ_kurs'][$j] += $data['quest_options1'][$key['id']]['answers_kurs'][$j][$i];
-					}
-					if ($data['form_access'] == 1)
-					{
-						$users_array=$this->forms_model->getAllUsersOptionResult($key['id'],$i);
-						$user_string = "";
-						foreach ($users_array as $key2)
-						{
-							$user_string=$user_string.$this->forms_model->getUser($key2['person_id']).", ";
-						}
-						$data['quest_options1'][$key['id']]['users'][$i]=substr($user_string, 0, -2);
+						$answers_kurs[$j][$i] = $this->forms_model->getCountOptionKursResult($quest_id,$i,$j);
+						$summ_kurs[$j] += $answers_kurs[$j][$i];
 					}
 					
+					/*
 					if ($count_punkts > 0)
 					{
 						$data['quest_options1'][$key['id']]['ball_answers'][$i] = 0;
@@ -349,193 +324,132 @@ class Forms extends CI_Controller {
 							$data['quest_options1'][$key['id']]['ball_answers'][$i] += $user_answer_balls[$key2['res_id']];
 						}
 					}
-
-				}
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['quest']);$i++)
-				{
-					$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
-					for ($j=1;$j<5;$j++)
-					{
-						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] > 0)
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]=round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);
-						}
-						else
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
-						}
-						//echo $key['id']." -> ".$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j]."<br>";
-					}
-				}
-				$other=$this->forms_model->getOtherTestResult($key['id']);
-				$i=0;
-				foreach ($other as $key2)
-				{
-					$data['quest_options1'][$key['id']]['other_answers'][$i]=$key2['answer'];
-					if ($data['form_access'] == 1)
-					{
-						$user=$this->forms_model->getUsersOptionResult($key['id'],$key2['answer']);
-						$user_name=$this->forms_model->getUser($user);
-						$data['quest_options1'][$key['id']]['other_user'][$i]=$user_name;
-					}
-					$i++;
+					*/
 				}
 
+				for($i = 0;$i < count($punkts);$i++)
+				{
+					$proz[$i] = round(($answers[$i]/$summ)*100,2);
+					for ($j = 1;$j < 5;$j++)
+					{
+						$proz_kurs[$j][$i] = ($summ_kurs[$j] > 0 ? round(($answers_kurs[$j][$i]/$summ_kurs[$j])*100,2) : 0);
+					}
+				}
+				$other_version = $this->forms_model->getOtherTestResult($quest_id);
 			}
-			//Шкала
-			if ($key['type'] == 4)
-			{
-				$data['quest_options1'][$key['id']]['summ'] = 0;
-				//Сумма по курсам
-				for($j=1;$j<5;$j++)
-				{
-					$data['quest_options1'][$key['id']]['summ_kurs'][$j] = 0;
-				}
-				for($i=1;$i<=$key['option3'];$i++)
-				{
-					$data['quest_options1'][$key['id']]['quest'][$i]=$i;	
-					$data['quest_options1'][$key['id']]['answers'][$i]=$this->forms_model->getCountOptionResult($key['id'],$i);
-					$data['quest_options1'][$key['id']]['summ'] += $data['quest_options1'][$key['id']]['answers'][$i];
-					for($j=1;$j<5;$j++)
-					{
-						$data['quest_options1'][$key['id']]['answers_kurs'][$j][$i] = $this->forms_model->getCountOptionKursResult($key['id'],$i,$j);
-						$data['quest_options1'][$key['id']]['summ_kurs'][$j] += $data['quest_options1'][$key['id']]['answers_kurs'][$j][$i];
-					}
-					if ($data['form_access'] == 1)
-					{
-						$users_array=$this->forms_model->getAllUsersOptionResult($key['id'],$i);
-						$user_string = "";
-						foreach ($users_array as $key2)
-						{
-							$user_string=$user_string.$this->forms_model->getUser($key2['person_id']).", ";
-						}
-						$data['quest_options1'][$key['id']]['users'][$i]=substr($user_string, 0, -2);
-					}
-				}
-				for($i=1;$i<=$key['option3'];$i++)
-				{
-					if ($data['quest_options1'][$key['id']]['summ'] != 0)
-					{
-						$data['quest_options1'][$key['id']]['proz'][$i]=round(($data['quest_options1'][$key['id']]['answers'][$i]/$data['quest_options1'][$key['id']]['summ'])*100,2);
-					}
-					else
-					{
-						$data['quest_options1'][$key['id']]['proz'][$i] = 0;
-					}
-					for ($j=1;$j<5;$j++)
-					{
-						if ($data['quest_options1'][$key['id']]['summ_kurs'][$j] != 0)
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = round(($data['quest_options1'][$key['id']]['answers_kurs'][$j][$i]/$data['quest_options1'][$key['id']]['summ_kurs'][$j])*100,2);	
-						}
-						else
-						{
-							$data['quest_options1'][$key['id']]['proz_kurs'][$i][$j] = 0;
-						}
-						
-					}
-				}
-			}
+
 			//Текст
-			if ($key['type'] == 3)
+			if ($q_type == 3)
 			{
-				$text_answer_array=$this->forms_model->getAllQuestResults($key['id']);
-				$i=0;
-				foreach($text_answer_array as $key2)
+				$other_version = $this->forms_model->getAllQuestResults($quest_id);
+			}
+
+			//Шкала
+			if ($q_type == 4)
+			{
+				$summ = 0;
+				
+				//Сумма по курсам
+				for($j = 1;$j < 5;$j++)	{$summ_kurs[$j] = 0;}
+
+				for($i = 1;$i <= $option3;$i++)
 				{
-					$data['quest_options1'][$key['id']]['answers'][$i]=$key2['answer'];
-					if ($data['form_access'] == 1)
+					array_push($punkts,$i);
+					$answers[$i] = $this->forms_model->getCountOptionResult($quest_id,$i);
+					$summ += $answers[$i];
+					for($j = 1;$j < 5;$j++)
 					{
-						$person_id=$this->forms_model->getUserByResId($key2['res_id']);
-						$data['quest_options1'][$key['id']]['users'][$i]=$this->forms_model->getUser($person_id);
+						$answers_kurs[$j][$i] = $this->forms_model->getCountOptionKursResult($quest_id,$i,$j);
+						$summ_kurs[$j] += $answers_kurs[$j][$i];
 					}
-					$i++;
+				}
+
+				for($i = 1;$i <= $option3;$i++)
+				{
+					$proz[$i] = ($summ > 0 ? round(($answers[$i]/$summ)*100,2) : 0);
+					for ($j=1;$j<5;$j++)
+					{
+						$proz_kurs[$j][$i] = ($summ_kurs[$j] > 0 ? round(($answers_kurs[$j][$i]/$summ_kurs[$j])*100,2) : 0);
+					}
 				}
 			}
-			//Шкала
-			if ($key['type'] == 5)
+			//Сетка с радио
+			if ($q_type == 5)
 			{
-				$data['quest_options1'][$key['id']]['stroka']=explode(", ",$key['option1']);
-				$data['quest_options1'][$key['id']]['stolb']=explode(", ",$key['option2']);
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				$punkts = explode(", ",$option1);
+				$columns = explode(", ",$option2);
+				
+				//Определяем количество ответов для всей строки
+				for($i = 0;$i < count($punkts);$i++)
 				{
-					//Определяем количество ответов для всей строки
-					$data['quest_options1'][$key['id']]['summ_str'][$i] = 0;
-					for($j=0;$j<count($data['quest_options1'][$key['id']]['stolb']);$j++)
+					$summ_str[$i] = 0;
+				
+					//Определяем количество ответов по каждому столбцу
+					for($j = 0;$j < count($columns);$j++)
 					{
-						//Определяем количество ответов по каждому столбцу
-						$data['quest_options1'][$key['id']]['summ_stlb'][$i][$j] = $this->forms_model->getCountOptionResultSetka($key['id'],$i,$j);
-						$data['quest_options1'][$key['id']]['summ_str'][$i] += $data['quest_options1'][$key['id']]['summ_stlb'][$i][$j];
-						if ($data['form_access'] == 1)
-						{
-							$users_array=$this->forms_model->getUsersOptionResultSetka($key['id'],$i,$j);
-							$user_string = "";
-							foreach ($users_array as $key2)
-							{
-								$user_string=$user_string.$this->forms_model->getUser($key2['person_id']).", ";
-							}
-							$data['quest_options1'][$key['id']]['users_setka'][$i][$j]=substr($user_string, 0, -2);
-						}
+						$summ_stlb[$i][$j] = $this->forms_model->getCountOptionResultSetka($quest_id,$i,$j);
+						$summ_str[$i] += $summ_stlb[$i][$j];
 					}
 				}
-				for($i=0;$i<count($data['quest_options1'][$key['id']]['stroka']);$i++)
+
+				for($i = 0;$i < count($punkts);$i++)
 				{
-					for($j=0;$j<count($data['quest_options1'][$key['id']]['stolb']);$j++)
+					for($j = 0;$j < count($columns);$j++)
 					{
-						if ($data['quest_options1'][$key['id']]['summ_str'][$i] > 0)
-						{
-							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j]=round(($data['quest_options1'][$key['id']]['summ_stlb'][$i][$j]/$data['quest_options1'][$key['id']]['summ_str'][$i])*100,2);	
-						}
-						else
-						{
-							$data['quest_options1'][$key['id']]['proz_stlb'][$i][$j] = 0;
-						}		
+						$proz[$i][$j] = ($summ_str[$i] > 0 ? round(($summ_stlb[$i][$j]/$summ_str[$i])*100,2) : 0);
 					}
 				}
 			}
 			//Сетка с селекторами
-			if ($key['type'] == 7)
+			if ($q_type == 7)
 			{
 				//получение массива строк
-				$data['quest_options1'][$key['id']]['stroka']=explode(", ",$key['option1']);
+				$punkts = explode(", ",$option1);
 				//получение массива столбцов
-				$data['quest_options1'][$key['id']]['stolb']=explode(", ",$key['option2']);
-				for($i = 0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				$columns = explode(", ",$option2);
+
+				for($i = 0;$i < count($punkts);$i++)
 				{
 					//Определяем среднее значение для всей строки (все курсы)
-					$data['quest_options1'][$key['id']]['row_summ'][$i] = 0;
+					$row_summ[$i] = 0;
 					for($k = 1;$k < 5;$k++)
 					{
-						$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] = 0;
-						$data['quest_options1'][$key['id']]['users_count'][$i][$k] = 0;
+						$proz_kurs[$k][$i] = 0;
+						$users_count[$i][$k] = 0;
 					}
-					for($j=0; $j < count($data['quest_options1'][$key['id']]['stolb']); $j++)
+
+					for($j=0; $j < count($columns); $j++)
 					{
 						//Определяем средний балл по каждой строке и столбцу 
-						$data['quest_options1'][$key['id']]['cell_avg'][$i][$j] = round($this->forms_model->getAVGOptionResultSetkaSelector($key['id'],$i,$j),3);
+						$proz[$i][$j] = round($this->forms_model->getAVGOptionResultSetkaSelector($quest_id,$i,$j),3);
 						//увеличить сумму всей строки на найденное среднее значение для строки и столбца
-						$data['quest_options1'][$key['id']]['row_summ'][$i] += $data['quest_options1'][$key['id']]['cell_avg'][$i][$j];
+						$row_summ[$i] += $proz[$i][$j];
 						//Пересчёт средних значений для каждого курса
 						for($k = 1;$k < 5;$k++)
 						{
 							//Увеличить сумму ряда на среднее значение
-							$data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k] += round($this->forms_model->getAVGOptionResultSetkaSelectorKurs($key['id'],$i,$j,$k),3);
+							$proz_kurs[$k][$i] += round($this->forms_model->getAVGOptionResultSetkaSelectorKurs($quest_id,$i,$j,$k),3);
 						}
 					}
 				}
 				//Средние значения для каждой строки
-				for($i=0;$i < count($data['quest_options1'][$key['id']]['stroka']);$i++)
+				for($i=0;$i < count($punkts);$i++)
 				{
 					for($k = 1;$k < 5;$k++)
 					{
-						$data['quest_options1'][$key['id']]['row_avg_kurs'][$i][$k] = round($data['quest_options1'][$key['id']]['row_summ_kurs'][$i][$k]/count($data['quest_options1'][$key['id']]['stolb']),3);
+						$proz_kurs[$k][$i] = round($proz_kurs[$k][$i]/count($columns),3);
 					}
 					//Найти среднее значение строки: поделить накопленное значение на количество столбцов
-					$data['quest_options1'][$key['id']]['avg_str'][$i] = round($data['quest_options1'][$key['id']]['row_summ'][$i]/count($data['quest_options1'][$key['id']]['stolb']),3);
+					//В массивы proz в заданной строке добавить среднее значение
+					array_push($proz[$i],round($row_summ[$i]/count($columns),3));
 				}
 			}
+			echo json_encode(array('answer'=>1,'quest'=>$q_type,'punkts'=>$punkts,'proz'=>$proz,'kurs1'=>$proz_kurs[1],'kurs2'=>$proz_kurs[2],'kurs3'=>$proz_kurs[3],'kurs4'=>$proz_kurs[4],'other'=>$other_version,'columns'=>$columns));
 		}
-		$data['error']="";
-		$this->load->view('forms/forms_one_result_view',$data);
+		else
+		{
+			echo json_encode(array('answer'=>0));
+		}
+
 	}
 }

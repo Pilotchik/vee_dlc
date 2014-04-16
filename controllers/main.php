@@ -88,6 +88,7 @@ class Main extends CI_Controller {
 		$this->load->model('persons_model');
 		$this->load->model('results_model');		
 		//Имя пользователя
+		$data['title'] = "ВОС.Главная";
 		$data2['name'] = $this->session->userdata('firstname')." ".$this->session->userdata('lastname');
 		$user_id = $this->session->userdata('user_id');
 		$data2['guest'] = $this->session->userdata('guest');

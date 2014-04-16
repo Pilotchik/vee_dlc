@@ -1,13 +1,7 @@
-<html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<title>ВОС.Журнал системы</title>
-		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/ui.datepicker.js"></script>
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    	<script type="text/javascript">
+<?php require_once(APPPATH.'views/require_modal_metrika_bs3.php');?>
+<div id="main">
+	<?php require_once(APPPATH.'views/require_main_menu_bs3.php');?>
+			<script type="text/javascript">
       		google.load("visualization", "1", {packages:["corechart"]});
       		google.setOnLoadCallback(drawChart);
       		function drawChart() 
@@ -25,8 +19,7 @@
         		var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         		chart.draw(data, options);
     	  	}
-    	</script>
-		<script type="text/javascript">
+    	
 			$(document).ready(function(){
 				$('#exampleRange').attachDatepicker({
 				rangeSelect: true,
@@ -37,13 +30,6 @@
 			
 			function func_filter()	{document.date_picker.submit();}
 		</script>
-		<link href="<?php echo base_url()?>css/styles.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	</head>
-	<body>
-		<?php require_once "require_modal_metrika.php";?>
-		<div id="main">
-			<?php require_once "require_main_menu.php";?>
 			<h3>Статистика сайта</h3>
 			<p>Укажите диапазон дат, для которого необходима статистика 
 			<table style="padding:0 0;">
@@ -64,7 +50,7 @@
 			<p>За весь период работы системы, благодаря статистическому анализу, было скорректировано <b><?php echo $proz_corr;?></b> результатов, 
 				из них <b><?php echo $proz_corr_plus;?>%</b> в лучшую сторону.</p>
 			<p>Количество пользователей, зарегистрированных через систему: <?php echo $vk_users+$nvk_users;?>, из них <?php echo $vk_users;?> авторизуются через ВКонтакте, что составляет примерно <?php echo round(($vk_users/($vk_users+$nvk_users))*100,1);?>%.</p>			
-			<div id="piechart" style="width: 500px; height: 300px;margin:10 auto;" ></div>
+			<div id="piechart" style="width: 100%; height: 300px;margin:10 auto;" ></div>
 
 			<h3>Обратная связь</h3>
 			<p>Довольных своим результатом студентов - <?= $positive ?>, против <?= $negative ?>, которых не удовлетворил результат (позитив <?php $pos_proz=round(($positive/($positive+$negative))*100,1);$neg_proz=($pos_proz==0 ? '0' : 100-$pos_proz); echo $pos_proz."% : ".$neg_proz;?>% негатив).</p>
@@ -280,5 +266,5 @@
             </div>
             <br />
 		</div>
-	</body>
-</html>
+
+<?php require_once(APPPATH.'views/require_header.php');?>
