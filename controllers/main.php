@@ -6,6 +6,9 @@ class Main extends CI_Controller {
 	function index($error = "")
 	{
 		$data['error'] = $error;
+		$this->load->model('registr_model');
+		$data['fspo']=$this->registr_model->getFSPO();
+		$data['segrys']=$this->registr_model->getSegrys();
 		$this->load->view('main_view',$data);
 	}
 
