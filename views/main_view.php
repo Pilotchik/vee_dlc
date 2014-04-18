@@ -307,9 +307,9 @@
 		<div class="container">
 			<div class="row">
 
-				<div class="col-md-12 intro" style="color: white; font-size: 18px;">
+				<div class="col-md-12 intro" style="color: white; font-size: 20px;">
 					<img src="<?= base_url() ?>images/logo.png" alt="Вирутальная обучающая среда" width="170px">
-					<p class="lead" ><h1>Виртуальная Обучающая Среда</h1>Среда для студентов факультета среднего профессионального образования НИУ ИТМО.</p>
+					<p class="lead" ><h1>Виртуальная Обучающая Среда</h1>Среда для студентов факультета среднего профессионального образования НИУ ИТМО</p>
 					<button  class="btn btn-hg btn-primary" data-toggle="modal" onClick="auth_open()">
 						Войти в систему
 					</button>

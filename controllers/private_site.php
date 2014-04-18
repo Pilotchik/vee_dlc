@@ -10,10 +10,12 @@ class Private_site extends CI_Controller {
 
 	function _remap($method)
 	{
-		$guest=$this->session->userdata('guest');
-		if ($guest=='')
+		if ($this->session->userdata('guest') == '')
 		{
 			$data['error']="Время сессии истекло. Необходима авторизация";
+			$this->load->model('registr_model');
+			$data['fspo']=$this->registr_model->getFSPO();
+			$data['segrys']=$this->registr_model->getSegrys();
 			$this->load->view('main_view',$data);
 		}
 		else
@@ -30,14 +32,19 @@ class Private_site extends CI_Controller {
 	//Функция отображения страницы результатов
 	function index()
 	{
-		$user_id=$this->session->userdata('user_id');
-		$user_type=$this->session->userdata('type_r');
+		$data['title'] = "ВОС.Мои результаты";
+		$user_id = $this->session->userdata('user_id');
+		$user_type = $this->session->userdata('type_r');
+		/*
 		//Получение информации о студенте
 		$data['user_info']=$this->private_model->getStudReyt($user_id);
+		
 		//Вычисление общего количества студентов, учавствующих в рейтинге
 		$data['all_users']['type']=$this->private_model->getAllReyt($user_type);
+		
 		//Дата обновления рейтинга
 		$data['reyt_date']=$this->private_model->getDateReyt($user_type);
+		
 		//Получение информации о рейтинге всех участников группы
 		if($data['user_info']['reyt_type']>0)
 		{
@@ -66,9 +73,13 @@ class Private_site extends CI_Controller {
 			}
 			//echo $data['user_info']['group_pos'];
 		}
+		*/
+
 		//Протокол проверенных заданий
 		$data['stud_answers'] = $this->moder_model->getOneStudAnswers($user_id);
+		
 		$this->load->model('forms_model');
+		
 		foreach($data['stud_answers'] as $key)
 		{
 			$data['test_name'][$key['id']] = $this->moder_model->getTestName($key['quest_id']);
@@ -89,7 +100,15 @@ class Private_site extends CI_Controller {
 		}
 		//Результаты студента
 		$data['user_id'] = $user_id;
-		$data['results'] = $this->private_model->getStudResults($user_id);
+
+		//Найти все дисциплины, в которых учавствовал пользователь
+		$data['results'] = array();
+		$data['disciplines'] = $this->private_model->getStudDisciplines($user_id);
+		foreach($data['disciplines'] as $key)
+		{
+			$data['results'][$key['id']] = $this->private_model->getStudResultsOverDiscAndUserID($user_id,$key['id']);
+		}
+		//$data['results'] = $this->private_model->getStudResults($user_id);
 		//Результаты пройденных дистанционных курсов
 		$data['courses'] = $this->de_model->getStudCourses();
 		foreach($data['courses'] as $key)

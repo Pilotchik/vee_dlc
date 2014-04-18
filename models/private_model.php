@@ -10,6 +10,22 @@ class Private_model extends CI_Model{
 		return $data;
 	}
 
+	//Получение всех дисциплин, в которых принимал участие студент
+	function getStudDisciplines($user_id = 1)
+	{
+		$sql="SELECT DISTINCT `new_tests`.`name_test`,`new_tests`.`id` FROM `new_tests`,`new_razd`,`new_results` WHERE `new_tests`.`id` = `new_razd`.`test_id` AND `new_results`.`razd_id` = `new_razd`.`id` AND `new_results`.`user` = '$user_id'  ORDER BY `new_tests`.`name_test` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	//Получение всех результатов по ID пользователя и дисциплины
+	function getStudResultsOverDiscAndUserID($user_id = 1,$disc_id = 1)
+	{
+		$sql="SELECT `new_results`.*,`new_results`.`id` as `res_id`, `new_razd`.* FROM `new_results`,`new_razd` WHERE `new_results`.`razd_id` = `new_razd`.`id` AND `new_razd`.`test_id` = '$disc_id' AND `new_results`.`user` = '$user_id'  ORDER BY `new_results`.`data` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 	function getStudReyt($user_id="")
 	{
 		$sql="SELECT `id`,`numbgr`,`reyt_type`,`reyting`,`type_r`,`lastname`,`firstname`,`photo` FROM `new_persons` WHERE `id`='$user_id'";
