@@ -12,6 +12,7 @@
 </style>
 <script>
 	var openquests = [];
+	var openes = [0];
 	var compl = 1;
 
 	$( window ).load(function() {
@@ -34,7 +35,23 @@
 		if ($('#collapse'+nom).css("display") == "none")	//Проверка открытия панели, в которую подгрузятся диаграммы
 		{
 			$('.collapse').collapse('hide'); 				//свернуть все панели
+			
+			if (openes.length>1)
+			{
+				$('#collapse'+openes[openes.length-1]).on('hidden.bs.collapse', function () {
+	  			console.log("oK!"+openes[openes.length-1]);
+	  			var destination = $('#title_div'+nom).offset().top - 80;
+				console.log(destination);
+				$("html,body").animate({scrollTop: destination}, "slow");	//Прокрутить до заголовка
+				})		
+			}
+			
 			$('#collapse'+nom).collapse('show');			//Развернуть панель, по которой был клик
+			$("#preload_quest"+nom).animate({
+        		marginLeft: "100%",
+        		}, 4000 );
+			openes.push(nom);
+
 			if (openquests.indexOf(nom) < 0)				//Если статистика ещё не подгружалась, то обратиться к контроллеру и подгрузить диаграммы
 			{
 				if (type == 1 || type == 2)					//Если тип: выбор одного или выбор нескольких
@@ -52,7 +69,7 @@
 						else
 						{
 							openquests.push(nom);							//Добавить в массив вопросов, для которых подгружена статистика, текущий вопрос
-							$("#preload_quest"+nom).slideToggle("fast");	//Скрыть прелоадер
+							$("#preload_quest"+nom).slideToggle("slow");	//Скрыть прелоадер
 							$("#table_div"+nom).slideToggle("fast");		//Скрыть таблицу, так как она не нужна
 							obj.punkts.splice(0,0,'1');						//Добавить в начало массива вариантов ответов текст (требование Google Chart API)
 							obj.proz.splice(0,0,'Параметры');				//Добавить в начало массива с результатами название оси X
@@ -129,7 +146,7 @@
 						else
 						{
 							openquests.push(nom);							//Добавить в массив вопросов, для которых подгружена статистика, текущий вопрос
-							$("#preload_quest"+nom).slideToggle("fast");	//Скрыть прелоадер
+							$("#preload_quest"+nom).slideToggle("slow");	//Скрыть прелоадер
 							$("#table_div"+nom).slideToggle("fast");		//Скрыть таблицу, так как она не нужна
 							
 							$("#chart_div_a"+nom).slideToggle("fast");
@@ -158,7 +175,7 @@
 						else
 						{
 							openquests.push(nom);							//Добавить в массив вопросов, для которых подгружена статистика, текущий вопрос
-							$("#preload_quest"+nom).slideToggle("fast");	//Скрыть прелоадер
+							$("#preload_quest"+nom).slideToggle("slow");	//Скрыть прелоадер
 							$("#table_div"+nom).slideToggle("fast");		//Скрыть таблицу, так как она не нужна
 							//подготовить массив
 							var i = 1;
@@ -232,7 +249,7 @@
 						else
 						{
 							openquests.push(nom);							//Добавить в массив вопросов, для которых подгружена статистика, текущий вопрос
-							$("#preload_quest"+nom).slideToggle("fast");	//Скрыть прелоадер
+							$("#preload_quest"+nom).slideToggle("slow");	//Скрыть прелоадер
 							$("#other_div"+nom).slideToggle("fast");
 							$("#chart_div_a"+nom).slideToggle("fast");		
 							$("#chart_div_b"+nom).slideToggle("fast");
@@ -275,7 +292,7 @@
 						else
 						{
 							openquests.push(nom);							//Добавить в массив вопросов, для которых подгружена статистика, текущий вопрос
-							$("#preload_quest"+nom).slideToggle("fast");	//Скрыть прелоадер
+							$("#preload_quest"+nom).slideToggle("slow");	//Скрыть прелоадер
 							$("#other_div"+nom).slideToggle("fast");
 							
 							table_str = '<table class="sortable" style="font-size:11px;width=100%"><thead><tr><td>Параметр</td>';
@@ -358,12 +375,26 @@
 					})
 				}	//Конец проверки на 7 тип
 			}	//Конец проверки на вторичную попытку подгрузки диаграмм
+
+			
 		}	//Конец проверки открытости панели, в которую подгружаются диаграммы
 		else
 		{
 			$('.collapse').collapse('hide');
 		}
 	}
+
+
+
+	/*
+	$("#accordion").on("shown.bs.collapse", function () {
+			    var selected = $(this);
+			    var collapseh = $(".collapse.in").height();
+			    $.scrollTo(selected, 500, {
+			        offset: -(collapseh)
+			    });
+			});
+	*/
 </script>
 <div id="main">
 	<?php require_once(APPPATH.'views/require_main_menu_bs3.php');?>
@@ -394,7 +425,7 @@
 		?>
 		<div class="panel panel-default">
 		    <div class="panel-heading">
-      			<h4 class="panel-title" onClick="func_open(<?= $i ?>,<?= $key['id'] ?>,<?= $key['type'] ?>,'<?= $key['title'] ?>',<?= $form_ou ?>)" style="cursor:pointer;">
+      			<h4 class="panel-title" onClick="func_open(<?= $i ?>,<?= $key['id'] ?>,<?= $key['type'] ?>,'<?= $key['title'] ?>',<?= $form_ou ?>)" style="cursor:pointer;" id="title_div<?= $i ?>">
         			<?= $key['title'] ?> <small>Вопрос №<?= $nom ?> из <?= $chislo_vopr ?></small>
       			</h4>
     		</div>
@@ -403,12 +434,12 @@
 					<i><?= $key['subtitle'] ?> <b><?= ($key['required'] == 1 ? "Вопрос являлся обязательным" : "") ?></b></i>
 					<br />
 					<br />
-					<div id="preload_quest<?= $i ?>" style="margin:10 auto; width: 10px;">
+					<div id="preload_quest<?= $i ?>" style="width: 10px;">
 						<img src="<?= base_url() ?>images/ajax-loader.gif" />
 					</div>
 					<div id="table_div<?= $i ?>" style="width: 100%;"></div>
-					<div id="chart_div_a<?= $i ?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
-					<div id="chart_div_b<?= $i ?>" style="width: 100%; height: 500px;margin:0 auto;"></div>
+					<div id="chart_div_a<?= $i ?>" style="width: 100%; height: 500px;margin:10 auto;"></div>
+					<div id="chart_div_b<?= $i ?>" style="width: 100%; height: 500px;margin:10 auto;"></div>
 					<div id="other_div<?= $i ?>" style="width: 100%;"></div>
 				</div>
     		</div>

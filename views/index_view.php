@@ -169,45 +169,40 @@
   		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<table width="100%" border="0">
-		<tr>
-			<td align="left" width="70%" style="vertical-align:top;">
-				<h3><?= $name ?></h3>
-				<h4>
-					Группа: <?= $group ?>
-					<div style="width:120px;margin:0px 0 0 0;" class="btn btn-success" onClick="$('#myModalConfirm').modal('show');">
-						<span class="glyphicon glyphicon-pencil"></span> Изменить 
-					</div>
-				</h4>
-			</td>
-			<td rowspan="3" align="center" width="30%" style="vertical-align:top;">
-				<?php 
-				if ($block == 0)
-				{
-					?>
-					<a href="<?= base_url() ?>attest" class="btn btn-success btn-lg" style="width:250px;margin:0 0 20px 0;">Тестирование</a>
-					<a href="<?= base_url() ?>forms" class="btn btn-warning btn-lg" style="width:250px;margin:0 0 20px 0;">Анкетирование</a>
-					<?php
-				}
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-8">
+			<h3><?= $name ?></h3>
+			<h4>
+				Группа: <?= $group ?>
+				<div style="width:120px;margin:0px 0 0 0;" class="btn btn-success" onClick="$('#myModalConfirm').modal('show');">
+					<span class="glyphicon glyphicon-pencil"></span> Изменить 
+				</div>
+			</h4>
+			<p>Сдано тестов: <span class="label label-info " style="font-size:16px"><?= $sdano_t;?></span></p>
+			<p>Пройдено курсов: <span class="label label-info" style="font-size:16px"><?= $sdano_de;?></span></p>
+		
+		</div>
+		<div class="col-xs-6 col-md-4">	
+			<?php 
+			if ($block == 0)
+			{
 				?>
-				<?php 
-				if($guest >= 2)
-				{
-					?>
-					<a href="<?= base_url() ?>results/view_last" class="btn btn-info btn-lg" style="width:250px;margin:0 0 20px 0;">Последние результаты</a>
-					<a href="<?= base_url() ?>stat_site" class="btn btn-primary btn-lg" style="width:250px;margin:0 0 20px 0;">Журнал системы</a>
-					<?php
-				}
+				<a href="<?= base_url() ?>attest" class="btn btn-success btn-lg" style="width:250px;margin:0 0 20px 0;">Тестирование</a>
+				<a href="<?= base_url() ?>forms" class="btn btn-warning btn-lg" style="width:250px;margin:0 0 20px 0;">Анкетирование</a>
+				<?php
+			}
+			?>
+			<?php 
+			if($guest >= 2)
+			{
 				?>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">Сдано тестов: <span class="badge badge-success"><?php echo $sdano_t;?></span></td>
-		</tr>
-		<tr>
-			<td align="left">Пройдено курсов: <span class="badge badge-warning"><?php echo $sdano_de;?></span></td>
-		</tr>
-	</table>
+				<a href="<?= base_url() ?>results/view_last" class="btn btn-info btn-lg" style="width:250px;margin:0 0 20px 0;">Последние результаты</a>
+				<a href="<?= base_url() ?>stat_site" class="btn btn-primary btn-lg" style="width:250px;margin:0 0 20px 0;">Журнал системы</a>
+				<?php
+			}
+			?>
+		</div>
+	</div>
 			
 	<?php 
 	if (count($tests) > 0)
@@ -219,7 +214,7 @@
 				<div id="chart_div" style="width: 100%; height: 400px; margin: 10 auto;"></div>
 			</div>
 			<div class="col-xs-6 col-md-4">
-				<div style="margin: 0 auto;width: 216px;">
+				<div style="margin: 0 auto;width: 250px;">
 					<div id="chart_div2" style="width: 100%;margin:0 auto;"></div>
 				</div>
 			</div>

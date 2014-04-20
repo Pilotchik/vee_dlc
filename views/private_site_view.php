@@ -122,7 +122,20 @@
 													</div>
 													<div class="panel-collapse collapse in"> 
 						  								<div class="panel-body">
-						  									Тест был пройден<span class="label label-default" style="font-size:14px;"><?= $key2['data'] ?></span> за<span class="label label-default" style="font-size:14px;"><?= ceil(($key2['timeend']-$key2['timebeg'])/60) ?></span> минуты
+						  									<?php
+						  									if ($key2['timeend']-$key2['timebeg'] < 0)
+						  									{
+						  										?>
+						  										Тест не был завершён. Попробуйте запустить тестирование и завершить его
+						  										<?php
+						  									}
+						  									else
+						  									{
+						  										?>
+						  										Тест был пройден<span class="label label-default" style="font-size:14px;"><?= $key2['data'] ?></span> за<span class="label label-default" style="font-size:14px;"><?= ceil(($key2['timeend']-$key2['timebeg'])/60) ?></span> минуты
+						  										<?php
+						  									}
+						  									?>
 						    							</div>
 												  		<ul class="list-group">
 															<li class="list-group-item">Ваш результат: <span class="label label-success"><?= $key2['proz'] ?></span></li>
@@ -165,7 +178,7 @@
 				<?php 
 			}
 			?>
-			<div class="btn-group" style="margin: 20px auto;width: 100%;left: 50%;margin-left: -150px;">
+			<div class="btn-group" style="margin: 20px auto;left: 50%;margin-left: -150px;">
 	  			<!--<button class="btn btn-inverse" style="width:300px;" onClick="func_reyt_desc()">Как формируется рейтинг?</button>-->
 	 			<button class="btn btn-success" style="width:300px;" onClick="func_corr_desc()">Как корректируется результат?</button>
 			</div>

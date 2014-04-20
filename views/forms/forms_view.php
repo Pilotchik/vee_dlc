@@ -36,7 +36,7 @@
 					<div class="col-sm-6 col-md-6">
 					<div class="panel panel-primary">
 							<div class="panel-heading">
-								<h4 class="panel-title"><?= $key['title'] ?></h4>
+								<h4 class="panel-title"><b><?= $key['title'] ?></b></h4>
 							</div>
 							<div  id="form<?= $key['id'] ?>" class="panel-collapse collapse in"> 
   							<div class="panel-body">
@@ -110,7 +110,7 @@
 					<div class="col-sm-6 col-md-6">
 					<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title"><?= $key['title'] ?></h4>
+								<h4 class="panel-title"><b><?= $key['title'] ?></b></h4>
 							</div>
 							<div  id="form<?= $key['id'] ?>" class="panel-collapse collapse in"> 
   							<div class="panel-body">
