@@ -175,6 +175,16 @@ class Main extends CI_Controller {
 		{
 			$data2['top_index'] = $this->results_model->getTopOfIndex($data2['type_r']);
 		}
+		/******Рейтинг*******/
+		//1. Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
+		$old_result = $this->results_model->getReytingIDoverUserIdAndISRZ($user_id,$data2['isrz'],$high_isrz + 1);
+		//2. Если такой записи не было, то создать новую запись
+		if ($old_result == 0)
+		{
+			 $this->results_model->addStudReyt($user_id,$high_isrz + 1,$data2['isrz']);
+		}
+		//3. Получить все записи рейтинга по возрастанию ID
+		$data2['reyting'] = $this->results_model->getFullReytingOverUserId($user_id);
 		$this->load->view('index_view',$data2);
 	}
 

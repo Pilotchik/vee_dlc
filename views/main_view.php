@@ -489,6 +489,7 @@
 						<li data-target="#testimonials-slider" data-slide-to="5"></li>
 						<li data-target="#testimonials-slider" data-slide-to="6"></li>
 						<li data-target="#testimonials-slider" data-slide-to="7"></li>
+						<li data-target="#testimonials-slider" data-slide-to="8"></li>
 					</ol>
 					
 					<!-- Carousel items -->
@@ -621,6 +622,23 @@
 							<div class="col-md-8">
 								<p class="lead">Янсон Константин</p>
 								<cite>Техническое обеспечение</cite>
+							</div>
+
+						</div>
+
+						<!-- Testimonial 9 -->
+						<div class="item">
+
+							<div class="col-md-2 col-md-offset-1">
+
+								<div class="quote-icon">
+									<img src="<?= base_url() ?>images/icons/dude.svg" alt="" />
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<p class="lead">Никитин Герман</p>
+								<cite>Модуль каталогизации и подбора рекомендуемых материалов</cite>
 							</div>
 
 						</div>

@@ -37,6 +37,40 @@ class Kat extends CI_Controller {
 			$data['materials'][$key['id']] = $this->kat_model->getMaterials($key['id']);
 		}
 		$data['error'] = $error;
+
+
+		//Рекомендации
+		$user_id = $this->session->userdata('user_id');; // мой айди
+		$names = array();
+		$data['contents'] = array();
+		//Выбрать вопросы, на которые давал ответ пользователь
+		$user_themes = $this->kat_model->getUserThemes($user_id);
+		//Для каждой темы выбрать результат пользователя
+		$result = array();
+		$bad_themes = array();
+		foreach ($user_themes as $key) {
+			$balls = $this->kat_model->getUserThemeResult($user_id,$key['theme_id']);
+			if ($balls < 50)
+			{
+				if (!(in_array($key['theme_id'],$bad_themes)))
+				{
+					array_push($bad_themes,$key['theme_id']);
+				}
+				$result[$key['theme_id']]['name'] = $key['name_th'];
+			}
+		}
+		
+		$data['result'] = $result;
+		
+		foreach ($result as $key) {
+			$mats = $this->kat_model->getNeedMaterials($key['name']);
+			if (count($mats)>0)
+			{
+				$data['contents'][$key['name']]['materials'] =  $mats;	
+				$data['contents'][$key['name']]['name'] =  $key['name'];	
+			}
+		}
+
 		$this->load->view('kat/kat_menu_view',$data);
 	}
 

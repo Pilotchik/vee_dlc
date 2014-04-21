@@ -354,8 +354,7 @@ class Results_model extends CI_Model{
 	function updateUserIndexOfDifficult($user_id = 1,$isrz = 0)
 	{
 		$sql="UPDATE `new_persons` SET `isrz`='$isrz' WHERE `id`='$user_id'";
-		$data = $this->db->query($sql);
-		return $data;
+		$this->db->query($sql);
 	}
 
 	function getCountIndexOfDifficult($isrz = 0, $type = 1, $type_r = 1)
@@ -377,10 +376,31 @@ class Results_model extends CI_Model{
 
 	function getTopOfIndex($type_r = 1)
 	{
-		$sql="SELECT `new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`type_r` = '$type_r' ORDER BY `isrz` DESC LIMIT 10";
+		$sql="SELECT `new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`type_r` = '$type_r' AND `new_persons`.`block` = '0' ORDER BY `isrz` DESC LIMIT 10";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	function getReytingIDoverUserIdAndISRZ($user_id = 1,$isrz = 1,$reyt = 1)
+	{
+		$sql="SELECT `id` FROM `new_reyting` WHERE `user_id` = '$user_id' AND `reyt` = '$reyt' LIMIT 1";
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
-		return $data;
+		return count($data);
+	}
+
+	function addStudReyt($user_id = 1, $reyt = 1, $isrz = 1)
+	{
+		$date = date("Y, n-1, d");
+		$sql = "INSERT INTO `new_reyting` (`user_id`,`date`,`reyt`,`isrz`) VALUES ('$user_id', '$date', '$reyt','$isrz')";
+		$this->db->query($sql);
+	}
+
+	function getFullReytingOverUserId($user_id = 1)
+	{
+		$sql="SELECT `date`,`reyt` FROM `new_reyting` WHERE `user_id` = '$user_id' ORDER BY `id` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 
 	function getUserTypeROverUserID($user_id = 1)

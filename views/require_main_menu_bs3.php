@@ -85,9 +85,9 @@ if($guest >= 2)
 							<li class="dropdown-header">Статистика тестов</li>
 							<li><a href="<?= base_url() ?>stat">Статистика по тестам</a></li>
 							<li><a href="<?= base_url() ?>stat/view_groups">Статистика по группам</a></li>
+							<!--
 							<li class="dropdown-header">Рейтинг</li>
 							<li><a href="<?= base_url() ?>reyting/index/1/fspo">Рейтинг ФСПО</a></li>
-							<!--
 							<li><a href="<?= base_url() ?>reyting/index/2/bk">НОУ "СЕГРИС-ИИТ". Базовый курс</a></li>
 							<li><a tabindex="-1" href="<?php echo base_url();?>reyting/index/2/spec">НОУ "СЕГРИС-ИИТ". Специализация</a></li>
 							<li><a tabindex="-1" href="<?php echo base_url();?>reyting/prepods">Рейтинг преподавателей</a></li>
@@ -127,6 +127,7 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/fspo">Справочные материалы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/segrys">Справочные материалы НОУ "СЕГРИС-ИИТ"</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/psih">Универсальные справочные материалы</a></li>
+							<li><a href="<?= base_url() ?>kat_admin/view_materials">Редактирования соответствия</a></li>
 							<li class="divider"></li>
 							<li style="background-color:yellow;"><a href="<?= base_url();?>tests/kods">Ключи тестов</a></li>
 						</ul>

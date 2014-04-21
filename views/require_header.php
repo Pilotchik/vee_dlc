@@ -55,7 +55,7 @@
 							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Идейный вдохновитель">Королёв Владимир</span>
 						</td>
 						<td align="center">
-							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="HTML-вёрстка">Кудрявцев Александр</span>
+							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="HTML-вёрстка"><a href="http://vk.com/pilotchik">Кудрявцев Александр</a></span>
 						</td>
 					</tr>
 					<tr>
@@ -63,7 +63,7 @@
 							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Модули компетентностного анализа обучения">Малышев Кирилл</span>
 						</td>
 						<td align="center">
-							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="ИБ-мотиватор">Саблин Григорий</span>
+							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Техническое обеспечение">Янсон Константин</span>
 						</td>
 					</tr>
 					<tr>
@@ -76,13 +76,19 @@
 					</tr>
 					<tr>
 						<td align="center">
-							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Техническое обеспечение">Янсон Константин</span>
+							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Каталогизация и рекомендации справочных материалов">Никитин Герман</span>
 						</td>
 						<td align="center">
 							&nbsp;
 						</td>
 					</tr>
+					<tr>
+						<td align="center" colspan="2">
+							<a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a>
+						</td>
+					</tr>
 				</table>
+
 			</div>
 			<div class="modal-footer">
 				<div class="btn">

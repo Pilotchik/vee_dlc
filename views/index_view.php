@@ -77,6 +77,8 @@
             chart.draw(data, options);
       	}
 
+
+
   		google.load('visualization', '1', {packages:['gauge']});
   		google.setOnLoadCallback(drawChart3);
   		
@@ -99,6 +101,33 @@
 	        var chart = new google.visualization.Gauge(document.getElementById('chart_div2'));
 	        chart.draw(data, options);
   		}
+
+  		google.load("visualization", "1", {packages:["corechart"]});
+  		google.setOnLoadCallback(drawChart4);
+
+  		function drawChart4() 
+  		{
+        	var data = google.visualization.arrayToDataTable([
+	        	['Дата', 'Место'],
+	        	<?php
+	        	foreach ($reyting as $key) 
+	        	{
+	        		?>
+	        		[new Date(<?= $key['date'] ?>), <?= $key['reyt'] ?>],
+	        		<?php
+	          	}
+	          	?>
+        	]);
+
+	        var options = {
+              title: 'История рейтинга',
+              vAxis: {title:'Место',minValue:1,direction:-1},
+              hAxis: {format:'MMM d, y'}
+            };
+
+	        var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
+	        chart.draw(data, options);
+      	}
 	</script>
 
     <?php 
@@ -263,6 +292,9 @@
 				}
 			?>
 			</div>
+		</div>
+		<div style="width:100%;margin:10px auto;">
+			<div id="chart_div4" style="width: 100%; height: 400px;"></div>
 		</div>
 		<?php 
 	}

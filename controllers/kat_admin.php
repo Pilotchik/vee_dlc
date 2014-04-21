@@ -120,5 +120,87 @@ class Kat_admin extends CI_Controller {
 		$this->load->model('main_model');
 		$this->main_model->createLogRecord($msg,3);
 	}
+
+	public function view_materials($error = "")
+	{
+		//Загрузить из БД все материалы
+		$data['error'] = $error;
+		$data['materials'] = $this->kat_model->getAllMaterials();
+		$this->load->view('kat/kat_view_materials_view',$data);
+	}
+
+
+	public function edit_material()
+	{
+		$this->form_validation->set_rules('edit_id', '', 'required|numeric|is_natural');
+		$this->form_validation->set_rules('edit_name', '', 'xss_clean|required');
+		$this->form_validation->set_rules('edit_content', '', 'xss_clean|required');
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->view_materials("Поля были заполнены некорректно");
+		}
+		else
+		{
+			$content = $this->input->post('edit_content');
+			$name = $this->input->post('edit_name');
+			$id = $this->input->post('edit_id');
+			$this->kat_model->updateMaterial($id,$name,$content);
+			$this->view_materials("Материал \"$name\" изменён");	
+		}	
+	}
+
+		public function edit_accordance()
+	{
+		/*$this->form_validation->set_rules('id_mat', '', 'required|numeric');
+		$this->form_validation->set_rules('accordance_percents', '', 'required|numeric|is_natural');
+		$this->form_validation->set_rules('sel_theme', '', 'required|numeric');
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->view_materials("Поля были заполнены некорректно");
+		}
+		else
+		{ */
+			$id_mat = $this->input->post('id_mat');
+			$id_th = $this->input->post('sel_theme');
+			$accordance = $this->input->post('accordance_percents');
+			$this->kat_model->setAccordance($id_mat,$id_th,$accordance);
+			$this->view_materials("Добавлено новое соответствие");	
+		//}	
+	}
+	public function edit_according($error = "")
+	{
+		
+		$id_mat = $this->uri->segment(3);
+		$data['error'] = $error;
+		$data['currentmat'] = $this->kat_model->getCurrentMat($id_mat);
+		$data['accordances'] = $this->kat_model->getAllAccordance($id_mat);
+		$data['themeslist'] = $this->kat_model->getAllThemes();
+		$data['id_mat'] = $id_mat;
+		$this->load->view('kat/kat_view_edit_according',$data);
+		
+	}
+
+	public function delete_accordance()
+	{
+		$id = $this->input->post('delete_id');
+		$this->kat_model->deleteAccordance($id);
+		$this->edit_according("Соответствие удалено");	
+	}
+
+	public function delete_material()
+	{			
+				$this->form_validation->set_rules('delete_id', '', 'required|numeric|is_natural');
+					if ($this->form_validation->run() == FALSE)
+				{
+					$this->view_materials("Поля были заполнены некорректно");
+				}
+					else
+				{
+					$id = $this->input->post('delete_id');
+					$this->kat_model->deleteMaterial($id);
+					$this->view_materials("Материал удален");
+				}
+
+	}
 	
 }
