@@ -20,9 +20,9 @@ class Registr_model extends CI_Model{
 
 	function checkLogin($login="")
 	{
-		$sql="SELECT `id` FROM `new_persons` WHERE `login`='$login'";
+		$sql = "SELECT `id` FROM `new_persons` WHERE `login`='$login'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
+		$data = $query->result_array();
 		return $data[0];	
 	}
 
@@ -63,9 +63,9 @@ class Registr_model extends CI_Model{
 	{
 		$lastname=$this->input->post('lastname');
 		$firstname=$this->input->post('firstname');
-		$uid=$this->input->post('uid');
-		$guest=$this->input->post('guest');
-		$photo=$this->input->post('photo');
+		$uid = $this->input->post('uid');
+		$guest = $this->input->post('guest');
+		$photo = "";
 		$type=$this->input->post('type');
 		if ($type=='1')
 		{

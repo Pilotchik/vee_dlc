@@ -16,7 +16,6 @@
 		<![endif]-->
 		<meta name="description" content="Виртуальная Обучающая среда" />
 		<script type="text/javascript" src="http://userapi.com/js/api/openapi.js?111"></script>
-		<script type="text/javascript">VK.init({apiId: 2849330});</script>
 		<script type="text/javascript" src="<?= base_url()?>js/jquery.min.js"></script>
 		<script type="text/javascript">
 
@@ -33,9 +32,6 @@
 			function auth_open()
 			{
 				$("#myModalAuth").modal('show');
-				$('#myModalAuth').on('shown.bs.modal', function () {
-  					VK.Widgets.Auth("vk_auth", {width: "250px", authUrl: 'http://exam.segrys.ru/registr/vk'});
-				});
 			}
 		</script>
 		
@@ -230,7 +226,7 @@
 							<label for="exampleInputPassword1">Пароль</label>
 							<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Введите пароль">
 						</div>
-						<div id="vk_auth" style="margin: 0 auto;"></div>
+						
 						<script type="text/javascript"></script>
 							
 					</div>
@@ -298,6 +294,30 @@
 
 	<!--//////////////////////////////////////// end NAVIGATION BAR ////////////////////////////////////////-->
 
+	<script>
+		VK.init({apiId: 2849330});
+
+		function authInfo(response) 
+		{
+  			if (response.session) 
+  			{
+    			//alert('user: '+response.session.mid);
+    			console.log(response.session.user);
+    			ln = response.session.user.last_name;
+    			fn = response.session.user.first_name;
+    			//Редирект на registr/vk
+    			window.location.href = "<?= base_url() ?>registr/vk?lastname="+ln+"&firstname="+fn;
+  			} 
+  			else 
+  			{
+    			console.log('not auth');
+  			}
+		}
+		
+		//VK.Auth.getLoginStatus(authInfo);
+
+	</script>
+
 	
 
 	<!--/////////////////////////////////////// HERO SECTION ////////////////////////////////////////-->
@@ -306,17 +326,23 @@
 
 		<div class="container">
 			<div class="row">
-
 				<div class="col-md-12 intro" style="color: white; font-size: 20px;">
 					<img src="<?= base_url() ?>images/logo.png" alt="Вирутальная обучающая среда" width="170px">
 					<p class="lead" ><h1>Виртуальная Обучающая Среда</h1>Среда для студентов факультета среднего профессионального образования НИУ ИТМО</p>
-					<button  class="btn btn-hg btn-primary" data-toggle="modal" onClick="auth_open()">
+					<!--
+					<div id="vk_auth" style="margin-top:10px"></div>
+						<script>VK.Widgets.Auth("vk_auth", {width: "250px", authUrl: 'http://exam.segrys.ru/registr/vk'});</script>
+					</div>
+					-->
+					<button  class="btn btn-hg btn-primary" onClick="auth_open()" style="width:196px;">
 						Войти в систему
 					</button>
-					<button class="btn btn-hg btn-inverse inline" data-toggle="modal" data-target="#myModalReg">
+					<button class="btn btn-hg btn-inverse inline" data-toggle="modal" data-target="#myModalReg" style="width:196px;">
 						Регистрация
 					</button>
-
+					<button class="btn btn-hg btn-info inline" style="width:196px;" id="vk_button" onClick="VK.Auth.login(authInfo);">
+						Через VK
+					</button>
 				</div>
 			</div><!-- /row -->
 		</div><!-- /container -->
