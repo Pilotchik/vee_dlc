@@ -100,6 +100,15 @@ class Mapi extends CI_Model{
         $data=array($query->result_array(),$query1->result_array());
         return $data;
     }
+
+    function getPersonDataToVK($uname = "")
+    {
+        $sql = "SELECT * FROM `new_persons` WHERE `login`='$uname' LIMIT 1";
+        $query = $this->db->query($sql);
+        $res_array = $query->result_array();
+        return $res_array[0];
+    }
+
     function getResRecord($user_id="",$test_id="")
     {
         $sql="SELECT `id`,`true_all`,`proz` FROM `new_results` where `user`='$user_id' and `razd_id`='$test_id'";
@@ -219,6 +228,21 @@ class Mapi extends CI_Model{
         $sql = "INSERT INTO `new_log` (`user`,`date`,`type`,`time`,`goal`) VALUES ('$user', '$date_t','$type','$now_time','$goal')";
         $query = $this->db->query($sql);
         return $query;
+    }
+
+    function checkUserAccount($user_id = 1)
+    {
+        $sql="SELECT `id`,`lastname`,`firstname` FROM `new_persons` WHERE `id` = '$user_id' AND `block` = '0' LIMIT 1";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
+    function getMaxUserId()
+    {
+        $sql="SELECT MAX(`id`) as `maxid` FROM `new_persons`";
+        $query = $this->db->query($sql);
+        $data = $query->result_array();
+        return $data[0]['maxid'];
     }
 
 }
