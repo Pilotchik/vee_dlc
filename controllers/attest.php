@@ -25,11 +25,12 @@ class Attest extends CI_Controller {
 	}
 
 
-	//Функция отображения главной страницы администратора
+	//Функция отображения главной страницы
 	function index($error = "")
 	{
+		$data['title'] = "ВОС.Тестирование";
 		$type_r=$this->session->userdata('type_r');
-		if ($type_r>0)
+		if ($type_r > 0)
 		{
 			$data['disciplines'] = $this->attest_model->getDisciplines($type_r);
 		}

@@ -59,16 +59,16 @@
 		<li class="active"><h3><?= $stud_name ?>. <?= $group_name ?> <small>Активность пользователя</small></h3></li>
 	</ul>
 	<h3>Тесты</h3>
-	<table class="sortable" id="groups">
+	<table class="sortable" id="groups" style="fint-size:16px;">
 		<thead>
 			<tr>
-				<td align="center"><b>Дисциплина</b></td>
-				<td align="center"><b>Тест</b></td>
-				<td align="center"><b>Дата</b></td>
-				<td align="center"><b>Время, мин</b></td>
-				<td align="center"><b>Результат</b></td>
-				<td align="center"><b>Оценка</b></td>
-				<td align="center"><b>Подробно</b></td>
+				<td><b>Дисциплина</b></td>
+				<td><b>Тест</b></td>
+				<td><b>Дата</b></td>
+				<td><b>Время, мин</b></td>
+				<td><b>Результат</b></td>
+				<td><b>Оценка</b></td>
+				<td><b>Подробно</b></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -86,20 +86,20 @@
 						$oz = $ozenka[$key['id']];
 						switch ($oz) 
 						{
-							case 2:	echo "<td bgcolor=red>$oz</td>";	break;
-							case 3:	echo "<td bgcolor=#e28b00>$oz</td>";	break;
-							case 4:	echo "<td bgcolor=#adff2f>$oz</td>";	break;
-							case 5:	echo "<td bgcolor=green>$oz</td>";	break;
+							case 2:	echo "<td style=\"background-color:#f2dede\">$oz</td>";	break;
+							case 3:	echo "<td style=\"background-color:#fcf8e3\">$oz</td>";	break;
+							case 4:	echo "<td style=\"background-color:#d9edf7\">$oz</td>";	break;
+							case 5:	echo "<td style=\"background-color:#dff0d8\">$oz</td>";	break;
 						}
 						?>
-						<td>
+						<td style="vertical-align:middle;">
 							<form action="<?= base_url() ?>results/view_stud_group_result/<?= $key['id'] ?>" method="post">
 								<input type="hidden" name="stud_id" value="<?= $stud_id ?>">
 								<input type="hidden" name="test_name" value="<?= $test_name[$key['id']]['name'] ?>">
 								<input type="hidden" name="group_id" value="<?= $group_id ?>">
 								<input type="hidden" name="test_id" value="<?= $test_name[$key['id']]['id'] ?>">
 								<input type="hidden" name="disc_id" value="<?= $disc_name[$key['id']]['id'] ?>">
-								<input style="width:100px;margin:0 auto;font-size:11px;" class="btn btn-info" type="submit" value="Просмотр">
+								<input style="width:100px;font-size:12px;" class="btn btn-info" type="submit" value="Просмотр">
 							</form>
 						</td>
 					</tr>
@@ -108,9 +108,7 @@
 				?>
 				</tbody>
 			</table>
-			<script type="text/javascript">
-				highlightTableRows("groups","hoverRow","clickedRow",false);
-			</script>
+			
 			<br />
 		<h3>Личный рейтинг</h3>
 		<div class="row">

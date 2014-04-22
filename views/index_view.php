@@ -222,7 +222,7 @@
 				<div id="chart_div3" style="width: 100%; height: 250px; margin: 10 auto;"></div>
 			</div>
 			<div class="col-xs-6" style="text-align:center;">
-				<h4>И<small>ндекс</small> C<small>ложности</small> Р<small>ешённых</small> З<small>адач</small></h4>
+				<h4 style="font-size: 28px;">И<small>ндекс</small> C<small>ложности</small> Р<small>ешённых</small> З<small>адач</small></h4>
 				<?= round($diff[1],1) ?>% * 1 + <?= round($diff[2],1) ?>% * 2 + <?= round($diff[3],1) ?>% * 3 + <?= round($diff[4],1) ?>% * 4
 				<?php
 				if ($isrz > 0)

@@ -49,11 +49,12 @@ class Attest_model extends CI_Model
 		return $data;
 	}
 
-	function getTests_compl($disc_id="",$user_id="")
+	//Получение всех пройденных тестов
+	function getTests_compl($disc_id = 1,$user_id = 1)
 	{
-		$sql="SELECT id,name_razd,kod FROM `new_razd` where `test_id`='$disc_id' and id in (select razd_id from `new_results` where `user`='$user_id' and `timeend`!='0')";
+		$sql="SELECT `new_razd`.`stud_view`,`new_razd`.`id`,`new_razd`.`name_razd`,`new_results`.`id` as `res_id` FROM `new_razd`,`new_results` WHERE `new_razd`.`test_id` = '$disc_id' AND `new_results`.`razd_id` = `new_razd`.`id` AND `new_results`.`user` = '$user_id' AND `new_results`.`timeend` != '0'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
+		$data = $query->result_array();
 		return $data;
 	}
 

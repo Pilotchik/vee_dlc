@@ -74,8 +74,9 @@
 						</a>
 			  		</h4>
 				</div>
-					<div id="collapse<?= $i;?>" class="panel-collapse collapse">
-						<table width="100%" class="table" style="margin-bottom:0px;">
+				
+				<div id="collapse<?= $i;?>" class="panel-collapse collapse">
+					<table width="100%" class="table" style="margin-bottom:0px;">
 					<?php
 					foreach ($materials[$key['id']] as $key2)
 					{
