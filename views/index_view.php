@@ -77,31 +77,6 @@
             chart.draw(data, options);
       	}
 
-
-
-  		google.load('visualization', '1', {packages:['gauge']});
-  		google.setOnLoadCallback(drawChart3);
-  		
-  		function drawChart3() 
-  		{
-    		var data = google.visualization.arrayToDataTable([
-      		['Параметр', 'Значение'],
-      		['Результат', <?php echo $avg?>]
-      		]);
-
-    		var options = {
-      		title: 'Средний результат',
-      		width: 400, height: 220,
-      		greenFrom: 60, greenTo: 100,
-      		yellowFrom:40, yellowTo: 60,
-      		redFrom: 20, redTo: 40,
-      		minorTicks: 5
-    		};
-
-	        var chart = new google.visualization.Gauge(document.getElementById('chart_div2'));
-	        chart.draw(data, options);
-  		}
-
   		google.load("visualization", "1", {packages:["corechart"]});
   		google.setOnLoadCallback(drawChart4);
 
@@ -209,6 +184,7 @@
 			</h4>
 			<p>Сдано тестов: <span class="label label-info " style="font-size:16px"><?= $sdano_t;?></span></p>
 			<p>Пройдено курсов: <span class="label label-info" style="font-size:16px"><?= $sdano_de;?></span></p>
+			<p>Средний результат по тестам: <span class="label label-warning" style="font-size:16px"><?= $avg ?>%</span></p>
 		
 		</div>
 		<div class="col-xs-6 col-md-4">	
@@ -238,25 +214,16 @@
 	{
 		?>
 		<h3>Личные результаты</h3>
-		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-md-8">
-				<div id="chart_div" style="width: 100%; height: 400px; margin: 10 auto;"></div>
-			</div>
-			<div class="col-xs-6 col-md-4">
-				<div style="margin: 0 auto;width: 250px;">
-					<div id="chart_div2" style="width: 100%;margin:0 auto;"></div>
-				</div>
-			</div>
-		</div>
-
+		<div id="chart_div" style="width: 100%; height: 300px; margin: 10 auto;"></div>
+		
 		<h3>Личный рейтинг</h3>
 		<div class="row">
-			<div class="col-xs-12 col-sm-6 col-md-8">
-				<div id="chart_div3" style="width: 100%; height: 400px; margin: 10 auto;"></div>
+			<div class="col-xs-6">
+				<div id="chart_div3" style="width: 100%; height: 250px; margin: 10 auto;"></div>
 			</div>
-			<div class="col-xs-6 col-md-4">
-				<h4>Индекс сложности <br>решённых задач</h4>
-				<?= round($diff[1]/100,3) ?> * 1 + <?= round($diff[2]/100,3) ?> * 2 + <?= round($diff[3]/100,3) ?> * 3 + <?= round($diff[4]/100,3) ?> * 4
+			<div class="col-xs-6" style="text-align:center;">
+				<h4>И<small>ндекс</small> C<small>ложности</small> Р<small>ешённых</small> З<small>адач</small></h4>
+				<?= round($diff[1],1) ?>% * 1 + <?= round($diff[2],1) ?>% * 2 + <?= round($diff[3],1) ?>% * 3 + <?= round($diff[4],1) ?>% * 4
 				<?php
 				if ($isrz > 0)
 				{

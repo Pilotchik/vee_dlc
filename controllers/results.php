@@ -995,6 +995,7 @@ class Results extends CI_Controller {
 			$data['group_id'] = $this->results_model->getGroupIDOverUserID($data['stud_id']);
 			$data['group_name'] = $this->results_model->getGroupNameOverId($data['group_id']);
 			$data['stud_name'] = $this->results_model->getUserNameOverUserID($data['stud_id']);
+			$data['title'] = "ВОС.Результаты.".$data['stud_name'];
 			$data['type_r'] = $this->results_model->getUserTypeROverUserID($data['stud_id']);
 			$data['results']=$this->results_model->getAllStudTests($data['stud_id']);
 			//Оценка
@@ -1078,6 +1079,7 @@ class Results extends CI_Controller {
 			{
 				$data['isrz'] = 0;
 			}
+			$this->load->model('reyting_model');
 			if (($data['stud_id'] == 1) || ($data['stud_id'] == 1060))
 			{
 				//Не обновлять
@@ -1085,13 +1087,25 @@ class Results extends CI_Controller {
 			else
 			{
 				//Обновить индекс в БД
-				$this->results_model->updateUserIndexOfDifficult($data['stud_id'],$data['isrz']);
+				$this->reyting_model->updateUserIndexOfDifficult($data['stud_id'],$data['isrz']);
 			}
 			//Узнать, сколько студентов набрали больший индекс
-			$high_isrz = $this->results_model->getCountIndexOfDifficult($data['isrz'],1,$data['type_r']);
-			$low_isrz = $this->results_model->getCountIndexOfDifficult($data['isrz'],2,$data['type_r']);
+			$high_isrz = $this->reyting_model->getCountIndexOfDifficult($data['isrz'],1,$data['type_r']);
+			$low_isrz = $this->reyting_model->getCountIndexOfDifficult($data['isrz'],2,$data['type_r']);
 			$data['high_isrz'] = ceil(($high_isrz/($high_isrz+$low_isrz))*100);
 			$data['low_isrz'] = 100 - $data['high_isrz'];
+			$data['high_isrz_abs'] = $high_isrz;
+			$data['low_isrz_abs'] = $low_isrz;
+			/******Рейтинг*******/
+			//1. Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
+			$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($data['stud_id'],$data['isrz'],$high_isrz + 1);
+			//2. Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
+			if ($old_result == 0)
+			{
+				 $this->reyting_model->addStudReyt($data['stud_id'],$high_isrz + 1,$data['isrz']);
+			}
+			//3. Получить все записи рейтинга по возрастанию ID
+			$data['reyting'] = $this->reyting_model->getFullReytingOverUserId($data['stud_id']);
 			$this->load->view('results/results_all_user_results_view',$data);	
 		}
 		else
