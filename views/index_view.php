@@ -308,6 +308,9 @@
 					?>
 					</tbody>
 				</table>
+				<div style="margin:20px auto;width:100%;text-align:center;">
+					<a href="<?= base_url() ?>rating?type=1" class="btn btn-info" style="width:50%;">Полный рейтинг НИУ ИТМО ФСПО</a>
+				</div>
 			</div>
 			<div class="tab-pane fade" id="segrys">
 				<table class="table table-hover table-bordered" style="font-size:12px;width:80%;margin:10 auto;">
@@ -339,6 +342,9 @@
 						?>
 					</tbody>
 				</table>
+				<div style="margin:20px auto;width:100%;text-align:center;">
+					<a href="<?= base_url() ?>rating?type=2" class="btn btn-info" style="width:50%;">Полный рейтинг НОУ СЕГРИС-ИИТ</a>
+				</div>
 			</div>
 		</div>
 		<?php
@@ -376,6 +382,9 @@
 				?>
 			</tbody>
 		</table>
+		<div style="margin:20px auto;width:100%;text-align:center;">
+			<a href="<?= base_url() ?>rating?type=<? $this->session->userdata('type_r') ?>" class="btn btn-default" style="width:250px;margin:0 0 20px 0;">Полный рейтинг <?= $type_r_name ?></a>
+		</div>
 		<?php
 	}
 	?>

@@ -186,6 +186,7 @@ class Main extends CI_Controller {
 		}
 		//3. Получить все записи рейтинга по возрастанию ID
 		$data2['reyting'] = $this->reyting_model->getFullReytingOverUserId($user_id);
+		$data2['type_r_name'] = $this->reyting_model->getTypeRegNameOverTypeRegId($data2['type_r']);
 		$this->load->view('index_view',$data2);
 	}
 

@@ -232,7 +232,7 @@ class Mapi extends CI_Model{
 
     function checkUserAccount($user_id = 1)
     {
-        $sql="SELECT `id`,`lastname`,`firstname` FROM `new_persons` WHERE `id` = '$user_id' AND `block` = '0' LIMIT 1";
+        $sql="SELECT `id`,`lastname`,`firstname`,`isrz` FROM `new_persons` WHERE `id` = '$user_id' AND `block` = '0' LIMIT 1";
         $query = $this->db->query($sql);
         return $query->result_array();
     }

@@ -14,6 +14,9 @@ class Attest extends CI_Controller {
 		if ($guest=='')
 		{
 			$data['error']="Время сессии истекло. Необходима авторизация";
+			$this->load->model('registr_model');
+			$data['fspo']=$this->registr_model->getFSPO();
+			$data['segrys']=$this->registr_model->getSegrys();
 			$this->load->view('main_view',$data);
 		}
 		else

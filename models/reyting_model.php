@@ -162,6 +162,16 @@ class Reyting_model extends CI_Model{
 		return $data;		
 	}
 
+	//Рейтинг. Версия 2.0
+
+	function getTypeRegNameOverTypeRegId($type_r = 1)
+	{
+		$sql="SELECT `name` FROM `new_type_reg` WHERE `id` = '$type_r'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['name'];
+	}
+
 	function updateUserIndexOfDifficult($user_id = 1,$isrz = 0)
 	{
 		$sql="UPDATE `new_persons` SET `isrz`='$isrz' WHERE `id`='$user_id'";
@@ -187,7 +197,14 @@ class Reyting_model extends CI_Model{
 
 	function getTopOfIndex($type_r = 1)
 	{
-		$sql="SELECT `new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`type_r` = '$type_r' AND `new_persons`.`block` = '0' ORDER BY `isrz` DESC LIMIT 10";
+		$sql="SELECT `new_persons`.`id`,`new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`type_r` = '$type_r' AND `new_persons`.`block` = '0' ORDER BY `isrz` DESC LIMIT 10";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	function getFullTopOfIndex($type_r = 1)
+	{
+		$sql="SELECT `new_persons`.`id`,`new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`type_r` = '$type_r' AND `new_persons`.`block` = '0' AND `new_persons`.`isrz` > 0 ORDER BY `isrz` DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -215,7 +232,6 @@ class Reyting_model extends CI_Model{
 		return $query->result_array();
 	}
 
-	
 }
 
 ?>

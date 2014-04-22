@@ -363,7 +363,8 @@ class Api extends CI_Controller
 		echo $this->mapi->getMaxUserId();
 	}
 
-	function getUserReyt()
+	//Функция получения индекса пользователя
+	function getUserISRZ()
 	{
 		$this->form_validation->set_rules('user_id', 'Ключ', 'required');
 		if($this->form_validation->run() == FALSE)
@@ -417,24 +418,7 @@ class Api extends CI_Controller
 					{
 						//Обновить индекс в базе данных
 						$this->reyting_model->updateUserIndexOfDifficult($user_id,$isrz);
-
-						//Узнать, сколько студентов набрали больший индекс
-						$high_isrz = $this->reyting_model->getCountIndexOfDifficult($isrz,1,$type_r);
-						
-						//Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
-						$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($user_id,$isrz,$high_isrz + 1);
-						
-						//Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
-						if ($old_result == 0)
-						{
-							$rank = $high_isrz + 1;
-							$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
-							echo "Рейтинг пользователя обновлён, ".$rank." место\n";
-						}
-						else
-						{
-							echo "Запись уже была создана сегодня или рейтинг не изменился\n";
-						}
+						echo "Индекс пользователя обновлён: ".$isrz."\n";
 					}
 					else
 					{
@@ -444,6 +428,65 @@ class Api extends CI_Controller
 				else
 				{
 					echo "Тестов меньше 5, рейтинг рассчитываться не будет\n";
+				}
+			}
+			else
+			{
+				echo $user_id."> Пользователя нет или он заблокирован\n";
+			}
+		}
+	}
+
+	//Функция получения места пользователя в рейтинге
+	function getUserReyt()
+	{
+		$this->form_validation->set_rules('user_id', 'Ключ', 'required');
+		if($this->form_validation->run() == FALSE)
+		{
+			echo "error";
+		}
+		else
+		{
+			$user_id = $this->input->post('user_id');
+			//Проверить, существует ли этот пользователь и не заблокирован ли он
+			$account = $this->mapi->checkUserAccount($user_id);
+			if (isset($account[0]))
+			{
+				echo $user_id."> ".$account[0]['lastname']." ".$account[0]['firstname']."\n";
+
+				$isrz = $account[0]['isrz'];
+
+				//Если индекс больше нуля, то просчитать места
+				if ($isrz > 0)
+				{
+					//Найти все вопросы, на которые отвечал пользователь
+					$this->load->model('results_model');
+					$this->load->model('reyting_model');
+
+					//определить тип образовательного учреждения, в котором учится пользователь
+					$type_r = $this->results_model->getUserTypeROverUserID($user_id);
+
+					//Узнать, сколько студентов набрали больший индекс
+					$high_isrz = $this->reyting_model->getCountIndexOfDifficult($isrz,1,$type_r);
+					
+					//Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
+					$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($user_id,$isrz,$high_isrz + 1);
+					
+					//Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
+					if ($old_result == 0)
+					{
+						$rank = $high_isrz + 1;
+						$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
+						echo "Рейтинг пользователя обновлён, ".$rank." место\n";
+					}
+					else
+					{
+						echo "Запись уже была создана сегодня или рейтинг не изменился\n";
+					}
+				}
+				else
+				{
+					echo "Индекс для пользователя не вычислялся";
 				}
 			}
 			else
