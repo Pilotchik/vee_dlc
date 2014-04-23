@@ -6,6 +6,8 @@
 		<li class="active">Общий рейтинг <?= $type_r_name ?></li>
 	</ul>
 
+	<h4>Последняя пересортировка рейтинга проводилась: <span class="label label-success"><?= $rate_resort ?></span></h4>
+
 	<table class="table table-hover table-bordered" id="groups" style="font-size:12px;width:80%;margin:10 auto;margin-top: 20px;">
 		<thead style="font-size:14px;">
 			<tr>

@@ -217,6 +217,7 @@
 		<div id="chart_div" style="width: 100%; height: 300px; margin: 10 auto;"></div>
 		
 		<h3>Личный рейтинг</h3>
+		<p><?= $status ?></p>
 		<div class="row">
 			<div class="col-xs-6">
 				<div id="chart_div3" style="width: 100%; height: 250px; margin: 10 auto;"></div>
@@ -234,7 +235,7 @@
 							<td align="center">
 							 	<small>Индекс<br>меньше<br>у <?= $low_isrz ?>% (<?= $low_isrz_abs ?>)</small>
 							</td>
-							<td align="center" width="100%" style="vertical-align:middle;padding-top:20px">
+							<td align="center" width="50%" style="vertical-align:middle;padding-top:20px">
 								<div class="progress">
 									<div class="progress-bar progress-bar-success" style="width: <?= $low_isrz ?>%">
 										<span class="sr-only"><?= $low_isrz ?>% Complete (success)</span>

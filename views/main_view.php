@@ -307,11 +307,35 @@
     			fn = response.session.user.first_name;
     			//Редирект на registr/vk
     			window.location.href = "<?= base_url() ?>registr/vk?lastname="+ln+"&firstname="+fn;
+    			/*VK.Api.call('users.get', {uids: 27420}, function(r) { 
+  					if(r.response) 
+  					{ 
+    					alert('Привет, ' + r.response[0].first_name); 
+  					} 
+				}); 
+				*/
   			} 
   			else 
   			{
     			console.log('not auth');
   			}
+		}
+
+		function send()
+		{
+			$.post('<?= base_url() ?>api/vk_send_notification',{user_id:27420,msg:'Привет, всё получилось'}, 
+			function(data,status)
+				{
+					if( status=='success' )
+					{
+			        	eval('var obj='+data);
+						console.log(obj);
+					}
+					else
+					{
+			        	alert('В процессе отправки произошла ошибка :(');
+			    	}
+				});
 		}
 		
 		//VK.Auth.getLoginStatus(authInfo);
@@ -340,7 +364,7 @@
 					<button class="btn btn-hg btn-inverse inline" data-toggle="modal" data-target="#myModalReg" style="width:196px;">
 						Регистрация
 					</button>
-					<button class="btn btn-hg btn-info inline" style="width:196px;" id="vk_button" onClick="VK.Auth.login(authInfo);">
+					<button class="btn btn-hg btn-info inline" style="width:196px;" id="vk_button" onClick="VK.Auth.login(authInfo,'messages');">
 						Через VK
 					</button>
 				</div>
@@ -453,7 +477,7 @@
 					
 					<div class="col-md-6">
 						<h3>Аналитика</h3>
-						<p class="lead">Анализ и статистическая обработка данных.</p>
+						<p class="lead">Анализ и статистическая обработка данных</p>
 						<p>Для формирования тестовых наборов, способных максимально точно определить уровень знаний, можно воспользоваться методами квалиметрической экспертизы, которые мы применяем в ВОС</p>
 					   <a href="" class="btn btn-hg btn-primary">Подробнее</a>
 					</div> 
@@ -488,6 +512,28 @@
 			</div><!-- /container -->
 
 		</div><!-- /info-section-white -->
+
+		<div class="info-section-gray">
+			
+			<div class="container">
+				<div class="row">   
+
+					<div class="col-md-6">
+						<a href="<?= base_url() ?>images/rating.png"><img src="<?= base_url() ?>images/rating.png" alt="placeholder image" class="img-responsive"></a>
+					</div>
+
+					
+					<div class="col-md-6">
+						<h3>Рейтинг</h3>
+						<p class="lead">Уникальная система рейтингования</p>
+						<p>Уникальность системы в том, что рейтинг расчитывается исходя из уровня сложности решённых пользователем задач</p>
+					   	<a href="" class="btn btn-hg btn-primary">Подробнее</a>
+					</div> 
+								   
+				</div><!-- /row -->
+			</div><!-- /container -->
+
+		</div><!-- /info-section-gray -->
 		
 		<!--/////////// And here's the gray background section! //////////-->
 		

@@ -1097,13 +1097,47 @@ class Results extends CI_Controller {
 			$data['high_isrz_abs'] = $high_isrz;
 			$data['low_isrz_abs'] = $low_isrz;
 			/******Рейтинг*******/
-			//1. Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
-			$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($data['stud_id'],$data['isrz'],$high_isrz + 1);
-			//2. Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
-			if ($old_result == 0)
+			
+			//Выбрать последнюю запись рейтинга пользователя
+			//Если такой нет, то создать запись
+			//Если запись есть и при этом рейтинг не совпадает, то смотреть на дату
+			//Если дата совпадает с сегодняшней, то перезаписать рейтинг
+			//Если дата не совпадает с сегодняшней, то создать запись
+
+			$rank = $high_isrz + 1;
+			$isrz = $data['isrz'];
+
+			$last_result = $this->reyting_model->getLastReytingRecordOverUserId($data['stud_id']);
+			
+			if (isset($last_result))
 			{
-				 $this->reyting_model->addStudReyt($data['stud_id'],$high_isrz + 1,$data['isrz']);
+				$date = date("Y, n-1, d");
+				if ($last_result['reyt'] != $rank)
+				{
+					$delta = $last_result['reyt'] - $rank;
+					if ($last_result['date'] == $date)
+					{
+						//Перезаписать рейтинг
+						$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz);
+						$data['status'] = "Рейтинг уже был составлен сегодня, но пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
+					}
+					else
+					{
+						$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz);
+						$data['status'] = "Пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
+					}
+				}
+				else
+				{
+					$data['status'] = "Позиция пользователя в рейтинге не изменилась. Он занимает ".$rank." место\n";
+				}
 			}
+			else
+			{
+				$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz);
+				$data['status'] = "Пользователь впервые участвует в рейтинге. Он занимает ".$rank." место\n";
+			}
+
 			//3. Получить все записи рейтинга по возрастанию ID
 			$data['reyting'] = $this->reyting_model->getFullReytingOverUserId($data['stud_id']);
 			$this->load->view('results/results_all_user_results_view',$data);	

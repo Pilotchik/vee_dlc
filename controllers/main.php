@@ -125,25 +125,25 @@ class Main extends CI_Controller {
 		//Вычисление индекса сложности решённых задач
 		$isrz = 0;
 		$this->load->model('reyting_model');
-		//Найти все вопросы, на которые отвечал пользователь
-		for($i = 1;$i < 5;$i++)
-		{
-			$diff[$i] = $this->results_model->getUserAnswersOverDifficult($user_id,$i);
-			$summ = 0;
-			foreach($diff[$i] as $key)
-			{
-				$summ += $key['true'];
-			}
-			$data2['diff'][$i] = 0;
-			if (count($diff[$i])>0) 
-			{
-				$data2['diff'][$i] = round(($summ/count($diff[$i]))*100,3);
-				$isrz += ($summ/count($diff[$i]))*$i;
-			}
-		}
-		$data2['error'] = $error;
 		if (count($user_tests)>4)
 		{
+			//Найти все вопросы, на которые отвечал пользователь
+			for($i = 1;$i < 5;$i++)
+			{
+				$diff[$i] = $this->results_model->getUserAnswersOverDifficult($user_id,$i);
+				$summ = 0;
+				foreach($diff[$i] as $key)
+				{
+					$summ += $key['true'];
+				}
+				$data2['diff'][$i] = 0;
+				if (count($diff[$i])>0) 
+				{
+					$data2['diff'][$i] = round(($summ/count($diff[$i]))*100,3);
+					$isrz += ($summ/count($diff[$i]))*$i;
+				}
+			}
+		
 			$data2['isrz'] = round($isrz,3);
 		}
 		else
@@ -177,16 +177,52 @@ class Main extends CI_Controller {
 			$data2['top_index'] = $this->reyting_model->getTopOfIndex($data2['type_r']);
 		}
 		/******Рейтинг*******/
-		//1. Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
-		$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($user_id,$data2['isrz'],$high_isrz + 1);
-		//2. Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
-		if ($old_result == 0)
+		
+		//Выбрать последнюю запись рейтинга пользователя
+		//Если такой нет, то создать запись
+		//Если запись есть и при этом рейтинг не совпадает, то смотреть на дату
+		//Если дата совпадает с сегодняшней, то перезаписать рейтинг
+		//Если дата не совпадает с сегодняшней, то создать запись
+
+		$rank = $high_isrz + 1;
+		$isrz = $data2['isrz'];
+
+		$last_result = $this->reyting_model->getLastReytingRecordOverUserId($user_id);
+		
+		if (isset($last_result))
 		{
-			 $this->reyting_model->addStudReyt($user_id,$high_isrz + 1,$data2['isrz']);
+			$date = date("Y, n-1, d");
+			if ($last_result['reyt'] != $rank)
+			{
+				$delta = $last_result['reyt'] - $rank;
+				if ($last_result['date'] == $date)
+				{
+					//Перезаписать рейтинг
+					$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz);
+					$data2['status'] = "Рейтинг уже был составлен сегодня, но Вы изменили позицию в рейтинге на ".$delta." позиций. Теперь Вы занимаете ".$rank." место\n";
+				}
+				else
+				{
+					$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
+					$data2['status'] = "Вы изменили позицию в рейтинге на ".$delta." позиций. Теперь Вы занимаете ".$rank." место\n";
+				}
+			}
+			else
+			{
+				$data2['status'] = "Ваша позиция в рейтинге не изменилась. Вы занимаете ".$rank." место\n";
+			}
 		}
+		else
+		{
+			$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
+			$data2['status'] = "Поздравляем! Вы впервые попали в рейтинг. Вы занимаете ".$rank." место\n";
+		}
+
 		//3. Получить все записи рейтинга по возрастанию ID
 		$data2['reyting'] = $this->reyting_model->getFullReytingOverUserId($user_id);
 		$data2['type_r_name'] = $this->reyting_model->getTypeRegNameOverTypeRegId($data2['type_r']);
+		$data2['error'] = $error;
+		
 		$this->load->view('index_view',$data2);
 	}
 
