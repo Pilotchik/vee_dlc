@@ -325,7 +325,7 @@
 			?>
 			<div style="margin-bottom:30px;<?= $style ?>"; id="site<?= $key2['id'] ?>">
 				<div id="root" style="width:90%;margin:30px 0 10px 0;">
-					<h4><?= $key2['title'] ?></h4>
+					<h3><?= $key2['title'] ?></h3>
 				</div>
 				<?php
 				//status_type6 = статус наличия на странице выбора перехода на другую страницу
@@ -369,7 +369,7 @@
 						//Массив элементов (разбиение строки по запятой и пробелу)
 						$arr_elem = explode(", ",$key['option1']);
 						?>
-						<table style="font-size:11px;">
+						<table style="font-size:12px;">
 						<?php
 						for($k=0;$k<count($arr_elem);$k++)
 						{
@@ -429,10 +429,10 @@
 					if ($key['type'] == 4)
 					{
 						?>
-						<table width="100%"" style="font-size:11px;"">
+						<table width="100%"" style="font-size:12px;"">
 							<tr>
-								<td align="center"><?= $key['option1'] ?></td>
-								<td width="70%" align="center"><div id="slider<?= $i ?>"></div></td>
+								<td align="center" width="20%"><?= $key['option1'] ?></td>
+								<td width="60%" align="center"><div id="slider<?= $i ?>"></div></td>
 								<td align="center"><?= $key['option2'] ?></td>
 							</tr>
 						</table>

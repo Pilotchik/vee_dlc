@@ -76,7 +76,7 @@ class Attest_model extends CI_Model
 
 	function getResult($test_id="",$user_id="")
 	{
-		$sql="SELECT * FROM `new_results` where `razd_id`='$test_id' and `user`='$user_id'";
+		$sql="SELECT * FROM `new_results` WHERE `razd_id`='$test_id' and `user`='$user_id'";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;	
@@ -114,7 +114,7 @@ class Attest_model extends CI_Model
 		return $data;	
 	}
 
-	function getSpecQuests($test_id="",$user_id="",$all_quests="")
+	function getSpecQuests($test_id="",$user_id="",$all_quests = "")
 	{
 		$sql="SELECT `id`,`type`,`text`,`image` FROM `new_vopros` WHERE `razd_id`='$test_id' AND `active`='1' and `del`='0' AND `id` NOT IN (SELECT `quest_id` FROM `new_stud_ans` WHERE `user`='$user_id') AND `id` IN $all_quests ORDER BY RAND()";
 		$query = $this->db->query($sql);

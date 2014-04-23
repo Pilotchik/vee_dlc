@@ -424,11 +424,11 @@ class Results extends CI_Controller {
 
 	function annul_test_result()
 	{
-		$result=$this->results_model->getStudResult($this->uri->segment(3));
-		$proz_array=$this->results_model->getProzResult($this->uri->segment(3));
+		$result = $this->results_model->getStudResult($this->uri->segment(3));
+		$proz_array = $this->results_model->getProzResult($this->uri->segment(3));
 		if (!isset($proz_array[0]['proz']))
 		{
-			$proz_array[0]['proz']=0;
+			$proz_array[0]['proz'] = 0;
 		}
 		@$this->results_model->delResult($this->uri->segment(3),$result[0]['user'],$proz_array[0]['proz'],$this->uri->segment(4));
 		$error = "Результат аннулирован";

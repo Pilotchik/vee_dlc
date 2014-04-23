@@ -88,7 +88,7 @@ class Private_model extends CI_Model{
 
 	function getUserDiscRes($user_id = "")
 	{
-		$sql="SELECT `id`,`razd_id`,`proz_corr` FROM `new_results` WHERE `user` = '$user_id'";
+		$sql="SELECT `id`,`razd_id`,`proz_corr` FROM `new_results` WHERE `user` = '$user_id' AND `timeend` != '0'";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;

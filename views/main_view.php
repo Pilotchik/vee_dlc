@@ -12,7 +12,7 @@
 
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 		<!--[if lt IE 9]>
-		  <script src="js/html5shiv.js"></script>
+			<script src="js/html5shiv.js"></script>
 		<![endif]-->
 		<meta name="description" content="Виртуальная Обучающая среда" />
 		<script type="text/javascript" src="http://userapi.com/js/api/openapi.js?111"></script>
@@ -43,6 +43,10 @@
 	
 	<?php require_once "require_modal_metrika_noreg3.php";?>
 	
+		<style type="text/css">
+			p {text-align: inherit;text-indent: 0px;}
+		</style>
+
 		<div class="modal fade" id="myModalReg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -274,7 +278,7 @@
 							<li><a href="#features">Возможности</a></li>
 							<li><a href="#info">Особенности</a></li>
 							<li><a href="#testimonials">О нас</a></li>
-							<li><a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a></li>
+							<!--<li><a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a></li> -->
 							<!-- If you want sub-menu items, do them like this
 							<li>
 								<ul>

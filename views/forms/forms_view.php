@@ -23,6 +23,28 @@
 		</center>
 	</div>
 	<div id="all_forms">
+		<div class="row">
+			<div class="col-xs-6 col-md-4">
+				<p>Распределение респондентов по курсам:</p>
+			</div>
+			<div class="col-xs-12 col-md-8">
+				<div class="progress">
+					<div class="progress-bar progress-bar-success" style="width: 25%">
+						1 курс
+					</div>
+					<div class="progress-bar progress-bar-info" style="width: 25%">
+						2 курс
+					</div>
+					<div class="progress-bar progress-bar-warning" style="width: 25%">
+						3 курс
+					</div>
+					<div class="progress-bar progress-bar-danger" style="width: 25%">
+						4 курс
+					</div>
+				</div>
+			</div>
+		</div>
+
 			<?php 
 			if (count($open_forms) > 0)
 			{
