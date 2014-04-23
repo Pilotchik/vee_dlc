@@ -29,16 +29,48 @@ class Forms extends CI_Controller {
 		$data['title'] = "ВОС.Анкетирование";
 		$type_r = $this->session->userdata('type_r');
 		$data['open_forms']=$this->forms_model->getTypeRForms($type_r);
+		$data['kurs_status'] = array();
 		foreach ($data['open_forms'] as $key)
 		{
+			$summ_resp = 0;
 			$data['count_resp'][$key['id']] = $this->forms_model->getCountForms($key['id']);
 			$data['resp_status'][$key['id']] = $this->forms_model->getRespStatus($key['id'],$this->session->userdata('user_id'));
+			//Если опрос проводился для ФСПО, то считать количество респондентов по каждому курсу
+			if ($key['type_r'] == 1)
+			{
+				for ($i = 1; $i < 5; $i++)
+				{
+					$data['kurs_status'][$key['id']]['abs'][$i] = $this->forms_model->getCountResultsOverKursAndFormId($key['id'],$i);
+					$summ_resp += $data['kurs_status'][$key['id']]['abs'][$i];
+				}
+				for ($i = 1; $i < 4; $i++)
+				{
+					$data['kurs_status'][$key['id']]['rel'][$i] = ($summ_resp == 0 ? 0 : round(($data['kurs_status'][$key['id']]['abs'][$i]/$summ_resp)*100,1));
+				}
+				$data['kurs_status'][$key['id']]['rel'][4] = 100 - $data['kurs_status'][$key['id']]['rel'][3] - $data['kurs_status'][$key['id']]['rel'][2] - $data['kurs_status'][$key['id']]['rel'][1];
+			}
 		}
+		
 		$data['archive_forms'] = $this->forms_model->getArchiveForms($type_r);
 		foreach ($data['archive_forms'] as $key)
 		{
+			$summ_resp = 0;
 			$data['count_resp'][$key['id']] = $this->forms_model->getCountForms($key['id']);
 			@$data['resp_status'][$key['id']] = $this->forms_model->getRespStatus($key['id'],$this->session->userdata('user_id'));
+			//Если опрос проводился для ФСПО, то считать количество респондентов по каждому курсу
+			if ($key['type_r'] == 1)
+			{
+				for ($i = 1; $i < 5; $i++)
+				{
+					$data['kurs_status'][$key['id']]['abs'][$i] = $this->forms_model->getCountResultsOverKursAndFormId($key['id'],$i);
+					$summ_resp += $data['kurs_status'][$key['id']]['abs'][$i];
+				}
+				for ($i = 1; $i < 4; $i++)
+				{
+					$data['kurs_status'][$key['id']]['rel'][$i] = ($summ_resp == 0 ? 0 : round(($data['kurs_status'][$key['id']]['abs'][$i]/$summ_resp)*100,1));
+				}
+				$data['kurs_status'][$key['id']]['rel'][4] = 100 - $data['kurs_status'][$key['id']]['rel'][3] - $data['kurs_status'][$key['id']]['rel'][2] - $data['kurs_status'][$key['id']]['rel'][1];
+			}
 		}
 		$this->load->view('forms/forms_view',$data);
 	}

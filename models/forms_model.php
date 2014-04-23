@@ -497,8 +497,6 @@ class Forms_model extends CI_Model{
 		return count($data);
 	}
 
-
-
 	//Получение среднего значения результата на пересечении строки и столбца
 	function getAVGOptionResultSetkaSelector($quest_id = 1,$answer = 0,$option = 0)
 	{
@@ -560,10 +558,9 @@ class Forms_model extends CI_Model{
 		$name=$lname." ".$fname;
 		$now_time=time();
 		$type="Пройден опрос \"".$form_name."\"";
-		$date_t=date("Y.m.d H:i");
+		$date_t = date("Y.m.d H:i");
 		$sql = "INSERT INTO `new_log` (`user`,`date`,`type`,`time`,`status`) VALUES ('$name','$date_t','$type','$now_time','1')";
-		$data = $this->db->query($sql);
-		return $data;
+		$this->db->query($sql);
 	}
 
 	function getRightResults($form_id="")
@@ -578,15 +575,14 @@ class Forms_model extends CI_Model{
 	{
 		$sql="SELECT `new_form_results`.`end`,`new_forms`.`title`,`new_forms`.`description` FROM `new_forms`,`new_form_results` WHERE `new_form_results`.`person_id`='$user_id' AND `new_form_results`.`form_id` = `new_forms`.`id` AND `new_forms`.`del`='0'";
 		$query = $this->db->query($sql);
-		$data = $query->result_array();
-		return $data;
+		return $query->result_array();
 	}
 
 	function checkFormId($form_id="")
 	{
 		$sql="SELECT `id` FROM `new_forms` WHERE `id` = '$form_id'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
+		$data = $query->result_array();
 		return count($data);
 	}
 
@@ -628,6 +624,26 @@ class Forms_model extends CI_Model{
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
 		return $data[0]['option3'];
+	}
+
+	//Получение количества респондентов по каждому курсу
+	function getCountResultsOverKursAndFormId($form_id = 1,$kurs = 1)
+	{
+		$kurs = $kurs."__";
+		$sql="SELECT `id` FROM `new_numbers` WHERE `type_r`='1' AND `name_numb` LIKE '$kurs' ORDER BY `name_numb` ASC";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		$numbers="(";
+		foreach ($data as $key)
+		{
+			$numbers=$numbers.$key['id'].",";
+		}
+		$numbers = substr($numbers, 0, -1);
+		$numbers = $numbers.")";
+		$sql = "SELECT COUNT(`id`) as `cnt` FROM `new_form_results` WHERE `form_id` = '$form_id' AND `person_id` IN (SELECT `id` FROM `new_persons` WHERE `numbgr` in $numbers) AND `end` != '0'";
+		$query = $this->db->query($sql);
+		$data=$query->result_array();
+		return $data[0]['cnt'];
 	}
 
 }

@@ -39,12 +39,39 @@
 								<h4 class="panel-title"><b><?= $key['title'] ?></b></h4>
 							</div>
 							<div  id="form<?= $key['id'] ?>" class="panel-collapse collapse in"> 
-  							<div class="panel-body">
-  								<?= $key['description'] ?>
-    							
-						  	</div>
-						  	<ul class="list-group">
+							<div class="panel-body">
+								<?= $key['description'] ?>
+								
+							</div>
+							<ul class="list-group">
 								<li class="list-group-item">Количество респондентов: <span class="label label-success"><?= $count_resp[$key['id']] ?></span></li>
+								<?php 
+								if ($key['type_r'] == 1)
+								{
+									?>
+									<li class="list-group-item">
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" style="width: <?= $kurs_status[$key['id']]['rel'][1] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][1] ?>% Complete (success)</span>
+												<?= $kurs_status[$key['id']]['abs'][1] ?>
+											</div>
+											<div class="progress-bar progress-bar-info" style="width: <?= $kurs_status[$key['id']]['rel'][2] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][2] ?>% Complete (info)</span>
+												<?= $kurs_status[$key['id']]['abs'][2] ?>
+											</div>
+											<div class="progress-bar progress-bar-warning" style="width: <?= $kurs_status[$key['id']]['rel'][3] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][3] ?>% Complete (warning)</span>
+												<?= $kurs_status[$key['id']]['abs'][3] ?>
+											</div>
+											<div class="progress-bar progress-bar-danger" style="width: <?= $kurs_status[$key['id']]['rel'][4] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][4] ?>% Complete (danger)</span>
+												<?= $kurs_status[$key['id']]['abs'][4] ?>
+											</div>
+										</div>
+									</li>
+									<?php
+								}
+								?>
 								<li class="list-group-item">Тип опроса: <span class="label label-info"><?= ($key['access'] == 0 ? 'Анонимный' : 'Открытый') ?></span></li>
 								<?php
 								if ($resp_status[$key['id']] == "" || $resp_status[$key['id']] == 0)
@@ -113,12 +140,39 @@
 								<h4 class="panel-title"><b><?= $key['title'] ?></b></h4>
 							</div>
 							<div  id="form<?= $key['id'] ?>" class="panel-collapse collapse in"> 
-  							<div class="panel-body">
-  								<?= $key['description'] ?>
-    							
-						  	</div>
-						  	<ul class="list-group">
+							<div class="panel-body">
+								<?= $key['description'] ?>
+								
+							</div>
+							<ul class="list-group">
 								<li class="list-group-item">Количество респондентов: <span class="label label-success"><?= $count_resp[$key['id']] ?></span></li>
+								<?php 
+								if ($key['type_r'] == 1)
+								{
+									?>
+									<li class="list-group-item">
+										<div class="progress">
+											<div class="progress-bar progress-bar-success" style="width: <?= $kurs_status[$key['id']]['rel'][1] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][1] ?>% Complete (success)</span>
+												<?= $kurs_status[$key['id']]['abs'][1] ?>
+											</div>
+											<div class="progress-bar progress-bar-info" style="width: <?= $kurs_status[$key['id']]['rel'][2] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][2] ?>% Complete (info)</span>
+												<?= $kurs_status[$key['id']]['abs'][2] ?>
+											</div>
+											<div class="progress-bar progress-bar-warning" style="width: <?= $kurs_status[$key['id']]['rel'][3] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][3] ?>% Complete (warning)</span>
+												<?= $kurs_status[$key['id']]['abs'][3] ?>
+											</div>
+											<div class="progress-bar progress-bar-danger" style="width: <?= $kurs_status[$key['id']]['rel'][4] ?>%">
+												<span class="sr-only"><?= $kurs_status[$key['id']]['rel'][4] ?>% Complete (danger)</span>
+												<?= $kurs_status[$key['id']]['abs'][4] ?>
+											</div>
+										</div>
+									</li>
+									<?php
+								}
+								?>
 								<li class="list-group-item">Тип опроса: <span class="label label-info"><?= ($key['access'] == 0 ? 'Анонимный' : 'Открытый') ?></span></li>
 								<?php
 								if ($resp_status[$key['id']] == "" || $resp_status[$key['id']] == 0)
@@ -169,4 +223,4 @@
 			</div>
 		</div>
 
-<?php require_once "require_header.php";?>
+<?php require_once(APPPATH.'views/require_header.php');?>
