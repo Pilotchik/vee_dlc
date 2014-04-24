@@ -27,6 +27,8 @@
 			var req = [];
 			var sdan = [];
 			var quest_value = [];
+			var col_w_answers = [];
+			var col_count = [];
 
 			function func_ok(site_numb,type)	
 			{
@@ -35,7 +37,6 @@
 				{
 				    if ($.inArray(req[site_numb][i], sdan) >= 0) {k++;}
 				}
-				console.log(k+" _ "+req[site_numb]);
 				if (k == req[site_numb].length)
 				{
 					if (type == 'end')
@@ -90,9 +91,8 @@
 					}
 					else
 					{
-						//Заблокировать конкретный чекбокс
-						//$(str).attr('disabled', 'disabled');
-						$('.rootid').eq(nom).css({"background":"#6b8e23"});
+						quest_ok(nom);
+						//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 						var quest_id=id_q;
 						$.post ('<?= base_url() ?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?= $form_id ?>},function(data,status){
 						if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -111,17 +111,18 @@
 					if (quest_value[nomer].length == 0)
 					{
 						sdan.splice(sdan.indexOf(nomer), 1);
-						$('.rootid').eq(nom).css({"background":"white"});
+						quest_nok(nom);
+						//$('.rootid').eq(nom).css({"background":"white"});
 					}
 				}
-				console.log(sdan);
 			}
 
 			function postAjax_radio(id_q,value,nomer)
 			{
 				sdan.push(nomer);
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#6b8e23"});
+				quest_ok(nom);
+				//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -134,7 +135,8 @@
 				str='.rad'+nomer;
 				$(str).removeAttr("checked");
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#6b8e23"});
+				quest_ok(nom);
+				//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				value=$(value).val();
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
@@ -154,7 +156,8 @@
 			{
 				sdan.push(nomer);
 				var nom = parseInt(nomer);
-				$('.rootid').eq(nom).css({"background":"#6b8e23"});
+				quest_ok(nom);
+				//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 				var quest_id=id_q;
 				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:strk,val2:stlb,form_id:<?php echo $form_id; ?>},function(data,status){
 				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -200,7 +203,8 @@
 								slide: function( event, ui ) {";?>
 									sdan.push(<?php echo $i; ?>);
 									var nom = parseInt(<?php echo $i; ?>);
-									$('.rootid').eq(nom).css({"background":"#6b8e23"});
+									quest_ok(nom);
+									//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 									var quest_id=<?php echo $key['id'];?>;
 									$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:ui.value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
 										if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
@@ -223,19 +227,29 @@
 			?>
 
 
-			function func_remove_tr(tr_id,req_status,table_id)
+			function func_remove_tr(tr_id,req_status,table_id,i,k)
 			{
 				if (req_status == 1)
 				{
-					if ($("#"+table_id+" tr").size()>2)
+					console.log($("#"+table_id+" tr:visible").size())
+					if ($("#"+table_id+" tr:visible").size()>3)
 					{
-						$("#"+tr_id).remove();
+						$("#"+tr_id).hide();
 					}
 				}
 				else
 				{
-					$("#"+tr_id).remove();
+					$("#"+tr_id).hide();
 				}
+				col_w_answers[i][k] = col_count[i];
+				//Показать строку с кнопкой для отображения всех скрытых строк таблицы
+				$('#tr_hide_'+i).show();
+			}
+
+			function func_view_rows(i)
+			{
+				$('#table_'+i).find("tr").show();
+				$('#tr_hide_'+i).hide("slow");
 			}
 
 			function closePopover()
@@ -246,27 +260,53 @@
 			//Функция обработки SELECT`а и отправки данных в БД
 			function fix_grid_pop(i,k,j,oz)
 			{
-				if (oz > 0)
+				if (oz >= 0)
 				{
 					//Добавление вопроса в список сданных (для проверки его обязательности)
 					sdan.push(i);
 					//Изменение цвета фона вопроса
-					$('.rootid').eq(i).css({"background":"#6b8e23"});
+					quest_ok(i);
+					//$('.rootid').eq(i).css({"background":"#6b8e23"});
 					//Получить id вопроса
 					var quest_id = $("#quest_id_"+i).html();
 					//Отправить данные в БД
 					$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:k,val2:j,form_id:<?= $form_id ?>,val3:oz},function(data,status){
 					if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
 					else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
-					})
+					});
 					id = i+"_"+k+"_"+j;
-					$("#a_"+id).html('<span style="cursor:pointer;font-weight: bold;font-size: 14px;">'+oz+'</span>');
+					$("#a_"+id).html('<span style="cursor:pointer;font-weight: bold;font-size: 14px;color:white;">'+oz+'</span>');
+					$("#td_"+id).css("background-color", "5bc0de");
 					$('.what1').popover('hide');
+					//Проверка, все ли оценки в строке выставлены
+					col_w_answers[i][k]++;
+					console.log(col_w_answers[i][k]);
+					if (col_w_answers[i][k] == col_count[i])
+					{
+						tr_id = "tr_"+i+"_"+k;
+						//Медленно скрыть строку
+						$("#"+tr_id).hide("slow");
+						//Показать строку с кнопкой для отображения всех скрытых строк таблицы
+						$('#tr_hide_'+i).show();
+					}
 				}
 				else
 				{
 					$('.what1').popover('hide');	
 				}
+			}
+
+			function quest_ok(i)
+			{
+				//$('.rootid').eq(i).css({"border-color":"#6b8e23","border-width":"1px","border-style":"solid"});
+				$('#ok_'+i).css("opacity","1");
+				$('blockquote').eq(i).css("border-left-color","#6b8e23");
+			}
+
+			function quest_nok(i)
+			{
+				$('#ok_'+i).css("opacity","0");
+				$('blockquote').eq(i).css("border-left-color","#eee");
 			}
 
 		</script>
@@ -366,20 +406,23 @@
 					}
 					?>
 					<div class="rootid" style="margin:20px 0;">
-						<blockquote>
+						<blockquote style="border-left-width: 10px;">
 							<?php 
 							if ($key['type'] != 6)
 							{
 								?>
-								<p style="text-indent:0px;text-justify:none;"><?= $key['title'] ?> <?= $req ?></p>
+								<p style="text-indent:0px;text-justify:none;"><span class="glyphicon glyphicon-ok" style="opacity:0;font-size:20px;color:#6b8e23" id="ok_<?= $i ?>"></span> <?= $key['title'] ?> <?= $req ?></p>
 								<footer><?= $key['subtitle'] ?></footer>
 								<?php
 							}
 							else
 							{
-								?>
-								<p style="text-indent:0px;text-justify:none;">Для перехода на следующую страницу опроса Вам следует сделать выбор</p>
-								<?php
+								if (count(explode(", ",$key['option1'])) > 1)
+								{
+									?>
+									<p style="text-indent:0px;text-justify:none;">Для перехода на следующую страницу опроса Вам следует сделать выбор</p>
+									<?php
+								}
 							}
 							?>
 						</blockquote>
@@ -521,6 +564,13 @@
 						$arr_elem_str = explode(", ",$key['option1']);
 						//Получение массива столбцов
 						$arr_elem_stlb = explode(", ",$key['option2']);
+						?>
+						<script>
+							//Запись количества столбцов в массив col_count
+							col_count[<?= $i ?>] = <?= count($arr_elem_stlb) ?>;
+							col_w_answers[<?= $i ?>] = [];
+						</script>
+						<?php
 						//Получение степени соответствия
 						$step = $key['option3'];
 						?>
@@ -537,10 +587,19 @@
 								?>
 								<td>Не оценить</td>
 							</tr>
+							<tr id="tr_hide_<?= $i ?>" style="display:none;">
+								<td colspan = "<?= count($arr_elem_stlb)+2 ?>">
+									<button class="btn btn-default" onClick="func_view_rows(<?= $i ?>)">Отобразить все скрытые строки</button>
+								</td>
+							</tr>
 							<?php
 							for ($k=0;$k<count($arr_elem_str);$k++)
 							{
 								?>
+								<script>
+									//инициализация количества данных ответов в одной строке
+									col_w_answers[<?= $i ?>][<?= $k ?>] = 0;
+								</script>
 								<tr id="tr_<?= $i ?>_<?= $k ?>">
 									<td><?= $arr_elem_str[$k] ?></td>
 									<?php
@@ -560,13 +619,13 @@
 											Оценка: <div class=btn-group data-toggle=buttons-radio>
 												<button class='btn btn-small' onClick='closePopover()'>?</button>
 												<?= $popover_body ?>
-											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>" onClick="$('.what1:not(#a_<?= $i ?>_<?= $k ?>_<?= $j ?>)').popover('hide');"> <span class="glyphicon glyphicon-star"></span> </a>
+											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>" onClick="$('.what1:not(#a_<?= $i ?>_<?= $k ?>_<?= $j ?>)').popover('hide');"> <span class="glyphicon glyphicon-star" style="font-size:18px;color:black;width:100%;height:100%"></span> </a>
 										</td>
 										<?php
 									}
 									?>
 									<td>
-										<div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')" style="cursor:pointer;"> <span class="glyphicon glyphicon-remove"></span> </div>
+										<div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>',<?= $i ?>,<?= $k ?>)" style="cursor:pointer;"> <span class="glyphicon glyphicon-remove" style="color:red;font-size:18px;"></span> </div>
 									</td>
 								</tr>
 								<?php
@@ -615,6 +674,9 @@
 			$site_numb++;
 		}
 		?>
-		
+		<script>
+			console.log(col_count);
+			console.log(col_w_answers);
+		</script>
 	</body>
 </html>
