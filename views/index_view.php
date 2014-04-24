@@ -384,7 +384,7 @@
 			</tbody>
 		</table>
 		<div style="margin:20px auto;width:100%;text-align:center;">
-			<a href="<?= base_url() ?>rating?type=<? $this->session->userdata('type_r') ?>" class="btn btn-default" style="width:250px;margin:0 0 20px 0;">Полный рейтинг <?= $type_r_name ?></a>
+			<a href="<?= base_url() ?>rating?type=<?= $this->session->userdata('type_r') ?>" class="btn btn-default" style="width:250px;margin:0 0 20px 0;">Полный рейтинг <?= $type_r_name ?></a>
 		</div>
 		<?php
 	}

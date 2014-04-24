@@ -1,7 +1,8 @@
 <html>
 	<head>
-		<title>Система тестирования</title>
+		<title>ВОС.Анкетирование</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link rel="shortcut icon" href="<?= base_url() ?>images/favi.png" type="image/x-icon">
 		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
@@ -32,9 +33,10 @@
 				var k = 0;
 				for (var i in req[site_numb]) 
 				{
-				    if (sdan.indexOf(req[site_numb][i])>=0) {k++;}
+				    if ($.inArray(req[site_numb][i], sdan) >= 0) {k++;}
 				}
-				if (k==req[site_numb].length)
+				console.log(k+" _ "+req[site_numb]);
+				if (k == req[site_numb].length)
 				{
 					if (type == 'end')
 					{
@@ -68,8 +70,10 @@
 			
 			function postAjax(id_q,value,nomer)
 			{
-				if (!(nomer in sdan)) {sdan.push(nomer);}
 				var nom = parseInt(nomer);
+
+				//if (!(nom in sdan)) {sdan.push(nom);console.log(sdan+' push');}
+				if ($.inArray(nom, sdan) < 0) {sdan.push(nom);console.log(sdan+' push');};
 				str='input[name='+nomer+'_'+value+']';
 				str_class=nomer+'_class';
 				if($(str).prop("checked"))
@@ -77,7 +81,8 @@
 					quest_value[nomer].push(value);
 					if (quest_value[nomer].length > max_args[nomer])
 					{
-						alert('Вы выбрали слишком много пунктов');
+						$('#modal_message').html('Вы выбрали слишком много пунктов!');
+						$('#myModalAlert').modal('show');
 						//Заблокировать все чекбоксы
 						$(str).removeAttr('checked');
 						$(str_class).attr('disabled', 'disabled');
@@ -241,20 +246,27 @@
 			//Функция обработки SELECT`а и отправки данных в БД
 			function fix_grid_pop(i,k,j,oz)
 			{
-				//Добавление вопроса в список сданных (для проверки его обязательности)
-				sdan.push(i);
-				//Изменение цвета фона вопроса
-				$('.rootid').eq(i).css({"background":"#6b8e23"});
-				//Получить id вопроса
-				var quest_id = $("#quest_id_"+i).html();
-				//Отправить данные в БД
-				$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:k,val2:j,form_id:<?= $form_id ?>,val3:oz},function(data,status){
-				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
-				else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
-				})
-				id = i+"_"+k+"_"+j;
-				$("#a_"+id).html('<span style="cursor:pointer;font-weight: bold;font-size: 14px;">'+oz+'</span>');
-				$('.what1').popover('hide');
+				if (oz > 0)
+				{
+					//Добавление вопроса в список сданных (для проверки его обязательности)
+					sdan.push(i);
+					//Изменение цвета фона вопроса
+					$('.rootid').eq(i).css({"background":"#6b8e23"});
+					//Получить id вопроса
+					var quest_id = $("#quest_id_"+i).html();
+					//Отправить данные в БД
+					$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:k,val2:j,form_id:<?= $form_id ?>,val3:oz},function(data,status){
+					if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
+					else	{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}
+					})
+					id = i+"_"+k+"_"+j;
+					$("#a_"+id).html('<span style="cursor:pointer;font-weight: bold;font-size: 14px;">'+oz+'</span>');
+					$('.what1').popover('hide');
+				}
+				else
+				{
+					$('.what1').popover('hide');	
+				}
 			}
 
 		</script>
@@ -262,46 +274,49 @@
   		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<link href="<?php echo base_url()?>css/styles.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<link href="<?php echo base_url()?>css/bootstrap3.min.css" rel="stylesheet" type="text/css" />
 		<style>
 			input {width:20px;}
 		</style>
 	</head>
 	<body>
 		<?php require_once(APPPATH.'views/require_modal_metrika.php');?>
-		<!-- Модальное окно с сообщениями -->
-				<div id="myModalConfirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- 					<div class="modal-header">
-    					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    					<h3 id="myModalLabel">Подтверждение</h3>
-  					</div>
-  					<div class="modal-body">
-  						<p>Вы уверены, что хотите завершить анкетирование?</p>
-  					</div>
-  					<div class="modal-footer">
-    					<button class="btn btn-success" style="width:100px" onClick="sendForm()">Да</button>
-    					<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
-  					</div>
-				</div>
+		<!-- Модальные окна с сообщениями -->
+		<div class="modal fade" id="myModalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        				<h4 class="modal-title">Подтверждение</h4>
+      				</div>
+      				<div class="modal-body">
+        				<p>Вы уверены, что хотите завершить анкетирование?</p>
+      				</div>
+      				<div class="modal-footer">
+        				<button class="btn btn-success" style="width:100px" onClick="sendForm()">Да</button>
+						<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+      				</div>
+    			</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
-				<div id="myModalAlert" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- 					<div class="modal-header">
-    					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    					<h3 id="myModalLabel">Внимание!</h3>
-  					</div>
-  					<div class="modal-body">
-  						<p><div id="modal_message"></div></p>
-  					</div>
-  					<div class="modal-footer">
-    					<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
-  					</div>
-				</div>
+		<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-body">
+        				<p><div id="modal_message"></div></p>
+      				</div>
+      				<div class="modal-footer">
+        				<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+      				</div>
+    			</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 		<!--Конец модального окна -->
-		<center>
-		<div id="root" style="width:90%;margin:30px 0 10px 0;">
-			<h3><?= $form_name ?></h3>
-		</div>
-		<form autocomplete="off" action="<?php echo base_url();?>forms/form_itog/<?php echo $form_id;?>" method="post" name="testForm" id="testFormId"></form>
+		<div id="root" style="width:90%;margin:10px auto;padding:20px;font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif;">
+			<h2 style="text-align:left"><?= $form_name ?></h2>
+			<p style="text-indent:0px;text-justify:none;font-size:16px;"><?= $form_desc ?></p>
+			<form autocomplete="off" action="<?php echo base_url();?>forms/form_itog/<?php echo $form_id;?>" method="post" name="testForm" id="testFormId"></form>
 		<?php
 		$site_numb = 0;
 		//Создать JS массив req с количеством требуемых вопросов на странице
@@ -323,26 +338,26 @@
 			//Если страница не является первой, то при загрузке опроса не отображать её контент
 			$style = ($site_numb == 0 ? " " : "display:none;");
 			?>
-			<div style="margin-bottom:30px;<?= $style ?>"; id="site<?= $key2['id'] ?>">
-				<div id="root" style="width:90%;margin:30px 0 10px 0;">
-					<h3><?= $key2['title'] ?></h3>
-				</div>
+			<div style="margin:40px 0;<?= $style ?>"; id="site<?= $key2['id'] ?>">
+				<h3><?= $key2['title'] ?></h3>
 				<?php
 				//status_type6 = статус наличия на странице выбора перехода на другую страницу
 				//если этот статус будет равен 0 после цикла по вопросам, то отображать форму завершения опроса
 				$status_type6 = 0;
 				//Число вопросов на странице
 				$chislo_vopr = count($quests[$key2['id']]);
+
 				//просмотр всех вопросов страницы
 				foreach($quests[$key2['id']] as $key)
 				{
 					//Номер вопроса по порядку
-					$nom=$i+1;
+					$nom = $i+1;
+
 					//Если вопрос является обязательным, то добавить его в JS-массив
 					$req = "";
 					if ($key['required'] == 1)
 					{
-						$req="<span class=\"label label-important\">*</span>";
+						$req = "<cite title=\"Вопрос является обязательным\" style=\"cursor:pointer;\"><span class=\"label label-success\">*</span></cite>";
 						?>
 						<script>
 							req[<?= $site_numb ?>].push(<?= $i ?>);
@@ -350,33 +365,39 @@
 						<?php
 					}
 					?>
-					<center>
-					<div id="root" class="rootid" style="width:90%;margin:10px 0 0 0;">
-						<?php 
-						if ($key['type'] != 6)
-						{
+					<div class="rootid" style="margin:20px 0;">
+						<blockquote>
+							<?php 
+							if ($key['type'] != 6)
+							{
+								?>
+								<p style="text-indent:0px;text-justify:none;"><?= $key['title'] ?> <?= $req ?></p>
+								<footer><?= $key['subtitle'] ?></footer>
+								<?php
+							}
+							else
+							{
+								?>
+								<p style="text-indent:0px;text-justify:none;">Для перехода на следующую страницу опроса Вам следует сделать выбор</p>
+								<?php
+							}
 							?>
-							<h4>Вопрос №<?= $nom ?> <?= $req ?></h4>
-							<?php
-						}
-						?>
-						<h3><?= $key['title'] ?></h3>
+						</blockquote>
 						<span style="display:none;" id="quest_id_<?= $i ?>"><?= $key['id'] ?></span>
-						<div class="alert" style="margin:5px 0 5px 0;"><?= $key['subtitle'] ?></div>
 					<?php
 					if ($key['type'] == 1)
 					{
 						//Массив элементов (разбиение строки по запятой и пробелу)
 						$arr_elem = explode(", ",$key['option1']);
 						?>
-						<table style="font-size:12px;">
+						<table style="font-size:14px;">
 						<?php
 						for($k=0;$k<count($arr_elem);$k++)
 						{
 							?>
 							<tr>
 								<td align="right">
-									<input type="radio" name="q<?= $nom ?>" value="<?= $k ?>" class="rad<?= $i ?>" onClick="postAjax_radio(<?= $key['id'] ?>,<?= $k ?>,<?= $i ?>)">
+									<input type="radio" name="q<?= $nom ?>" value="<?= $k ?>" class="rad<?= $i ?>" onClick="postAjax_radio(<?= $key['id'] ?>,<?= $k ?>,<?= $i ?>)" style="-webkit-appearance: radio;width: 20px;height: 30px;margin:2px">
 								</td>
 								<td align="left">
 									<?= $arr_elem[$k] ?>
@@ -389,11 +410,11 @@
 						{
 							?>
 							<tr>
-								<td align="right">
+								<td style="padding-top:20px;text-align:right;padding-right:5px;">
 									Или укажите свой вариант:
 								</td>
-								<td align="left">
-									<input type="text" id="text<?= $key['id'] ?>" style="width:200px;" onChange="postAjax2(<?= $key['id'] ?>, text<?= $key['id'] ?>, <?= $i ?>)">
+								<td style="padding-top:20px;text-align:left;">
+									<input type="text" id="text<?= $key['id'] ?>" style="width:200px;" onChange="postAjax2(<?= $key['id'] ?>, text<?= $key['id'] ?>, <?= $i ?>)" class="form-control">
 								</td>
 							</tr>
 							<?php
@@ -406,15 +427,31 @@
 					{
 						$arr_elem = explode(", ",$key['option1']);
 						?>
-						<table style="font-size:12px;">
+						<table style="font-size:14px;">
 						<?php
 						for($k=0;$k<count($arr_elem);$k++)
 						{
-							echo "<tr><td align=right><input type=checkbox name=".$i."_"."$k class=".$i."_class onClick=postAjax(".$key['id'].",$k,$i)></td><td align=left>".$arr_elem[$k]."</td></tr>";
+							?>
+							<tr>
+								<td style="padding-right:5px;text-align:right;">
+									<input type="checkbox" name="<?= $i ?>_<?= $k ?>" class="<?= $i ?>_class" onClick="postAjax(<?= $key['id'] ?>,<?= $k ?>, <?= $i ?>)" style="-webkit-appearance: checkbox;width: 20px;height: 30px;margin:2px">
+								</td>
+								<td align="left" style="">
+									<?= $arr_elem[$k] ?>
+								</td>
+							</tr>
+							<?php
 						}
 						if ($key['own_version']==1)
 						{
-							echo "<tr><td align=right>Или укажите свой вариант:</td><td align=left><input type=text id=text".$key['id']." style=\"width:200px;\" onChange=postAjax2(".$key['id'].",text".$key['id'].",$i)></td></tr>";
+							?>
+							<tr>
+								<td style="padding-top:20px;text-align:right;padding-right:5px;">Или укажите свой вариант:</td>
+								<td style="padding-top:20px;text-align:left;">
+									<input type="text" id="text<?= $key['id'] ?>" style="width:200px;" onChange="postAjax2(<?= $key['id'] ?>,text"<?= $key['id'] ?>", <?= $i ?>)" class="form-control">
+								</td>
+							</tr>
+							<?php
 						}
 						?>
 						</table>
@@ -423,13 +460,13 @@
 					if ($key['type'] == 3)
 					{
 						?>
-						<textarea rows="3" id="text<?= $key['id'] ?>" onChange="postAjax2(<?= $key['id'] ?>,text<?= $key['id'] ?>,<?= $i ?>)" style="width:400px;"></textarea>
+						<textarea rows="3" id="text<?= $key['id'] ?>" onChange="postAjax2(<?= $key['id'] ?>,text<?= $key['id'] ?>,<?= $i ?>)" style="width:100%;" class="form-control"></textarea>
 						<?php
 					}
 					if ($key['type'] == 4)
 					{
 						?>
-						<table width="100%"" style="font-size:12px;"">
+						<table width="100%" style="font-size:14px;">
 							<tr>
 								<td align="center" width="20%"><?= $key['option1'] ?></td>
 								<td width="60%" align="center"><div id="slider<?= $i ?>"></div></td>
@@ -487,7 +524,7 @@
 						//Получение степени соответствия
 						$step = $key['option3'];
 						?>
-						<table class="sortable" id="table_<?= $i ?>" style="font-size:10px;width=100%">
+						<table class="sortable" id="table_<?= $i ?>" style="font-size:10px;width=95%;align:center;">
 							<tr>
 								<td>&nbsp;</td>
 								<?php
@@ -523,13 +560,13 @@
 											Оценка: <div class=btn-group data-toggle=buttons-radio>
 												<button class='btn btn-small' onClick='closePopover()'>?</button>
 												<?= $popover_body ?>
-											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>"><i class="icon-question-sign"></i></a>
+											</div>" title="" data-original-title="<?= $arr_elem_str[$k] ?>. <?= $arr_elem_stlb[$j] ?>" id="a_<?= $i ?>_<?= $k ?>_<?= $j ?>" onClick="$('.what1:not(#a_<?= $i ?>_<?= $k ?>_<?= $j ?>)').popover('hide');"> <span class="glyphicon glyphicon-star"></span> </a>
 										</td>
 										<?php
 									}
 									?>
 									<td>
-										<div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')" style="cursor:pointer;"><i class="icon-remove"></i></div>
+										<div onClick="func_remove_tr('tr_<?= $i ?>_<?= $k ?>',<?= $key['required'] ?>,'table_<?= $i ?>')" style="cursor:pointer;"> <span class="glyphicon glyphicon-remove"></span> </div>
 									</td>
 								</tr>
 								<?php
@@ -543,12 +580,18 @@
 						$status_type6++;
 						$arr_elem_id = explode(", ",$key['option1']);
 						$arr_elem_str = explode(", ",$key['option2']);
-						for ($k=0;$k<count($arr_elem_id);$k++)
-						{
-							?>
-							<input type="button" style="width:350px;margin:10px 0 10px 0;" class="btn btn-primary" value="<?= $arr_elem_str[$k] ?>" onClick="next_site(<?= $key2['id'] ?>, <?= $arr_elem_id[$k] ?>, <?= $site_numb ?>)"><br>
+						?>
+						<div style="width:100%;text-align: center;">
 							<?php
-						}
+							for ($k=0;$k<count($arr_elem_id);$k++)
+							{
+								?>
+								<input type="button" style="width:350px;margin:10px auto;" class="btn btn-primary" value="<?= $arr_elem_str[$k] ?>" onClick="next_site(<?= $key2['id'] ?>, <?= $arr_elem_id[$k] ?>, <?= $site_numb ?>)"><br>
+								<?php
+							}
+							?>
+						</div>
+						<?php
 					}
 					?>
 					<br />
@@ -560,11 +603,9 @@
 				if ($status_type6 == 0)
 				{
 					?>
-					<center>
-					<div id="root" style="width:90%;margin:10px 0 0 0;">
-						<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-inverse" value="Завершить" onClick="javascript: func_ok(<?= $site_numb ?>,'end')">
+					<div style="width:100%;text-align: center;">
+						<input type="button" style="width:206px;margin:10px 0 10px 0;" class="btn btn-success" value="Завершить" onClick="func_ok(<?= $site_numb ?>,'end')">
 					</div>
-					</center>
 					<?php
 				}
 				?>
