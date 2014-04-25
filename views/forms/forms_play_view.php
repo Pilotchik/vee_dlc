@@ -201,9 +201,10 @@
       							max:".$key['option3'].",
 								step: 1,
 								slide: function( event, ui ) {";?>
-									sdan.push(<?php echo $i; ?>);
-									var nom = parseInt(<?php echo $i; ?>);
+									sdan.push(<?= $i ?>);
+									var nom = parseInt(<?= $i ?>);
 									quest_ok(nom);
+									$("#slide_<?= $i ?>").html(ui.value);
 									//$('.rootid').eq(nom).css({"background":"#6b8e23"});
 									var quest_id=<?php echo $key['id'];?>;
 									$.post ('<?php echo base_url();?>forms/autosave',{id_q:quest_id,val:ui.value,val2:0,form_id:<?php echo $form_id; ?>},function(data,status){
@@ -285,7 +286,7 @@
 					{
 						tr_id = "tr_"+i+"_"+k;
 						//Медленно скрыть строку
-						$("#"+tr_id).hide("slow");
+						//$("#"+tr_id).hide("slow");
 						//Показать строку с кнопкой для отображения всех скрытых строк таблицы
 						$('#tr_hide_'+i).show();
 					}
@@ -511,9 +512,14 @@
 						?>
 						<table width="100%" style="font-size:14px;">
 							<tr>
-								<td align="center" width="20%"><?= $key['option1'] ?></td>
+								<td align="center" width="20%" rowspan="2"><?= $key['option1'] ?></td>
 								<td width="60%" align="center"><div id="slider<?= $i ?>"></div></td>
-								<td align="center"><?= $key['option2'] ?></td>
+								<td align="center" rowspan="2"><?= $key['option2'] ?></td>
+							</tr>
+							<tr>
+								<td align="left" style="padding-top: 10px;">
+									Ваш выбор: <strong><span id="slide_<?= $i ?>" style="font-size: 20px;"></span></strong>
+								</td>
 							</tr>
 						</table>
 						<?php
