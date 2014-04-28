@@ -280,13 +280,13 @@
 					$("#td_"+id).css("background-color", "5bc0de");
 					$('.what1').popover('hide');
 					//Проверка, все ли оценки в строке выставлены
-					col_w_answers[i][k]++;
-					console.log(col_w_answers[i][k]);
-					if (col_w_answers[i][k] == col_count[i])
+					if ($.inArray(j, col_w_answers[i][k]) < 0) {col_w_answers[i][k].push(j);}
+					console.log(col_w_answers[i][k].length);
+					if (col_w_answers[i][k].length == col_count[i])
 					{
 						tr_id = "tr_"+i+"_"+k;
 						//Медленно скрыть строку
-						//$("#"+tr_id).hide("slow");
+						$("#"+tr_id).hide("slow");
 						//Показать строку с кнопкой для отображения всех скрытых строк таблицы
 						$('#tr_hide_'+i).show();
 					}
@@ -604,7 +604,7 @@
 								?>
 								<script>
 									//инициализация количества данных ответов в одной строке
-									col_w_answers[<?= $i ?>][<?= $k ?>] = 0;
+									col_w_answers[<?= $i ?>][<?= $k ?>] = [];
 								</script>
 								<tr id="tr_<?= $i ?>_<?= $k ?>">
 									<td><?= $arr_elem_str[$k] ?></td>

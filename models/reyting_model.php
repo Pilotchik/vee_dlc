@@ -65,23 +65,23 @@ class Reyting_model extends CI_Model{
 		return $data[0];
 	}
 
-	function addStudReyt($user_id = 1, $reyt = 1, $isrz = 1)
+	function addStudReyt($user_id = 1, $reyt = 1, $isrz = 1, $forecast = 5)
 	{
 		$date = date("Y, n-1, d");
-		$sql = "INSERT INTO `new_reyting` (`user_id`,`date`,`reyt`,`isrz`) VALUES ('$user_id', '$date', '$reyt','$isrz')";
+		$sql = "INSERT INTO `new_reyting` (`user_id`,`date`,`reyt`,`isrz`,`forecast`) VALUES ('$user_id', '$date', '$reyt','$isrz','$forecast')";
 		$this->db->query($sql);
 	}
 
 	function getFullReytingOverUserId($user_id = 1)
 	{
-		$sql="SELECT `date`,`reyt` FROM `new_reyting` WHERE `user_id` = '$user_id' ORDER BY `id` ASC";
+		$sql="SELECT `date`,`reyt`,`forecast`,`isrz` FROM `new_reyting` WHERE `user_id` = '$user_id' ORDER BY `id` ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
-	function updateStudReyt($rec_id = 1,$rank = 1,$isrz = 1)
+	function updateStudReyt($rec_id = 1,$rank = 1,$isrz = 1, $forecast = 5)
 	{
-		$sql="UPDATE `new_reyting` SET `reyt`='$rank',`isrz`='$isrz' WHERE `id`='$rec_id'";
+		$sql="UPDATE `new_reyting` SET `reyt`='$rank',`isrz`='$isrz',`forecast`='$forecast' WHERE `id` = '$rec_id'";
 		$this->db->query($sql);
 	}
 

@@ -189,21 +189,25 @@ class Main extends CI_Controller {
 
 		$last_result = $this->reyting_model->getLastReytingRecordOverUserId($user_id);
 		
+		$data2['progress'] = "";
+		
 		if (isset($last_result))
 		{
 			$date = date("Y, n-1, d");
 			if ($last_result['reyt'] != $rank)
 			{
 				$delta = $last_result['reyt'] - $rank;
+				$forecast = 0.1 * $last_result['forecast'] + 0.9 * $isrz;
+				$data2['progress'] = ($forecast < $last_result['forecast'] ? "Вам надо постараться" : "Вы прогрессируете, так держать!");
 				if ($last_result['date'] == $date)
 				{
 					//Перезаписать рейтинг
-					$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz);
+					$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz,$forecast);
 					$data2['status'] = "Рейтинг уже был составлен сегодня, но Вы изменили позицию в рейтинге на ".$delta." позиций. Теперь Вы занимаете ".$rank." место\n";
 				}
 				else
 				{
-					$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
+					$this->reyting_model->addStudReyt($user_id,$rank,$isrz,$forecast);
 					$data2['status'] = "Вы изменили позицию в рейтинге на ".$delta." позиций. Теперь Вы занимаете ".$rank." место\n";
 				}
 			}
@@ -214,7 +218,7 @@ class Main extends CI_Controller {
 		}
 		else
 		{
-			$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
+			$this->reyting_model->addStudReyt($user_id,$rank,$isrz,$isrz);
 			$data2['status'] = "Поздравляем! Вы впервые попали в рейтинг. Вы занимаете ".$rank." место\n";
 		}
 

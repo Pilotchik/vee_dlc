@@ -1115,15 +1115,16 @@ class Results extends CI_Controller {
 				if ($last_result['reyt'] != $rank)
 				{
 					$delta = $last_result['reyt'] - $rank;
+					$forecast = 0.1 * $last_result['forecast'] + 0.9 * $isrz;
 					if ($last_result['date'] == $date)
 					{
 						//Перезаписать рейтинг
-						$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz);
+						$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz,$forecast);
 						$data['status'] = "Рейтинг уже был составлен сегодня, но пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
 					}
 					else
 					{
-						$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz);
+						$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz,$forecast);
 						$data['status'] = "Пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
 					}
 				}
@@ -1134,7 +1135,7 @@ class Results extends CI_Controller {
 			}
 			else
 			{
-				$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz);
+				$this->reyting_model->addStudReyt($data['stud_id'],$rank,$isrz,$isrz);
 				$data['status'] = "Пользователь впервые участвует в рейтинге. Он занимает ".$rank." место\n";
 			}
 

@@ -14,6 +14,7 @@
 				<td align="center" colspan="2"><b>Фамилия Имя</b></td>
 				<td align="center"><b>Номер группы</b></td>
 				<td colspan="3"><b>Рейтинг</b></td>
+				<td><b>Прогноз</b></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -52,10 +53,22 @@
 						{
 							?><td align="center" style="font-size:16px;" class="info" colspan="2"><span class="glyphicon glyphicon-thumbs-up"></span><?php
 						}
+						if ($top_users[$key['id']][count($top_users[$key['id']]) - 1]['forecast'] >= $top_users[$key['id']][count($top_users[$key['id']]) - 2]['forecast'])
+						{
+							?>
+							<td align="center" style="font-size:16px;" class="success"><span class="glyphicon glyphicon-plus"></span></td>
+							<?php
+						}
+						else
+						{
+							?>
+							<td align="center" style="font-size:16px;" class="danger"><span class="glyphicon glyphicon-minus"></span></td>
+							<?php
+						}
 					}
 					else
 					{
-						?><td align="center" style="font-size:16px;" class="info" colspan="2"><span class="glyphicon glyphicon-thumbs-up"></span><?php
+						?><td align="center" style="font-size:16px;" class="info" colspan="3"><span class="glyphicon glyphicon-thumbs-up"></span><?php
 					}
 					?>
 					</td>

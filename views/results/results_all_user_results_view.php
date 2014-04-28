@@ -33,12 +33,12 @@
 		function drawChart4() 
   		{
         	var data = google.visualization.arrayToDataTable([
-	        	['Дата', 'Место'],
+	        	['Дата', 'ИСРЗ','Прогноз'],
 	        	<?php
 	        	foreach ($reyting as $key) 
 	        	{
 	        		?>
-	        		[new Date(<?= $key['date'] ?>), <?= $key['reyt'] ?>],
+	        		[new Date(<?= $key['date'] ?>), <?= $key['isrz'] ?>, <?= $key['forecast'] ?>],
 	        		<?php
 	          	}
 	          	?>
@@ -46,7 +46,7 @@
 
 	        var options = {
               title: 'История рейтинга',
-              vAxis: {title:'Место',minValue:1,direction:-1},
+              vAxis: {title:'Место',minValue:0,maxValue:10,direction:1},
               hAxis: {format:'MMM d, y'}
             };
 
