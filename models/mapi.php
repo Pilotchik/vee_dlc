@@ -245,12 +245,4 @@ class Mapi extends CI_Model{
 		return $data[0]['maxid'];
 	}
 
-	//Обновление даты последней пересортировки рейтинга с помощью робота
-	function updateRateResortDate()
-	{
-		$date_t = date("H:i d.m.Y");
-		$sql="UPDATE `new_conf` SET `rate_resort` ='$date_t' WHERE `id` = '1'";
-		$this->db->query($sql);
-	}
-
 }

@@ -437,6 +437,13 @@ class Api extends CI_Controller
 		}
 	}
 
+	function updateRateResortDate()
+	{
+		$this->load->model('reyting_model');
+		$this->reyting_model->updateRateResortDate();
+		echo "Дата пересортировки рейтинга обновлена";
+	}
+
 	//Функция получения места пользователя в рейтинге
 	function getUserReyt()
 	{
@@ -469,19 +476,44 @@ class Api extends CI_Controller
 					//Узнать, сколько студентов набрали больший индекс
 					$high_isrz = $this->reyting_model->getCountIndexOfDifficult($isrz,1,$type_r);
 					
-					//Проверить, есть ли в таблице с рейтингом запись таким же user_id и таким же рейтингом
-					$old_result = $this->reyting_model->getReytingIDoverUserIdAndISRZ($user_id,$isrz,$high_isrz + 1);
+					//Выбрать последнюю запись рейтинга пользователя
+						//Если такой нет, то создать запись
+						//Если запись есть и при этом рейтинг не совпадает, то смотреть на дату
+						//Если дата совпадает с сегодняшней, то перезаписать рейтинг
+						//Если дата не совпадает с сегодняшней, то создать запись
+
+					$rank = $high_isrz + 1;
+
+					$last_result = $this->reyting_model->getLastReytingRecordOverUserId($user_id);
 					
-					//Если такой записи не было и нет записи в сегодняшний день, то создать новую запись
-					if ($old_result == 0)
+					if (isset($last_result))
 					{
-						$rank = $high_isrz + 1;
-						$this->reyting_model->addStudReyt($user_id,$rank,$isrz);
-						echo "Рейтинг пользователя обновлён, ".$rank." место\n";
+						$date = date("Y, n-1, d");
+						if ($last_result['reyt'] != $rank)
+						{
+							$delta = $last_result['reyt'] - $rank;
+							$forecast = 0.1 * $last_result['forecast'] + 0.9 * $isrz;
+							if ($last_result['date'] == $date)
+							{
+								//Перезаписать рейтинг
+								$this->reyting_model->updateStudReyt($last_result['id'],$rank,$isrz,$forecast);
+								echo "Рейтинг уже был составлен сегодня, но пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
+							}
+							else
+							{
+								$this->reyting_model->addStudReyt($user_id,$rank,$isrz,$forecast);
+								echo "Пользователь изменил позицию в рейтинге на ".$delta." позиций. Теперь он занимает ".$rank." место\n";
+							}
+						}
+						else
+						{
+							echo "Позиция пользователя в рейтинге не изменилась. Он занимает ".$rank." место\n";
+						}
 					}
 					else
 					{
-						echo "Запись уже была создана сегодня или рейтинг не изменился\n";
+						$this->reyting_model->addStudReyt($user_id,$rank,$isrz,$isrz);
+						echo "Пользователь впервые участвует в рейтинге. Теперь он занимает ".$rank." место\n";
 					}
 				}
 				else
@@ -494,6 +526,53 @@ class Api extends CI_Controller
 				echo $user_id."> Пользователя нет или он заблокирован\n";
 			}
 		}
+	}
+
+	function vk_send_notification()
+	{
+		$this->form_validation->set_rules('user_id', 'Ключ', 'required');
+		if($this->form_validation->run() == FALSE)
+		{
+			echo json_encode(array('answer'=>0));
+		}
+		else
+		{
+			$user_id = $this->input->post('user_id');
+			$msg = $this->input->post('msg');
+
+			$api_id = 2849330; // id приложения 
+    		$secret_key = 'LXGYFTULRHhxoYQ5vExI'; // защищенный ключ
+    		
+    		require_once(APPPATH.'libraries/vkapi.php');
+
+    		$VK = new vkapi($api_id, $secret_key);
+    		
+    		$data = time();
+    		$rnd = rand();
+
+    		//$msg = urlencode($msg);
+    		$msg = "hello";
+
+    		$resp = $VK->api('secure.sendNotification', array('message'=>$msg,'random'=>$rnd,'timestamp'=>$data,'uids'=>$user_id),$api_id,$secret_key);
+    		//$data = strtotime($data);
+    		//md5("api_id=".$api_id."message=".$message."method=".$method."random=".$random."timestamp=".$timestamp."uids=".$uids."v=".$version.$secret);
+
+    		echo json_encode(array('answer'=>$resp,'vk'=>$resp,'date'=>$data,'msg'=>$msg));	
+		}
+	}
+
+	function php_stat()
+	{
+		$url = 'http://flapps.ru/';  
+		$ch = curl_init();
+		echo $ch;
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		$page = curl_exec ($ch);
+		curl_close($ch);  
+		echo $page; 
 	}
 
 }

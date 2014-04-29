@@ -7,9 +7,7 @@ host = 'http://exam.segrys.ru'
 
 #получение максимального ID
 #Запрос к API-функции getMaxUserId, которая возвращает максимальны ID таблицы пользователей
-host_1 = host + '/api/getMaxUserId'
-print(host_1)
-req = urllib.request.urlopen(host_1)
+req = urllib.request.urlopen(host + '/api/getMaxUserId')
 #декодирование ответа
 max_id = int(req.read().decode('utf-8'))
 print("MAX ID:",max_id)
@@ -49,7 +47,7 @@ while user_id <= max_id:
 
 #обновить дату полной пересортировки
 req = urllib.request.urlopen(host + '/api/updateRateResortDate')
-status = int(req.read().decode('utf-8'))
+status = req.read().decode('utf-8')
 print(status)
 
 print("Получено индексов:",index_count)

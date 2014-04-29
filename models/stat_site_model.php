@@ -2,38 +2,42 @@
 
 class Stat_site_model extends CI_Model{
 	
-	function getLogs($time1 = "",$time2 = "",$status = "")
+	//Получение записей журнала системы по промежутку времени и статусу
+	function getLogs($time1 = 0, $time2 = 0, $status = 0)
 	{
-		$sql="SELECT * FROM `new_log` where time>'$time1' AND time<'$time2' AND `status`='$status' ORDER BY time DESC";
+		$sql="SELECT * FROM `new_log` WHERE `time` > '$time1' AND `time` < '$time2' AND `status` = '$status' ORDER BY `time` DESC";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data;
+		return $query->result_array();
 	}
 
-	function getCountTests($time1="",$time2="")
+	//Получение количества сданных тестов промежутке времени
+	function getCountTests($time1 = 0, $time2 = 0)
 	{
-		$sql="SELECT COUNT(*) FROM `new_results` where timeend>'$time1' AND timeend<'$time2'";
+		$sql="SELECT COUNT(*) FROM `new_results` WHERE `timeend` > '$time1' AND `timeend` < '$time2'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['COUNT(*)'];
+	}
+
+	//Получение количества скорректированных результатов
+	function getCountCorr()
+	{
+		$sql="SELECT COUNT(*) FROM `new_results` WHERE `proz` != `proz_corr`";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['COUNT(*)'];
+	}
+
+	//Получение количества результатов, у которых скорректированный результат больше полученного
+	function getCountCorrPlus()
+	{
+		$sql="SELECT COUNT(*) FROM `new_results` where `proz` < `proz_corr`";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data[0]['COUNT(*)'];
 	}
 
-	function  getCountCorr()
-	{
-		$sql="SELECT COUNT(*) FROM `new_results` where `proz`!=`proz_corr`";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['COUNT(*)'];
-	}
-
-	function  getCountCorrPlus()
-	{
-		$sql="SELECT COUNT(*) FROM `new_results` where `proz`<`proz_corr`";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['COUNT(*)'];
-	}
-
+	//Получение количества пользователей, зарегистрированных через VK
 	function  getVkUsers()
 	{
 		$sql="SELECT COUNT(*) FROM `new_persons` where `block`=0 AND `login` LIKE  '%vk_%'";
@@ -42,6 +46,7 @@ class Stat_site_model extends CI_Model{
 		return $data[0]['COUNT(*)'];
 	}
 
+	//Получение количества пользователей, зарегистрированных через форму авторизации
 	function getNotVkUsers()
 	{
 		$sql="SELECT COUNT(*) FROM `new_persons` where `block`=0 AND `login` NOT LIKE  '%vk_%'";
@@ -50,23 +55,25 @@ class Stat_site_model extends CI_Model{
 		return $data[0]['COUNT(*)'];	
 	}
 
-	function getCountIncorrStud($type="")
+	//Получение количества вопросов, на которые были получен отзыв
+	function getCountIncorrStud($type = "")
 	{
-		$sql="SELECT DISTINCT `quest_id` FROM `new_vopros_feedback` where `type`='$type' AND `quest_id` IN (SELECT `id` FROM `new_vopros` WHERE `del`='0')";
+		$sql="SELECT DISTINCT `quest_id` FROM `new_vopros_feedback` WHERE `type`='$type' AND `quest_id` IN (SELECT `id` FROM `new_vopros` WHERE `del`='0')";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return count($data);	
 	}
 
+	//Получение количества некорректных вопросов
 	function getCountIncorrStat()
 	{
 		$sql="SELECT `id` FROM `new_vopros` WHERE `del`='0' AND `level`='0'";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
+		$data = $query->result_array();
 		return count($data);	
 	}
 
-	//Количество активных заданий
+	//Получение количества активных заданий
 	function getCountQuest()
 	{
 		$sql="SELECT `id` FROM `new_vopros` WHERE `del`='0'";
@@ -75,6 +82,7 @@ class Stat_site_model extends CI_Model{
 		return count($data);	
 	}
 
+	//Получение количества результатов, для которых был оставлен отзыв
 	function getCountOpinion($opinion=0)
 	{
 		$sql="SELECT `id` FROM `new_results` WHERE `opinion`='$opinion'";
@@ -83,6 +91,7 @@ class Stat_site_model extends CI_Model{
 		return count($data);		
 	}
 
+	//Получение количества записей в журнале
 	function getLogCount($type = "")
 	{
 		$sql="SELECT count(*) FROM `new_log` WHERE `status` = '$type'";

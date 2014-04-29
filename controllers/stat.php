@@ -8,6 +8,7 @@ class Stat extends CI_Controller {
 		
 	}
 
+	//Функция первичной проверки прав просмотра и перенаправления запросов в вызываемый метод
 	function _remap($method)
 	{
 		$guest=$this->session->userdata('guest');
@@ -36,7 +37,7 @@ class Stat extends CI_Controller {
 	}
 
 
-	//Функция отображения страницы результатов
+	//Функция отображения страницы статистики
 	function index()
 	{
 		$data['fspo']=$this->results_model->getDisciplines('1');
@@ -44,13 +45,13 @@ class Stat extends CI_Controller {
 		foreach ($data['fspo'] as $key) 
 		{
 			$count=$this->stat_model->getTestCount($key['id']);
-			$data['count_results'][$key['id']]=$count[0]['COUNT(*)'];
+			$data['count_results'][$key['id']] = $count[0]['COUNT(*)'];
 		}
 		$data['segrys']=$this->results_model->getDisciplines('2');
 		foreach ($data['segrys'] as $key) 
 		{
 			$count=$this->stat_model->getTestCount($key['id']);
-			$data['count_results'][$key['id']]=$count[0]['COUNT(*)'];
+			$data['count_results'][$key['id']] = $count[0]['COUNT(*)'];
 		}
 		$data['univers']=$this->results_model->getDisciplines('3');
 		foreach ($data['univers'] as $key) 
@@ -62,6 +63,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_disc_view',$data);
 	}
 
+	//Формирование данных для интерфейса со списком всех тестов образовательного учреждения
 	function view_tests($error = "")
 	{
 		$data['tests']=$this->results_model->getDisciplin($this->uri->segment(3));
@@ -93,6 +95,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_tests_view',$data);
 	}
 
+	//Формирование данных для интерфейса со списком всех групп образовательного учреждения
 	function view_disc_groups()
 	{
 		//Определить образовательное учреждение для дисцпилины
@@ -167,6 +170,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_disc_groups_view',$data);
 	}
 
+	//Формирование данных для интерфейса со списком всех тестов одной группы
 	function view_test_groups()
 	{
 		//Получение списка пользователей, которые учавствовали в тесте
@@ -264,6 +268,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_tests_groups_view',$data);	
 	}
 
+	//Формирование данных для интерфейса со статистикой по темам дисциплины
 	function view_theme_results()
 	{
 		$data['results']=$this->stat_model->getThemes($this->uri->segment(3));
@@ -291,6 +296,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_tests_themes_view',$data);
 	}
 
+	//СТАТИСТИЧЕСКАЯ ОБРАБОТКА ТЕСТА
 	function view_test_stat()
 	{
 		//ID вопросов теста
@@ -586,6 +592,7 @@ class Stat extends CI_Controller {
 		}
 	}
 
+	//Формирование данных для интерфейса со статистикой по группам образовательного учреждения
 	function view_groups($error = "")
 	{
 		$data['last_result']=array();
@@ -612,6 +619,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_groups_view',$data);
 	}
 
+	//Формирование данных для интерфейса со статистикой по одной группе
 	function view_one_group()
 	{
 		//Получить список дисциплин, которые были сданы группой
@@ -693,6 +701,7 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_groups_one_view',$data);
 	}
 
+	//Формирование данных для интерфейса с отчётом по результатам статистической обработки теста
 	function view_test_report()
 	{
 		$data['quests']=array();
@@ -703,10 +712,10 @@ class Stat extends CI_Controller {
 			{
 				$data['answers'][$key['id']]['info']=$this->stat_model->getQuestsAnswers($key['id']);
 			}
-			$data['test_name']=$this->input->post('test_name');
-			$data['disc_id']=$this->uri->segment(4);
+			$data['test_name'] = $this->input->post('test_name');
+			$data['disc_id'] = $this->uri->segment(4);
 			$data['disc_name'] = $this->de_model->getDiscNameOverID($this->uri->segment(4));
-			$data['test_id']=$this->uri->segment(3);
+			$data['test_id'] = $this->uri->segment(3);
 			$data['error']="";
 			$this->load->view('stat/stat_tests_report_view',$data);	
 		}

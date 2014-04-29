@@ -8,6 +8,7 @@ class Forms_admin extends CI_Controller {
 		
 	}
 
+	//Функция первичной проверки прав просмотра и перенаправления запросов в вызываемый метод
 	function _remap($method)
 	{
 		$guest=$this->session->userdata('guest');
@@ -45,6 +46,7 @@ class Forms_admin extends CI_Controller {
 		$this->load->view('forms/forms_admin_view',$data);
 	}
 
+	//Функция изменения параметров опроса
 	function form_edit()
 	{
 		$this->form_validation->set_rules('c_value', 'Параметр', 'trim|xss_clean|required');
@@ -62,6 +64,7 @@ class Forms_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция удаления опроса из списка опросов
 	function form_del()
 	{
 		$this->forms_model->delForm();
@@ -71,6 +74,7 @@ class Forms_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция создания опроса
 	function form_create()
 	{
 		$this->form_validation->set_rules('f_title', 'Текст', 'trim|xss_clean|required');
@@ -101,6 +105,7 @@ class Forms_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция формирования интерфейса со списков вопросов анкетирования
 	function quest_view($error = "")
 	{
 		//Получение идентификатора опроса из URI
@@ -118,6 +123,7 @@ class Forms_admin extends CI_Controller {
 		$this->load->view('forms/forms_admin_quest_view',$data);
 	}
 
+	//Функция изменения параметров вопроса анкетирования
 	function quest_edit()
 	{
 		$this->form_validation->set_rules('c_value', 'Значение', 'trim|xss_clean|required');
@@ -138,6 +144,7 @@ class Forms_admin extends CI_Controller {
 		$this->quest_view($error);
 	}
 
+	//Функция удаления вопроса из опроса
 	function quest_del()
 	{
 		$this->form_validation->set_rules('c_id', 'Параметр3', 'trim|xss_clean|is_natural');
@@ -157,6 +164,7 @@ class Forms_admin extends CI_Controller {
 		$this->quest_view($error);
 	}
 
+	//функция удаления страницы опроса
 	function quest_site_del()
 	{
 		$this->form_validation->set_rules('c_id', 'Параметр3', 'trim|xss_clean|is_natural');
@@ -181,7 +189,7 @@ class Forms_admin extends CI_Controller {
 		$this->quest_view($error);
 	}
 
-	//Создание вопроса
+	//Создание вопроса для анкетирования
 	function quest_create()
 	{
 		$form_id=$this->uri->segment(3);
@@ -233,6 +241,7 @@ class Forms_admin extends CI_Controller {
 		$this->quest_view($error);
 	}
 
+	//Функция формирования интерфейса со списком опросов и их статусом
 	function view_results($error="")
 	{
 		$data['error'] = $error;
@@ -244,6 +253,7 @@ class Forms_admin extends CI_Controller {
 		$this->load->view('forms/forms_results_view',$data);
 	}
 
+	//Функция изменения параметров опроса с целью разрешения просмотра результатов анкетирования
 	function public_result()
 	{
 		$form_id = $this->uri->segment(3);
@@ -258,6 +268,7 @@ class Forms_admin extends CI_Controller {
 		$this->view_results("Статус опроса обновлён");
 	}
 
+	//Функция формирования интерфейса для просмотра списка вопросов и результатов
 	function view_one_result()
 	{
 		$form_id = $this->uri->segment(3);
@@ -272,6 +283,7 @@ class Forms_admin extends CI_Controller {
 		$this->load->view('forms/forms_one_result_view',$data);
 	}
 
+	//Функция журналирования событий, связанных с администрированием опросов
 	function _add_to_log($msg = "")
 	{
 		$this->load->model('main_model');
