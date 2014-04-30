@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Апр 23 2014 г., 10:45
+-- Время создания: Апр 30 2014 г., 09:18
 -- Версия сервера: 5.5.35-1
--- Версия PHP: 5.5.9-1
+-- Версия PHP: 5.5.11-2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `new_annul` (
   `result` varchar(50) NOT NULL,
   `razd_id` int(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=439 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=447 ;
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `new_form_answers` (
   `option` text NOT NULL,
   `option_7` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=7871 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=24926 ;
 
 -- --------------------------------------------------------
 
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `new_form_quests` (
   `numb` int(3) NOT NULL DEFAULT '1',
   `site` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=133 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=134 ;
 
 -- --------------------------------------------------------
 
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `new_form_results` (
   `begin` int(11) NOT NULL DEFAULT '0',
   `end` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=749 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=930 ;
 
 -- --------------------------------------------------------
 
@@ -321,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `new_log` (
   `goal` int(5) NOT NULL DEFAULT '1',
   `status` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=10979 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=11659 ;
 
 -- --------------------------------------------------------
 
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `new_log_status` (
   `log_type` int(3) NOT NULL,
   `count` int(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=53 ;
 
 -- --------------------------------------------------------
 
@@ -356,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `new_materials` (
   `url` varchar(150) NOT NULL,
   `views` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=24 ;
 
 -- --------------------------------------------------------
 
@@ -371,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `new_mat_themes` (
   `theme_id` int(5) NOT NULL,
   `balls` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=51 ;
 
 -- --------------------------------------------------------
 
@@ -465,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `new_persons` (
   `public_status` int(1) NOT NULL DEFAULT '0',
   `isrz` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=2529 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=2546 ;
 
 -- --------------------------------------------------------
 
@@ -522,12 +522,14 @@ DROP TABLE IF EXISTS `new_present_content`;
 CREATE TABLE IF NOT EXISTS `new_present_content` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `text` text NOT NULL,
+  `content` text NOT NULL,
   `slide` int(3) NOT NULL,
   `image` text NOT NULL,
   `present_id` int(20) NOT NULL,
+  `main_slide` int(10) NOT NULL DEFAULT '0',
   `del` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=30 ;
 
 -- --------------------------------------------------------
 
@@ -540,12 +542,15 @@ CREATE TABLE IF NOT EXISTS `new_present_list` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `user_id` int(20) NOT NULL,
   `present_name` text NOT NULL,
+  `description` text NOT NULL,
   `date` datetime NOT NULL,
   `del` int(1) NOT NULL DEFAULT '0',
-  `public_status` int(1) NOT NULL,
+  `public_status` int(1) NOT NULL DEFAULT '0',
   `current_slide` int(3) NOT NULL DEFAULT '0',
+  `transition` varchar(50) NOT NULL DEFAULT 'default',
+  `theme` varchar(50) NOT NULL DEFAULT 'sky',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -602,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `new_results` (
   `variant` int(10) NOT NULL,
   `opinion` int(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=4833 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=4853 ;
 
 -- --------------------------------------------------------
 
@@ -617,8 +622,9 @@ CREATE TABLE IF NOT EXISTS `new_reyting` (
   `date` varchar(50) NOT NULL,
   `reyt` int(50) NOT NULL,
   `isrz` float NOT NULL DEFAULT '0',
+  `forecast` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=676 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1176 ;
 
 -- --------------------------------------------------------
 
@@ -632,7 +638,7 @@ CREATE TABLE IF NOT EXISTS `new_scenaries` (
   `res_id` int(50) NOT NULL,
   `quests` longtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=2450 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=2470 ;
 
 -- --------------------------------------------------------
 
@@ -699,7 +705,7 @@ CREATE TABLE IF NOT EXISTS `new_stud_ans` (
   `check` int(2) NOT NULL DEFAULT '0',
   `unix_time` int(50) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=102018 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=102280 ;
 
 -- --------------------------------------------------------
 

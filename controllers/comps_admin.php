@@ -2,7 +2,7 @@
 
 class Comps_admin extends CI_Controller {
 
-	function Forms_admin()
+	function Comps_admin()
 	{
 		parent::__construct();
 		
@@ -11,7 +11,7 @@ class Comps_admin extends CI_Controller {
 	function _remap($method)
 	{
 		$guest=$this->session->userdata('guest');
-		if ($guest=='')
+		if ($guest == '')
 		{
 			$data['error']="Время сессии истекло. Необходима авторизация";
 			$this->load->view('main_view',$data);

@@ -18,13 +18,7 @@ class Captcha_model extends CI_Model{
 		return $data[0]['name'];
 	}
 
-	function getUserName($author_id="")
-	{
-		$sql="SELECT `lastname`,`firstname` FROM `new_persons` where `id`='$author_id'";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['lastname']." ".$data[0]['firstname'];
-	}
+	
 
 	function getAllTypeReg()
 	{

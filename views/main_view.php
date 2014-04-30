@@ -6,7 +6,7 @@
 		<link rel="shortcut icon" href="<?= base_url() ?>images/favi.png" type="image/x-icon">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="keywords" content="Институт, Информационных, Технологий, Сегрис, образование, обучение, школьникам, студентам, курсы, компьютеры, компьютерные курсы, ИИТ Сегрис, непрерывное образование, итмо, дистанционные технологии" />
-		<meta name="description" content="Виртуальная обучающая среда" />
+		<meta name="description" content="Виртуальная образовательная среда" />
 		<!-- One CSS file that rules them all -->
 		<link href="<?= base_url() ?>css/main.css" rel="stylesheet">
 
@@ -14,7 +14,7 @@
 		<!--[if lt IE 9]>
 			<script src="js/html5shiv.js"></script>
 		<![endif]-->
-		<meta name="description" content="Виртуальная Обучающая среда" />
+		<meta name="description" content="Виртуальная образовательная среда" />
 		<script type="text/javascript" src="http://userapi.com/js/api/openapi.js?111"></script>
 		<script type="text/javascript" src="<?= base_url()?>js/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -357,7 +357,7 @@
 			<div class="row">
 				<div class="col-md-12 intro" style="color: white; font-size: 20px;">
 					<img src="<?= base_url() ?>images/logo.png" alt="Вирутальная обучающая среда" width="170px">
-					<p class="lead" ><h1>Виртуальная Обучающая Среда</h1>Среда для студентов факультета среднего профессионального образования НИУ ИТМО</p>
+					<p class="lead" ><h1>Виртуальная Образовательная Среда</h1>Среда для обучения студентов факультета среднего профессионального образования НИУ ИТМО</p>
 					<!--
 					<div id="vk_auth" style="margin-top:10px"></div>
 						<script>VK.Widgets.Auth("vk_auth", {width: "250px", authUrl: 'http://exam.segrys.ru/registr/vk'});</script>

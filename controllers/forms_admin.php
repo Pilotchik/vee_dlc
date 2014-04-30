@@ -15,13 +15,16 @@ class Forms_admin extends CI_Controller {
 		if ($guest=='')
 		{
 			$data['error']="Время сессии истекло. Необходима авторизация";
+			$this->load->model('registr_model');
+			$data['fspo']=$this->registr_model->getFSPO();
+			$data['segrys']=$this->registr_model->getSegrys();
 			$this->load->view('main_view',$data);
 		}
 		else
 		{
 			if ($guest<2)
 			{
-				redirect('/main/auth/', 'refresh');
+				redirect('/', 'refresh');
 			}	
 			else
 			{
@@ -69,7 +72,7 @@ class Forms_admin extends CI_Controller {
 	{
 		$this->forms_model->delForm();
 		$form_name = $this->forms_model->getFormName($this->input->post('c_id'));
-		$this->_add_to_log("Опроса \"$form_name\" удалён");
+		$this->_add_to_log("Опрос \"$form_name\" удалён");
 		$error = "Опрос удалён";
 		$this->index($error);
 	}
