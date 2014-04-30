@@ -10,7 +10,7 @@ class Present_admin extends CI_Controller {
 
 	function _remap($method)
 	{
-		$guest=$this->session->userdata('guest');
+		$guest = $this->session->userdata('guest');
 		if ($guest=='')
 		{
 			$data['error'] = "Время сессии истекло. Необходима авторизация";
@@ -21,13 +21,12 @@ class Present_admin extends CI_Controller {
 		}
 		else
 		{
-			if ($guest<2)
+			if ($guest < 2)
 			{
 				redirect('/', 'refresh');
 			}	
 			else
 			{
-				$this->load->model('forms_model');
 				$this->load->model('present_model');
 				$this->$method();
 			}
@@ -174,25 +173,11 @@ class Present_admin extends CI_Controller {
 		$this->slides_view($this->uri->segment(3),$error);
 	}
 
-	function present_menage($error="")
-	{
-		$data['presents']=$this->present_model->getAllPresents();
-		foreach ($data['presents'] as $key)
-		{
-			$data['author'][$key['id']]=$this->present_model->getUserName($key['user_id']);
-		}
-		$data['error']=$error;
-		$this->load->view('present/present_menage_view',$data);
-	}
-
+	//Функция формирования интерфейса для управления презентацией
 	function present_view()
 	{
 		$present_id = $this->uri->segment(3);
-		//Сделать первый (минимальный для презентации) слайд активным
-		//1. Найти первый (минимальный)
-		$first = $this->present_model->getMinSlide($present_id);
-		//2. Сделать первый слайд активным
-		$this->present_model->setActiveSlide($present_id,$first);
+		$data['title'] = "ВОС.Управление презентацией";
 		$data['present_name'] = $this->present_model->getPresentName($present_id);
 		$data['present_slides'] = $this->present_model->getAllSlides($present_id);
 		$data['present_id'] = $present_id;
@@ -200,12 +185,23 @@ class Present_admin extends CI_Controller {
 		$this->load->view('present/present_slides_menage_view',$data);
 	}
 
-	function setactive_slide()
+	//Функция асинхронной смены текущих индексов
+	function change_slide()
 	{
-		$present_id=$this->input->post('present_id');
-		$slide=$this->input->post('slide');
-		$this->present_model->setActiveSlide($present_id,$slide);
-		echo json_encode(array('answer'=>1));
+		$this->form_validation->set_rules('index_h', 'Описание', 'trim|xss_clean|required|is_natural');
+		$this->form_validation->set_rules('index_v', 'Описание', 'trim|xss_clean|required|is_natural');
+		if ($this->form_validation->run() == FALSE)
+		{
+			echo json_encode(array('answer' => 0));	
+		}
+		else
+		{
+			$index_h = $this->input->post('index_h');
+			$index_v = $this->input->post('index_v');
+			$present_id = $this->input->post('present_id');
+			$this->present_model->changeIndex($present_id,$index_h,$index_v);
+			echo json_encode(array('answer'=>1));
+		}
 	}
 
 	//Функция журналирования событий, связанных с администрированием опросов

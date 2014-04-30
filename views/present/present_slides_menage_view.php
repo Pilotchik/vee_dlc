@@ -1,71 +1,80 @@
-<html>
-	<head>
-		<title>Система тестирования</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<script type="text/javascript" src="<?php echo base_url()?>js/jquery.min.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/sorttable.js"></script>
-		<script type="text/javascript" src="<?php echo base_url()?>js/hltable.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() 
-			{ 	
-				$('.rootid').eq(0).css({"background":"#bef574"});
-				$('.btn').eq(0).css("display", "none");
-			});
+<?php require_once(APPPATH.'views/require_modal_metrika_bs3.php');?>
+	<script type="text/javascript">
+		$(document).ready(function() 
+		{ 	
+			$('#main_note_ID').html($('#note_1').html());
+		});
 
-			function func_nazad()		{document.nazad.submit();}
-			function func_home()		{document.home.submit();}
+		var cur_h = 0;
+		var max_h = <?= count($present_slides) ?>;
+		var cur_v = 0;
 
-			function postAjax(slide,nomer)
-			{
-				var nom = parseInt(nomer);
-				$('.btn').css("display", "block");
-				$('.btn').eq(nom).css("display", "none");
-				$('.rootid').eq(nom).css({"background":"#bef574"});
-				$.post ('<?php echo base_url();?>present_admin/setactive_slide',{slide:slide,present_id:<?php echo $present_id; ?>},function(data,status){
-				if( status!='success' )	{alert('В процессе автосохранения произошла ошибка :(');}
-				else{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');}}})
-			}
+		function postAjax(cmd)
+		{
+			var cmd = parseInt(cmd);
+			if (cmd == 1 && cur_h < max_h)	{cur_h++;cur_v = 0;$('#cmd_status').html('Вперёд')}
+			if (cmd == 2 && cur_h > 0)		{cur_h--;cur_v = 0;$('#cmd_status').html('Назад')}
+			if (cmd == 3 && cur_v > 0)		{cur_v--;$('#cmd_status').html('Вверх')}
+			if (cmd == 4)					{cur_v++;$('#cmd_status').html('Вниз')}
+			$('#main_note_ID').html($('#note_'+cur_h).html());
+			$.post ('<?= base_url() ?>present_admin/change_slide',{index_h:cur_h,index_v:cur_v,present_id:<?= $present_id ?>},function(data,status){
+			if( status!='success' )	{alert('В процессе передачи команды произошла ошибка :(');}
+			else{eval('var obj='+data);	if (obj.answer==0)	{alert('Ответ не сохранился');} else {console.log('ok');}}});
+		}
 						
-		</script>
-		<link href="<?php echo base_url()?>css/styles.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-		<style>
-			form {margin:0 0 0 0;}
-		</style>
-	</head>
-	<body>
-		<form action="<?php echo base_url();?>present_admin/present_menage" method="get" name="nazad"></form>
-		<form action="<?php echo base_url();?>main/auth" method="get" name="home"></form>
-		<?php require_once(APPPATH.'views/require_modal_metrika.php');?>
-		<center>
-		<div id="root" style="width:90%;">
-			<h1><?php echo $present_name;?></h1>
+	</script>
+
+	<div id="main">
+		<h3>Управление презентацией "<?= $present_name ?>"</h3>
+		Предыдущая команда: <span id="cmd_status"></span>
+		<div class="row" style="text-align:center;margin:15px auto;">
+			<div class="col-sm-12">
+				<button href="#" class="btn btn-primary btn-lg btn-block" style="height: 80;" onClick="postAjax(3)">
+					<span class="glyphicon glyphicon-chevron-up"></span>
+				</button>
+			</div>
+		</div>
+		<div class="row" style="text-align:center;margin:15px auto;">
+			<div class="col-xs-4 col-sm-4">
+				<button href="#" class="btn btn-primary btn-lg btn-block" style="height: 80;" onClick="postAjax(2)">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+				</button>
+			</div>
+			<div class="col-xs-4 col-sm-4">
+				<button href="#" class="btn btn-default btn-lg btn-block" style="height: 80;" onClick="postAjax(5)">
+					<span class="glyphicon glyphicon-pause"></span>
+				</button>
+			</div>
+			<div class="col-xs-4 col-sm-4">
+				<button href="#" class="btn btn-primary btn-lg btn-block" style="height: 80;" onClick="postAjax(1)">
+					<span class="glyphicon glyphicon-chevron-right"></span>
+				</button>
+			</div>
+		</div>
+		<div class="row" style="text-align:center;margin:15px auto;">
+			<div class="col-sm-12">
+				<button href="#" class="btn btn-primary btn-lg btn-block" style="height: 80;" onClick="postAjax(4)">
+					<span class="glyphicon glyphicon-chevron-down"></span>
+				</button>
+			</div>
+		</div>
+		<div class="row" style="margin:15px auto;">
+			<div class="col-sm-12" id="main_note_ID" style="font-size:28px;line-height:30px;margin:30px auto;"></div>
+			<div class="col-sm-12">
+				<a href="<?= base_url()?>present" class="btn btn-lg btn-default btn-block">
+					<span class="glyphicon glyphicon-chevron-left"></span> Назад
+				</a>
+			</div>
 		</div>
 		<?php
 		$i = 0;
 		foreach ($present_slides as $key)
 		{
 			?>
-			<div id="root" style="width:90%;margin:20px 0 0 0;" class="rootid">
-				<h2><?php  echo $key['slide'];?></h2>
-				<p style="font-size:28px;line-height:30px;"><?php  echo $key['text'];?></p>
-				<div style="width:306px;height:100px;line-height:100px;margin:10px 0 10px 0;font-size:20px;" class="btn btn-inverse" onClick="postAjax(<?php echo $key['slide'].", ".$i;?>)">
-					Сделать активным
-				</div>
-			</div>
+			<div id="note_<?= $i ?>" style="display:none;"><?= $key['slide'] ?>. <?= $key['text'] ?></div>
 			<?php
 			$i++;
 		}
 		?>
-		<div id="root" style="width:90%;margin:25px 0 0 0;">
-			<div class="btn-group">
-				<div style="width:206px;margin:10px 0 10px 0;" class="btn btn-inverse" onClick="javascript: func_nazad()">
-					<i class="icon-arrow-left icon-white"></i> Назад
-				</div>
-				<div style="width:206px;margin:10px 0 10px 0;" class="btn btn-inverse" onClick="javascript: func_home()">
-					<i class="icon-home icon-white"></i> Главное меню
-				</div>
-			</div>
-		</div>
 	</body>
 </html>

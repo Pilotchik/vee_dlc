@@ -33,7 +33,15 @@
 											<input style="width:90px;margin:0 0 0 0;font-size:10px;" class="btn btn-inverse" type="submit" value="Проектор">
 											</form>
 										-->
-										<a href="<?= base_url() ?>present/play2/<?= $key['id'] ?>?theme=<?= $key['theme'] ?>&transition=<?= $key['transition'] ?>" class="btn btn-success"><span class="glyphicon glyphicon-play"></span> Просмотр</a>
+										<a href="<?= base_url() ?>present/play/<?= $key['id'] ?>?theme=<?= $key['theme'] ?>&transition=<?= $key['transition'] ?>" class="btn btn-success"><span class="glyphicon glyphicon-play"></span> Просмотр</a>
+										<?php
+										if ($this->session->userdata('guest') > 1)
+										{
+											?>
+											<a href="<?= base_url() ?>present_admin/present_view/<?= $key['id'] ?>" class="btn btn-info"><span class="glyphicon glyphicon-plane"></span> Управление</a>
+											<?php
+										}
+										?>
 									</div>
 								</li>
 

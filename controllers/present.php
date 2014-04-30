@@ -21,33 +21,16 @@ class Present extends CI_Controller {
 		$this->load->view('present/present_list_view',$data);
 	}
 
+	//Функция формирования интерфейса для просмотра слайдов
 	function play()
 	{
 		$this->load->model('present_model');
 		$present_id = (int) $this->uri->segment(3);
-		//Сделать первый (минимальный для презентации) слайд активным
-		//1. Найти первый (минимальный)
-		$first = $this->present_model->getMinSlide($present_id);
-		//2. Сделать первый слайд активным
-		$this->present_model->setActiveSlide($present_id,$first);
-		$data['first'] = $first;
-		$data['present_slides'] = $this->present_model->getAllSlides($present_id);
-		$data['present_id'] = $present_id;
-		$data['error'] = "";
-		$this->load->view('present/present_play_view',$data);
-	}
-
-	function play2()
-	{
-		$this->load->model('present_model');
-		$present_id = (int) $this->uri->segment(3);
-		//Сделать первый (минимальный для презентации) слайд активным
-		//1. Найти первый (минимальный)
-		$first = $this->present_model->getMinSlide($present_id);
-		//2. Сделать первый слайд активным
-		$this->present_model->setActiveSlide($present_id,$first);
-		$data['first'] = $first;
+		//обнулить индексы
+		$this->present_model->updatePresentIndexes($present_id);
+		//Получение названия презентации
 		$data['present_name'] = $this->present_model->getPresentName($present_id);
+		//Получение слайдов презентации
 		$data['present_slides'] = $this->present_model->getAllSlides($present_id);
 		//Получение подслайдов
 		$data['subslides'] = array();
@@ -57,22 +40,23 @@ class Present extends CI_Controller {
 		}
 		$data['present_id'] = $present_id;
 		$data['error'] = "";
-		$this->load->view('present/present_play2_view',$data);
+		$this->load->view('present/present_play_view',$data);
 	}
 
-	function check_slide()
+	//функция асинхронной проверки индексов
+	function get_indexes()
 	{
 		$this->load->model('present_model');
 		$this->form_validation->set_rules('present_id', 'ID', 'trim|required|xss_clean|is_natural_no_zero');
 		if ($this->form_validation->run() == TRUE)
 		{
-			$present_id=$this->input->post('present_id');
-			$current = $this->present_model->getCurrentSlide($present_id);
-			echo json_encode(array('answer'=>1,'current_slide'=>$current));
+			$present_id = $this->input->post('present_id');
+			$current = $this->present_model->getCurrentIndexes($present_id);
+			echo json_encode(array('answer' => 1,'index_h' => $current['index_h'],'index_v' => $current['index_v'] ));
 		}
 		else
 		{
-			$this->index();
+			echo json_encode(array('answer'=>0));
 		}
 	}
 

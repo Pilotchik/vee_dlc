@@ -121,7 +121,6 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>de_admin/disc_view/segrys">Курсы НОУ "СЕГРИС-ИИТ"</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/psih">Универсальные курсы</a></li>
 							<li class="dropdown-header">Электронные презентации</li>
-							<li><a href="<?= base_url() ?>present_admin/present_menage">Управление показом</a></li>
 							<li><a href="<?= base_url() ?>present_admin">Управление презентациями</a></li>
 							<li class="dropdown-header">Справочные материалы</li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/fspo">Справочные материалы ФСПО</a></li>

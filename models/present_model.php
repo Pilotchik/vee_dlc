@@ -105,31 +105,29 @@ class Present_model extends CI_Model{
 		$value=$this->input->post('q_value');
 		$param=$this->input->post('q_param');
 		$sql = "UPDATE `new_present_content` SET `$param` = '$value' where `id`='$id_c'";
-		$data = $this->db->query($sql);
-		return $data;
+		$this->db->query($sql);
 	}
 
-	function getMinSlide($present_id="")
+	//функция изменения номера слайда
+	function changeIndex($present_id = 1, $index_h = 0,$index_v = 0)
 	{
-		$sql="SELECT MIN(`slide`) FROM `new_present_content` WHERE `present_id`='$present_id' AND `del`='0'";
+		$sql = "UPDATE `new_present_list` SET `index_h` = '$index_h',`index_v` = '$index_v' WHERE `id` = '$present_id'";
+		$this->db->query($sql);
+	}
+
+	//Получение текущих индексов
+	function getCurrentIndexes($present_id = 1)
+	{
+		$sql = "SELECT `index_h`,`index_v` FROM `new_present_list` WHERE `id` = '$present_id' LIMIT 1";
 		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['MIN(`slide`)'];
+		$data = $query->result_array();
+		return $data[0];	
 	}
 
-	function setActiveSlide($present_id="",$first="")
+	function updatePresentIndexes($present_id = 1)
 	{
-		$sql = "UPDATE `new_present_list` SET `current_slide` = '$first' WHERE `id`='$present_id'";
-		$data = $this->db->query($sql);
-		return $data;
-	}
-
-	function getCurrentSlide($present_id="")
-	{
-		$sql="SELECT `current_slide` FROM `new_present_list` WHERE `id`='$present_id'";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0]['current_slide'];	
+		$sql = "UPDATE `new_present_list` SET `index_h` = '0',`index_v` = '0' WHERE `id` = '$present_id'";
+		$this->db->query($sql);
 	}
 
 }
