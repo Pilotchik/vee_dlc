@@ -13,10 +13,10 @@ class Attest extends CI_Controller {
 		$guest=$this->session->userdata('guest');
 		if ($guest=='')
 		{
-			$data['error']="Время сессии истекло. Необходима авторизация";
+			$data['error'] = "Время сессии истекло. Необходима авторизация";
 			$this->load->model('registr_model');
-			$data['fspo']=$this->registr_model->getFSPO();
-			$data['segrys']=$this->registr_model->getSegrys();
+			$data['fspo'] = $this->registr_model->getFSPO();
+			$data['segrys'] = $this->registr_model->getSegrys();
 			$this->load->view('main_view',$data);
 		}
 		else
@@ -91,15 +91,16 @@ class Attest extends CI_Controller {
 		{
 			$now_time = time();
 			$data['name_test'] = $test[0]['name_razd'];
+			$data['title'] = "ВОС.Тест.".$data['name_test'];
 			$data['time_long'] = $test[0]['time_long'];
 			$data['user_id'] = $this->session->userdata('user_id');
-			$result=$this->attest_model->getResult($test_id,$this->session->userdata('user_id'));
+			$result = $this->attest_model->getResult($test_id,$this->session->userdata('user_id'));
 			if (isset($result[0]))
 			{
 				//Если тест уже был начат
 				$data['time_save']=$result[0]['timesave'];
 				$data['begin_t']=$result[0]['timebeg'];
-				$all_quests=$this->attest_model->getScenariy($result[0]['id']);
+				$all_quests = $this->attest_model->getScenariy($result[0]['id']);
 				$data['quests']=$this->attest_model->getSpecQuests($test_id,$this->session->userdata('user_id'),$all_quests);
 			}
 			else
@@ -326,11 +327,11 @@ class Attest extends CI_Controller {
 
 	function test_itog()
 	{
-		$test_id=$this->uri->segment(3);
-		$user_id=$this->session->userdata('user_id');
-		$now_time=time();
-		$status_array=$this->attest_model->getResRecord($user_id,$test_id);
-		$result_id=$status_array[0]['id'];
+		$test_id = (int) $this->uri->segment(3);
+		$user_id = $this->session->userdata('user_id');
+		$now_time = time();
+		$status_array = $this->attest_model->getResRecord($user_id,$test_id);
+		$result_id = $status_array[0]['id'];
 		if ($status_array[0]['proz']>0)
 		{
 			redirect(base_url());
@@ -352,7 +353,7 @@ class Attest extends CI_Controller {
 			$result=$this->attest_model->updateResRecord($result_id,$true_cnt,$abs,$now_time);
 			$data['result_id'] = $result_id;
 			$this->load->model('main_model');
-			$lection_id = $this->input->post('lection_id');
+			$lection_id = (int) $this->input->get('lection_id');
 			if ($lection_id != 0)
 			{
 				//Подгрузка модели дистанционного обучения

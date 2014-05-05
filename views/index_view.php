@@ -240,7 +240,7 @@
 								<div class="progress">
 									<div class="progress-bar progress-bar-success" style="width: <?= $low_isrz ?>%">
 										<span class="sr-only"><?= $low_isrz ?>% Complete (success)</span>
-										</div>
+									</div>
 										<div class="progress-bar progress-bar-warning" style="width: <?= $high_isrz ?>%">
 										<span class="sr-only"><?= $high_isrz ?>% Complete (warning)</span>
 										</div>
