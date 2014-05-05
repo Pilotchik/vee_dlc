@@ -35,9 +35,19 @@ class Kat extends CI_Controller {
 		{
 			//Все материалы дисциплины
 			$data['materials'][$key['id']] = $this->kat_model->getMaterials($key['id']);
+			foreach ( $data['materials'][$key['id']] as $key2)
+			{
+				$data['materials_themes'][$key2['id']] = $this->kat_model->getThemesOverMaterialID($key2['id']);
+			}
 		}
-		$data['error'] = $error;
 
+		$data['all_themes'] = $this->kat_model->getAllThemesWithMaterials();
+		foreach($data['all_themes'] as $key)
+		{
+			$data['all_themes_count'][$key['id_theme']] = $this->kat_model->getCountThemesOverThemeId($key['id_theme']);
+		}
+		
+		$data['error'] = $error;
 
 		//Рекомендации
 		$user_id = $this->session->userdata('user_id');; // мой айди
@@ -84,6 +94,19 @@ class Kat extends CI_Controller {
 		$this->kat_model->updateMaterialViewsOverId($mat_id,$views);
 		$data['error'] = "";
 		$this->load->view('kat/kat_material_view',$data);
+	}
+
+	function view_theme()
+	{
+		$theme_id = (int) $this->uri->segment(3);
+		$data['error'] = "";
+		$data['materials'] = $this->kat_model->getMaterialsOverThemeId($theme_id);
+		$data['theme_name'] = $this->kat_model->getThemeNameOverThemeId($theme_id);
+		foreach ($data['materials'] as $key)
+		{
+			$data['materials_themes'][$key['id']] = $this->kat_model->getThemesOverMaterialID($key['id']);
+		}
+		$this->load->view('kat/kat_theme_view',$data);
 	}
 
 }

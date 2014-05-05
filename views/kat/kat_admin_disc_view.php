@@ -170,7 +170,7 @@
 									echo "
 									<tr class=info>
 										<td width=70% align=left style=\"line-height: 30px;\">
-											<div id=\"name$id_mat\">".$key2['name']."</div>
+											<div id=\"name$id_mat\">".$key2['name']." (".$key2['views'].")</div>
 										</td>";
 										?>
 										<td align="center">

@@ -12,10 +12,32 @@ class Kat_model extends CI_Model
 
 	function getMaterials($disc_id = "")
 	{
-		$sql="SELECT `id`,`name` FROM `new_materials` WHERE `disc_id`='$disc_id' AND `del`='0' AND `active`='1' ORDER BY `name` ASC";
+		$sql="SELECT `id`,`name`,`views` FROM `new_materials` WHERE `disc_id`='$disc_id' AND `del`='0' AND `active`='1' ORDER BY `name` ASC";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;
+	}
+
+	function getThemesOverMaterialID($mat_id = 1)
+	{
+		$sql="SELECT `name_th` FROM `new_themes` WHERE `id_theme`IN (SELECT `theme_id` FROM `new_mat_themes` WHERE `mat_id` = '$mat_id') ORDER BY `name_th` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	function getAllThemesWithMaterials()
+	{
+		$sql = "SELECT `id_theme`,`name_th` FROM `new_themes` WHERE `id_theme`IN (SELECT `theme_id` FROM `new_mat_themes` WHERE `balls` > '0') AND `del` = '0' ORDER BY `name_th` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	function getCountThemesOverThemeId($theme_id = 1)
+	{
+		$sql = "SELECT COUNT(`theme_id`) as `cnt` FROM `new_mat_themes` WHERE `theme_id` = '$theme_id' AND `balls` > '0'";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['cnt'];
 	}
 
 	function getAllDisciplines($dest = "")
@@ -121,8 +143,8 @@ class Kat_model extends CI_Model
 	}
 	function deleteMaterial($id = 1)
 	{
-				$sql = "UPDATE `new_materials` SET `del`='1' WHERE `id` = '$id'";
-				$this->db->query($sql);	
+		$sql = "UPDATE `new_materials` SET `del`='1' WHERE `id` = '$id'";
+		$this->db->query($sql);	
 	}
 	function getAllAccordance($id_mat)
 	{
@@ -172,6 +194,22 @@ class Kat_model extends CI_Model
 		WHERE `new_themes`.`name_th` = '$name' AND `new_mat_themes`.`balls` > '50'";
 		$query = $this->db->query($sql);
 		return $query->result_array();
+	}
+
+	function getMaterialsOverThemeId($theme_id = 1)
+	{
+		$sql = "SELECT `id`,`name` FROM `new_materials` WHERE `id` IN (SELECT `mat_id` FROM `new_mat_themes` WHERE `theme_id` = '$theme_id') AND `del`='0' AND `active`='1' ORDER BY `name` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	//Получение названия темы по её идентификатору
+	function getThemeNameOverThemeId($theme_id = 1)
+	{
+		$sql = "SELECT `name_th` FROM `new_themes` WHERE `id_theme` = '$theme_id' LIMIT 1";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['name_th'];
 	}
 
 }
