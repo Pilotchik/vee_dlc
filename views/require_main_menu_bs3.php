@@ -85,13 +85,6 @@ if($guest >= 2)
 							<li class="dropdown-header">Статистика тестов</li>
 							<li><a href="<?= base_url() ?>stat">Статистика по тестам</a></li>
 							<li><a href="<?= base_url() ?>stat/view_groups">Статистика по группам</a></li>
-							<!--
-							<li class="dropdown-header">Рейтинг</li>
-							<li><a href="<?= base_url() ?>reyting/index/1/fspo">Рейтинг ФСПО</a></li>
-							<li><a href="<?= base_url() ?>reyting/index/2/bk">НОУ "СЕГРИС-ИИТ". Базовый курс</a></li>
-							<li><a tabindex="-1" href="<?php echo base_url();?>reyting/index/2/spec">НОУ "СЕГРИС-ИИТ". Специализация</a></li>
-							<li><a tabindex="-1" href="<?php echo base_url();?>reyting/prepods">Рейтинг преподавателей</a></li>
-							-->
 							<li class="dropdown-header">Служебная аналитика</li>
 							<li><a href="<?= base_url() ?>stat_site">Журнал системы</a></li>
 							<li><a href="<?= base_url() ?>stat_site/read_messages">Сообщения пользователей</a></li>
@@ -120,8 +113,10 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>de_admin/disc_view/fspo">Курсы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/segrys">Курсы НОУ "СЕГРИС-ИИТ"</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/psih">Универсальные курсы</a></li>
+							<!--
 							<li class="dropdown-header">Электронные презентации</li>
 							<li><a href="<?= base_url() ?>present_admin">Управление презентациями</a></li>
+							-->
 							<li class="dropdown-header">Справочные материалы</li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/fspo">Справочные материалы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/segrys">Справочные материалы НОУ "СЕГРИС-ИИТ"</a></li>

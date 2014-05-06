@@ -8,10 +8,11 @@ class Present_admin extends CI_Controller {
 		
 	}
 
+	//Функция первичной проверки прав просмотра и перенаправления запросов в вызываемый метод
 	function _remap($method)
 	{
 		$guest = $this->session->userdata('guest');
-		if ($guest=='')
+		if ($guest == '')
 		{
 			$data['error'] = "Время сессии истекло. Необходима авторизация";
 			$this->load->model('registr_model');
@@ -21,6 +22,7 @@ class Present_admin extends CI_Controller {
 		}
 		else
 		{
+			/*
 			if ($guest < 2)
 			{
 				redirect('/', 'refresh');
@@ -30,23 +32,19 @@ class Present_admin extends CI_Controller {
 				$this->load->model('present_model');
 				$this->$method();
 			}
+			*/
+			$this->load->model('present_model');
+			$this->$method();
 		}
 	}
-
 
 	//Функция отображения главной страницы администрирования опросов
 	function index($error = "")
 	{
-		$data['title'] = "ВОС. Управление презентациями";
-		$data['presents'] = $this->present_model->getAllPresents();
-		foreach ($data['presents'] as $key)
-		{
-			$data['author'][$key['id']]=$this->present_model->getUserName($key['user_id']);
-		}
-		$data['error'] = $error;
-		$this->load->view('present/present_admin_view',$data);
+		redirect('/present', 'refresh');
 	}
 
+	//Функция изменения статуса архивации в БД
 	function present_del()
 	{
 		$this->present_model->delPresent();
@@ -54,6 +52,7 @@ class Present_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция изменения параметров презентации в БД
 	function present_edit()
 	{
 		$this->form_validation->set_rules('f_title', 'Текст', 'trim|xss_clean|required');
@@ -80,6 +79,7 @@ class Present_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция добавления в БД данных о презентации
 	function present_create()
 	{
 		$this->form_validation->set_rules('f_title', 'Текст', 'trim|xss_clean|required');
@@ -105,6 +105,7 @@ class Present_admin extends CI_Controller {
 		$this->index($error);
 	}
 
+	//Функция формирования интерфейса для управления презентацией
 	function slides_view($present_id = "", $error = "")
 	{
 		if ($present_id == "") {$present_id = $this->uri->segment(3);}
@@ -125,6 +126,7 @@ class Present_admin extends CI_Controller {
 		$this->load->view('present/present_admin_slides_view',$data);
 	}
 
+	//Функция изменения статуса архивации слайда
 	function slide_del()
 	{
 		$this->present_model->delSlide();
@@ -133,6 +135,7 @@ class Present_admin extends CI_Controller {
 		$this->slides_view($present_id,$error);
 	}
 
+	//Функция обработки и добавления данных о слайде презентации в БД
 	function slide_create()
 	{
 		$present_id = $this->uri->segment(3);
@@ -157,6 +160,7 @@ class Present_admin extends CI_Controller {
 		$this->slides_view($present_id,$error);
 	}
 
+	//Функция обработки и изменения данных слайда в БД
 	function slide_edit()
 	{
 		$this->form_validation->set_rules('q_value', 'Значение', 'trim|required');

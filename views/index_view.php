@@ -77,7 +77,7 @@
             chart.draw(data, options);
       	}
 
-  		google.load("visualization", "1", {packages:["corechart"]});
+  		google.load("visualization", "1", {packages:['annotatedtimeline']});
   		google.setOnLoadCallback(drawChart4);
 
   		function drawChart4() 
@@ -100,8 +100,11 @@
               hAxis: {format:'MMM d, y'}
             };
 
-	        var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
-	        chart.draw(data, options);
+	        //var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
+	        //chart.draw(data, options);
+
+	        var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div4'));
+  			annotatedtimeline.draw(data, {'displayAnnotations': true});
       	}
 	</script>
 

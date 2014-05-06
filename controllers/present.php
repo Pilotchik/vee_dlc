@@ -12,11 +12,13 @@ class Present extends CI_Controller {
 	{
 		$this->load->model('present_model');
 		$data['title'] = "ВОС.Список презентаций";
-		$data['presents'] = $this->present_model->getAllPresents(1);
-		foreach ($data['presents'] as $key)
+		$data['presents_nmy'] = $this->present_model->getAllPresents(0,$this->session->userdata('user_id'));
+		foreach ($data['presents_nmy'] as $key)
 		{
 			$data['author'][$key['id']] = $this->present_model->getUserName($key['user_id']);
+			$data['status'][$key['id']] = ($key['user_id'] == $this->session->userdata('user_id') ? 1 : 0);
 		}
+		$data['presents_my'] = $this->present_model->getAllPresents(1,$this->session->userdata('user_id'));
 		$data['error'] = "";
 		$this->load->view('present/present_list_view',$data);
 	}

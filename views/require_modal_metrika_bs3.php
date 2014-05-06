@@ -19,40 +19,17 @@
 		<script type="text/javascript" src="<?= base_url() ?>js/bootstrap-typeahead.js"></script>
 	</head>
 	<body>
-			<script> 
-				$(window).load(function()
-					{
-						<?php if ($error!="") 
-							{ ?> 
-								$('#myModal').modal('show'); <?php 
-							}?>
-					});
+		<script> 
+			$(window).load(function()
+			{
+				<?php if ($error!="") 
+				{ ?> 
+					$('#myModal').modal('show'); <?php 
+				}?>
+			});
 				
-				function view_modal()	{$('#ModalMessage').modal('show');}
-
-				function send_message_feedback()
-				{
-					postAjax_mail();
-					$('#ModalMessage').modal('hide');
-				}
-
-				function postAjax_mail()
-				{
-					var msg = $("#mail").val();
-					var uri = $("#uri_div").val();
-					var to = $("#my_select :selected").val();
-					$.post ('<?php echo base_url();?>main/add_message',{message:msg,uri_str:uri,to:to},
-					function(data,status)
-					{
-						if( status != 'success')
-						{
-        					alert('В процессе отправки произошла ошибка :(');
-    					}
-					})
-				}
-
-			</script>
-			<?php if ($error!="") 
+		</script>
+		<?php if ($error != "") 
 			{ 
 				?>
 				<div class="modal fade" id="myModalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -76,15 +53,13 @@
 			?>
 			<!-- окно для вызова сообщения -->
 			<!--
-			<div class="btn btn-primary btn-block btn-primary" type="button" style="vertical-align:middle;height:30;width:250;position:fixed;left: 77.2%;bottom: 0px;z-index:1111;cursor:pointer;box-shadow:5px;border-radius:10px 0 0 0; " onClick="view_modal();">
-    			Связаться с преподавателем
-			</div>
 			<div id="ModalMessage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:700px;margin-left: -350px;">
 	 			<div class="modal-header">
 	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	    			<h3 id="myModalLabel">Связь с преподавателем</h3>
 	  			</div>
 	  			<div class="modal-body">
+	  				<?php echo base_url();?>main/add_message
 	  				<p>Напишите Ваш вопрос, отзыв, пожелание или предложение:</p>
 	  					<textarea id="mail" name="q_value" style="min-width:100%" rows="4"></textarea>
 						<input type="hidden" id="uri_div" value="<?php print_r($this->uri->uri_string);?>">

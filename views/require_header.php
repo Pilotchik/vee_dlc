@@ -20,8 +20,9 @@
 		</td>
 	</tr>
 </table>
-<div style="width:200px;margin:10 auto;">
+<div style="width:300px;margin:0 auto;display: flex;margin-bottom:10px;">
 	<a data-toggle="modal" data-target="#creditsModal" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Авторы и разработчики <b class="caret" style="border-top:white 4px solid;"></b></a>
+	<a href="<?= base_url() ?>tutor" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Помощь <b class="caret" style="border-top:white 4px solid;"></b></a>
 </div>
 
 <script>
@@ -79,7 +80,7 @@
 							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Каталогизация и рекомендации справочных материалов">Никитин Герман</span>
 						</td>
 						<td align="center">
-							&nbsp;
+							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Рейтинг пользователей">Волхонов Денис</span>
 						</td>
 					</tr>
 					<tr>

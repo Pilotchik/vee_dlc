@@ -8,6 +8,7 @@ class Kat extends CI_Controller {
 		
 	}
 
+	//Функция первичной проверки прав просмотра и перенаправления запросов в вызываемый метод
 	function _remap($method)
 	{
 		$guest = $this->session->userdata('guest');
@@ -84,6 +85,7 @@ class Kat extends CI_Controller {
 		$this->load->view('kat/kat_menu_view',$data);
 	}
 
+	//Функция формирования интерфейса с содержимым материала
 	function view_content()
 	{
 		$mat_id = $this->uri->segment(3);

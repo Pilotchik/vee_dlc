@@ -146,7 +146,7 @@
 	</script>
 		
 	<ul class="breadcrumb">
-		<li><a href="<?= base_url() ?>present_admin">Управление презентациями</a></li>
+		<li><a href="<?= base_url() ?>present">Все презентации</a></li>
 		<li class="active">Слайды презентации "<?= $present_name ?>"</li>
 	</ul>
 

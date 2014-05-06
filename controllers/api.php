@@ -553,11 +553,11 @@ class Api extends CI_Controller
     		//$msg = urlencode($msg);
     		$msg = "hello";
 
-    		$resp = $VK->api('secure.sendNotification', array('message'=>$msg,'random'=>$rnd,'timestamp'=>$data,'uids'=>$user_id),$api_id,$secret_key);
+    		$resp = $VK->api('secure.sendNotification', array('message'=>$msg,'timestamp'=>$data,'uids'=>$user_id),$api_id,$secret_key);
     		//$data = strtotime($data);
     		//md5("api_id=".$api_id."message=".$message."method=".$method."random=".$random."timestamp=".$timestamp."uids=".$uids."v=".$version.$secret);
-
-    		echo json_encode(array('answer'=>$resp,'vk'=>$resp,'date'=>$data,'msg'=>$msg));	
+    		//{"access_token":"0b224e2c0b224e2c0b0c5d903e0b09341e00b220b224e2c5845074a25150960496599ea","expires_in":0}
+    		echo json_encode(array('answer'=>$resp,'date'=>$data,'msg'=>$msg));	
 		}
 	}
 
