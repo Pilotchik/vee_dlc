@@ -62,24 +62,6 @@ class Main_model extends CI_Model{
 		return $data[0]['name_numb'];
 	}
 
-	function addMessage($user_id = "", $mail = "", $uri_str = "",$to = "")
-	{
-		$now_time=time();
-		$date_t=date("Y.m.d H:i");
-		$sql = "INSERT INTO `new_feedback` (`user_id`,`uri_string`,`message`,`data`,`time`,`to`) VALUES ('$user_id','$uri_str','$mail','$date_t','$now_time','$to')";
-		echo $sql;
-		$data = $this->db->query($sql);
-		return $data;
-	}
-
-	function getMessages($time1,$time2)
-	{
-		$sql="SELECT * FROM `new_feedback` WHERE time>'$time1' AND time<'$time2' ORDER BY `time` DESC";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data;
-	}
-
 	function getUserOverId($user_id = "")
 	{
 		$sql="SELECT `lastname`,`firstname` FROM `new_persons` WHERE `id`='$user_id'";

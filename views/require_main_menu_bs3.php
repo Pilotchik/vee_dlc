@@ -87,7 +87,6 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>stat/view_groups">Статистика по группам</a></li>
 							<li class="dropdown-header">Служебная аналитика</li>
 							<li><a href="<?= base_url() ?>stat_site">Журнал системы</a></li>
-							<li><a href="<?= base_url() ?>stat_site/read_messages">Сообщения пользователей</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -113,15 +112,13 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>de_admin/disc_view/fspo">Курсы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/segrys">Курсы НОУ "СЕГРИС-ИИТ"</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/psih">Универсальные курсы</a></li>
-							<!--
-							<li class="dropdown-header">Электронные презентации</li>
-							<li><a href="<?= base_url() ?>present_admin">Управление презентациями</a></li>
-							-->
 							<li class="dropdown-header">Справочные материалы</li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/fspo">Справочные материалы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/segrys">Справочные материалы НОУ "СЕГРИС-ИИТ"</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/dest_view/psih">Универсальные справочные материалы</a></li>
 							<li><a href="<?= base_url() ?>kat_admin/view_materials">Редактирования соответствия</a></li>
+							<li class="divider"></li>
+							<li><a href="<?= base_url() ?>tutor_admin">Сообщения пользователей</a></li>
 							<li class="divider"></li>
 							<li style="background-color:yellow;"><a href="<?= base_url();?>tests/kods">Ключи тестов</a></li>
 						</ul>

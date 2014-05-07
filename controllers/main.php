@@ -107,6 +107,10 @@ class Main extends CI_Controller {
 		$this->load->model('private_model');
 		$data2['avg'] = 0;
 		$user_tests = $this->private_model->getUserDiscRes($user_id);
+		for($i = 1;$i < 5;$i++)
+		{
+			$data2['diff'][$i] = 0;
+		}
 		foreach ($user_tests as $key)
 		{
 			$data2['tests'][$key['id']]['proz'] = $key['proz_corr'];
@@ -260,24 +264,6 @@ class Main extends CI_Controller {
 		$this->main_page($error);
 	}
 
-	function add_message()
-	{
-		$this->form_validation->set_rules('message', 'Значение', 'trim|xss_clean|required');
-		$this->form_validation->set_rules('to', 'Значение', 'trim|xss_clean|required|is_natural');
-		$this->form_validation->set_rules('uri_str', 'Параметр', 'trim|xss_clean');
-		if ($this->form_validation->run() != FALSE)
-		{
-			$mail = addslashes($this->input->post('message'));
-			$uri_str = addslashes($this->input->post('uri_str'));
-			$to = (int) $this->input->post('to');
-			$this->load->model('main_model');
-			$user_id = $this->session->userdata('user_id');
-			if ($this->session->userdata('lastname') == "")	{$user_id = 0;}
-			$this->main_model->addMessage($user_id,$mail,$uri_str,$to);
-			echo json_encode(array('msg'=>$mail));
-		}
-	}
-
 	function unblock()
 	{
 		$this->load->model('main_model');
@@ -301,7 +287,11 @@ class Main extends CI_Controller {
 			$this->load->model('main_model');
 			echo json_encode($this->main_model->getAllPersonsLikeName($name));
 		}
-		
+	}
+
+	function editors()
+	{
+		echo "Разработчики все будут описаны здесь";
 	}
 
 }

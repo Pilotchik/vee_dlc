@@ -1,4 +1,9 @@
-<table style="margin:10px auto;margin-top:20px;">
+<div style="width:300px;margin:0 auto;display: flex;margin-bottom:0px;">
+	<a data-toggle="modal" data-target="#creditsModal" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Авторы и разработчики</a>
+	<a href="<?= base_url() ?>tutor" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Помощь</a>
+</div>
+
+<table style="margin:10px auto;margin-top:10px;">
 	<tr>
 		<td align="center" valign="middle">
 			<small style="color:white">LMS. Версия 3.1. НИУ ИТМО ФСПО. 2008 - 2014 </small>
@@ -20,10 +25,6 @@
 		</td>
 	</tr>
 </table>
-<div style="width:300px;margin:0 auto;display: flex;margin-bottom:10px;">
-	<a data-toggle="modal" data-target="#creditsModal" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Авторы и разработчики <b class="caret" style="border-top:white 4px solid;"></b></a>
-	<a href="<?= base_url() ?>tutor" style="color:white;margin:0 auto;cursor:pointer;text-decoration:none;">Помощь <b class="caret" style="border-top:white 4px solid;"></b></a>
-</div>
 
 <script>
 	$(function() {
@@ -96,7 +97,7 @@
 					<div id="vk_like"></div>
 				</div>
 				<script type="text/javascript">
-					VK.Widgets.Like("vk_like", {type: "mini", height: 24});
+					VK.Widgets.Like("vk_like", {type: "mini", height: 24,pageTitle: 'Виртуальная образовательная среда. Разработчики', pageUrl:'http://exam.segrys.ru/main/editors'});
 				</script>
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Спасибо!</button>
 			</div>

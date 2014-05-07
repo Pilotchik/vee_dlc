@@ -2,10 +2,7 @@
 	<div id="main">
 		<?php require_once(APPPATH.'views/require_main_menu_bs3.php');?>
 			
-			<script type="text/javascript">
-			function func_reyt_desc()	{document.reyt_descForm.submit();}
-			function func_corr_desc()	{document.corr_descForm.submit();}
-
+		<script type="text/javascript">
 			$(document).ready(function() 
 			{ 	
 				$('#root3').css("display", "none");
@@ -16,78 +13,8 @@
 				$('#root3').fadeOut("slow");
 				$('#overlay').fadeOut('fast');
 			}
-			</script>
-			<form action="<?php	echo base_url();?>private_site/reyt_desc" method="get" name="reyt_descForm"></form>
-			<form action="<?php	echo base_url();?>private_site/corr_desc" method="get" name="corr_descForm"></form>	
+		</script>
 			
-			<!--
-			<h3>Рейтинг</h3>
-			<?php 
-			if ($user_info['reyt_type']!=0)
-			{
-				echo "<p>В рейтинге образовательного учреждения Вы занимаете: <b>".$user_info['reyt_type']."</b> место из ".$all_users['type'].", с результатом: <b>".$user_info['reyting']."</b>. ";
-				if ($user_info['reyting']>1)
-				{
-					echo "Коэффициент выше единицы, а это значит, что ваш уровень выше среднего, отличный результат!";
-				}
-				else
-				{
-					echo "Коэффициент меньше единицы, а это значит, что ваш уровень ниже среднего.";
-				}
-				echo "</p>
-				<p>В группе вы находитесь на ".$user_info['group_pos']." месте из ".$all_group." возможных.</p>";
-			?>
-			<table class="sortable" border="1" id="groups2" width="100%">
-			<thead>
-				<tr>
-					<td align="center"><b>Студент</b></td>
-					<td align="center"><b>Место в группе</b></td>
-					<td align="center"><b>Место в рейтинге</b></td>
-					<td align="center"><b>Рейтинг</b></td>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-			$i=1;
-			foreach ($group as $key)
-			{
-				if ($user_id==$key['id'])
-				{
-					$color="yellow";
-				}
-				else
-				{
-					$color="white";
-				}
-				echo "<tr>";
-				echo "<td bgcolor=$color>".$key['lastname']." ".$key['firstname']."</td>";
-				echo "<td bgcolor=$color>".$i."</td>";
-				echo "<td bgcolor=$color>".$key['reyt_type']."</td>";
-				echo "<td bgcolor=$color>".$key['reyting']."</td>";
-				echo "</tr>";
-				$i++;
-			}
-			?>
-			</tbody>
-			</table>
-			<script type="text/javascript">
-				highlightTableRows("groups2");
-			</script>
-			<?php 
-				echo "<p>Последнее обновление рейтинга: ".$reyt_date."</p>
-				<br>
-				<center>
-				<form action=\"".base_url()."private_site/view_history\" method=\"post\" name=\"edit\">
-						<input style=\"width:206px;margin:10px 0 20px 0;\" class=\"btn btn-inverse\" type=\"submit\" value=\"История рейтинга\">
-					</form>
-				</center>";
-			}
-			else
-			{
-				echo "<p>Для Вас рейтинг ещё не был составлен</p>";
-			}
-			?>
-			-->
 			<?php 
 			if (count($disciplines) > 0)
 			{
@@ -177,14 +104,7 @@
   				</div>
 				<?php 
 			}
-			?>
-			<div class="btn-group" style="margin: 20px auto;left: 50%;margin-left: -150px;">
-	  			<!--<button class="btn btn-inverse" style="width:300px;" onClick="func_reyt_desc()">Как формируется рейтинг?</button>-->
-	 			<button class="btn btn-success" style="width:300px;" onClick="func_corr_desc()">Как корректируется результат?</button>
-			</div>
-				
-		<?php
-
+			
 		if (count($courses)>0)
 		{
 		?>
@@ -276,5 +196,5 @@
 			?>
 			<br>
 		</div>
-	</body>
-</html>
+
+<?php require_once(APPPATH.'views/require_header.php');?>

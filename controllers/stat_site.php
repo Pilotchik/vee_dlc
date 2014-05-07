@@ -138,47 +138,6 @@ class Stat_site extends CI_Controller {
 		$data['error']="";
 		$this->load->view('stat_site_view',$data);
 	}
-
-	function read_messages()
-	{
-		$this->load->model('main_model');
-		$range=$this->input->get('range');
-		if ($range!='')
-		{
-			$time1=substr($range,0,10);
-			$time2=substr($range,13,23);
-			$time1=strtotime($time1);
-			$time2=strtotime($time2);
-		}
-		else
-		{
-			$time1=strtotime("-1 month");
-			$time2=time();
-		}
-		$data['messages'] = $this->main_model->getMessages($time1,$time2);
-		foreach ($data['messages'] as $key)
-		{
-			if ($key['user_id'] == 0)
-			{
-				$data['users'][$key['id']] = "Анонимный Аноним";
-			}
-			else
-			{
-				$data['users'][$key['id']] = $this->main_model->getUserOverId($key['user_id']);	
-			}
-			if ($key['to'] == 0)
-			{
-				$data['to'][$key['id']] = "Всем";	
-			}
-			else
-			{
-				$data['to'][$key['id']] = $this->main_model->getUserOverId($key['to']);	
-			}
-			
-		}
-		$data['error'] = "";
-		$this->load->view('stat_site_messages_view',$data);
-	}
 	
 }
 

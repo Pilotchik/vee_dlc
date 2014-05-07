@@ -154,24 +154,6 @@ class Private_site extends CI_Controller {
 		$this->load->view('private_reyting_history_view',$data);			
 	}
 
-	function reyt_desc()
-	{
-		$user_id=$this->session->userdata('user_id');
-		$results=$this->private_model->getStudResults($user_id);
-		$data['result']=$results[0];
-		$data['error']="";
-		$this->load->view('private_reyt_desc_view',$data);	
-	}
-
-	function corr_desc()
-	{
-		$user_id=$this->session->userdata('user_id');
-		$res=$this->private_model->getCorrResult($user_id);
-		$data['test']=$res;
-		$data['results']=$this->private_model->getStudResult($res['id'],$user_id);
-		$data['error']="";
-		$this->load->view('private_corr_desc_view',$data);	
-	}
 
 	//Формирование диаграммы с компетентностным портретом
 	function view_popup_stud()

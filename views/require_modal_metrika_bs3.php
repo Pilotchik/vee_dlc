@@ -29,9 +29,10 @@
 			});
 				
 		</script>
-		<?php if ($error != "") 
-			{ 
-				?>
+		<?php 
+		if ($error != "") 
+		{ 
+			?>
 				<div class="modal fade" id="myModalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  				<div class="modal-dialog">
 		    			<div class="modal-content">
@@ -51,40 +52,7 @@
 				<?php 
 			}
 			?>
-			<!-- окно для вызова сообщения -->
-			<!--
-			<div id="ModalMessage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width:700px;margin-left: -350px;">
-	 			<div class="modal-header">
-	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    			<h3 id="myModalLabel">Связь с преподавателем</h3>
-	  			</div>
-	  			<div class="modal-body">
-	  				<?php echo base_url();?>main/add_message
-	  				<p>Напишите Ваш вопрос, отзыв, пожелание или предложение:</p>
-	  					<textarea id="mail" name="q_value" style="min-width:100%" rows="4"></textarea>
-						<input type="hidden" id="uri_div" value="<?php print_r($this->uri->uri_string);?>">
-					<p>Кому: </p>
-						<select name="sel_prepod" id="my_select">
-							<option value=0>Всем</option>
-							<option value="212">Королёв Владимир Владимирович</option>
-							<option value="1060">Кудрявцев Александр Николаевич</option>
-							<?php
-							//$prepods = prepods_list();
-							/*
-							foreach($prepods as $key)
-							{
-								echo "<option value=".$key['id'].">".$key['lastname']." ".$key['firstname']."</option>";
-							}
-							*/
-							?>
-						</select>
-	  			</div>
-	  			<div class="modal-footer">
-	    			<button class="btn btn-success" style="width:100px" onClick="send_message_feedback()">Отправить</button>
-	    			<button class="btn" style="width:100px" data-dismiss="modal" aria-hidden="true">Закрыть</button>
-	  			</div>
-			</div>
-			-->
+			
 
 		<!-- Yandex.Metrika counter -->
 			<div style="display:none;">

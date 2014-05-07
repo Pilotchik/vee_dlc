@@ -118,14 +118,6 @@ class Private_model extends CI_Model{
 		return $data[0]['name_test'];
 	}
 
-	function getCorrResult($user_id="")
-	{
-		$sql="SELECT `new_results`.`id`,`new_results`.`data`,`new_razd`.`name_razd` FROM `new_results`,`new_razd` WHERE `new_results`.`user`='$user_id' AND `new_results`.`proz`!=`new_results`.`proz_corr` AND `new_results`.`proz_corr`>0 AND `new_results`.`razd_id`=`new_razd`.`id` LIMIT 1";
-		$query = $this->db->query($sql);
-		$data=$query->result_array();
-		return $data[0];
-	}
-
 	/*
 		###################
 		Часть 2. Для резюме

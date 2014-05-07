@@ -7,10 +7,27 @@ class Present extends CI_Controller {
 		parent::__construct();
 	}
 
+	function _remap($method)
+	{
+		$guest = $this->session->userdata('guest');
+		if ($guest == '')
+		{
+			$data['error'] = "Время сессии истекло. Необходима авторизация";
+			$this->load->model('registr_model');
+			$data['fspo'] = $this->registr_model->getFSPO();
+			$data['segrys'] = $this->registr_model->getSegrys();
+			$this->load->view('main_view',$data);
+		}
+		else
+		{
+			$this->load->model('present_model');
+			$this->$method();
+		}
+	}
+
 	//Функция отображения главной страницы
 	function index()
 	{
-		$this->load->model('present_model');
 		$data['title'] = "ВОС.Список презентаций";
 		$data['presents_nmy'] = $this->present_model->getAllPresents(0,$this->session->userdata('user_id'));
 		foreach ($data['presents_nmy'] as $key)
@@ -26,7 +43,6 @@ class Present extends CI_Controller {
 	//Функция формирования интерфейса для просмотра слайдов
 	function play()
 	{
-		$this->load->model('present_model');
 		$present_id = (int) $this->uri->segment(3);
 		//обнулить индексы
 		$this->present_model->updatePresentIndexes($present_id);
@@ -48,7 +64,6 @@ class Present extends CI_Controller {
 	//функция асинхронной проверки индексов
 	function get_indexes()
 	{
-		$this->load->model('present_model');
 		$this->form_validation->set_rules('present_id', 'ID', 'trim|required|xss_clean|is_natural_no_zero');
 		if ($this->form_validation->run() == TRUE)
 		{

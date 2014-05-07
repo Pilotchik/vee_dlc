@@ -278,7 +278,7 @@
 							<li><a href="#features">Возможности</a></li>
 							<li><a href="#info">Особенности</a></li>
 							<li><a href="#testimonials">О нас</a></li>
-							<!--<li><a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a></li> -->
+							<li><a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a></li>
 							<!-- If you want sub-menu items, do them like this
 							<li>
 								<ul>
