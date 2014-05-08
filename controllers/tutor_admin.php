@@ -98,7 +98,9 @@ class Tutor_admin extends CI_Controller {
 
 	function all_history()
 	{
-		$range=$this->input->get('range');
+		$this->load->model('main_model');
+
+		$range = $this->input->get('range');
 		if ($range!='')
 		{
 			$time1 = strtotime(substr($range,0,10));
@@ -109,12 +111,14 @@ class Tutor_admin extends CI_Controller {
 			$time1=strtotime("-1 month");
 			$time2=time();
 		}
-		$data['messages'] = $this->tutor_model->getMessages($time1,$time2);
-		$this->load->model('main_model');
-		foreach ($data['messages'] as $key)
+		$data['old_dialogs'] = $this->tutor_model->getAllUnActiveMessagesWithAnswers($time1,$time2);
+		foreach($data['old_dialogs'] as $key)
 		{
-			$data['users'][$key['id']] = $this->main_model->getUserOverId($key['user_id']);	
+			$data['users'][$key['id']] = $this->main_model->getUserOverId($key['user_id']);
+			//Получить ответы на вопрос
+			$data['answers'][$key['id']] = $this->tutor_model->getAnswerMessagesOverQuestId($key['id']);
 		}
+
 		$data['title'] = "ВОС.Архив вопросов";
 		$data['error'] = "";
 		$this->load->view('tutor/tutor_admin_history_view',$data);	
@@ -142,7 +146,7 @@ class Tutor_admin extends CI_Controller {
 			$config['mailtype'] = 'html';
 			$config['charset'] = 'utf-8';
 			$this->email-> initialize($config);
-			$this->email->from('pilotchik@gmail.com', 'Администратор ВОС');
+			$this->email->from('ves_ifmo@mail.ru', 'Администратор ВОС');
 			
 			$this->email->to($email); 
 			$this->email->cc('pilotchik@gmail.com');

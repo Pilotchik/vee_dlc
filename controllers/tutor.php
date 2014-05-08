@@ -26,7 +26,7 @@ class Tutor extends CI_Controller {
 	}
 
 	//Функция отображения главной страницы
-	function index()
+	function index($error = "")
 	{
 		$data['title'] = "ВОС.Помощь";
 		$data['error'] = "";
@@ -58,7 +58,7 @@ class Tutor extends CI_Controller {
 			$config['mailtype'] = 'html';
 			$config['charset'] = 'utf-8';
 			$this->email->initialize($config);
-			$this->email->from('pilotchik@gmail.com', 'Администратор ВОС');
+			$this->email->from('ves_ifmo@mail.ru', 'Администратор ВОС');
 			
 			$this->email->to('pilotchik@gmail.com'); 
 			$this->email->subject('Новый вопрос в ВОС');
@@ -73,6 +73,66 @@ class Tutor extends CI_Controller {
 
 			$this->tutor_model->addMessage($user_id,$help_type,$help_title,$help_text);
 			echo json_encode(array('msg'=>$help_type));
+		}
+	}
+
+	function add_grade()
+	{
+		$this->form_validation->set_rules('help_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		$this->form_validation->set_rules('help_grade', '', 'trim|xss_clean|required|is_natural_no_zero|less_than[3]');
+		if ($this->form_validation->run() != FALSE)
+		{
+			$help_id = $this->input->post('help_id');
+			$help_grade = $this->input->post('help_grade');
+			$this->tutor_model->updateMessageGrade($help_id,$help_grade);
+			echo json_encode(array('msg'=>$help_grade));
+		}
+	}
+
+	function add_answer()
+	{
+		$this->form_validation->set_rules('help_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		$this->form_validation->set_rules('help_answer', '', 'trim|xss_clean|required');
+		if ($this->form_validation->run() != FALSE)
+		{
+			$help_answer = addslashes($this->input->post('help_answer'));
+			$help_id = $this->input->post('help_id');
+			
+			$user_id = $this->session->userdata('user_id');
+			
+			$this->load->library('email');
+			$config['protocol'] = 'mail';
+			$config['mailtype'] = 'html';
+			$config['charset'] = 'utf-8';
+			$this->email->initialize($config);
+			$this->email->from('ves_ifmo@mail.ru', 'Администратор ВОС');
+			
+			$this->email->to('pilotchik@gmail.com'); 
+			$this->email->subject('Новый вопрос в ВОС');
+			
+			$text = "<H2>Новый вопрос в ВОС!</H2>
+				<br>Зайдите в систему и узнайте, что Вам написали.<br>
+				<a href='http://exam.segrys.ru'>exam.segrys.ru</b><br><br>
+				<i>Виртуальная образовательная среда</i>";	
+			$this->email->message($text);
+			$this->email->send();
+			$error = "Сообщение отправлено на почту";
+
+			$this->tutor_model->addAnswerMessage($help_id,$help_answer,$user_id);
+			echo json_encode(array('msg'=>$error));
+		}
+	}
+
+	function close_quest()
+	{
+		$this->form_validation->set_rules('help_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		if ($this->form_validation->run() != FALSE)
+		{
+			$help_id = $this->input->post('help_id');
+			$user_id = $this->session->userdata('user_id');
+
+			$this->tutor_model->archiveMessageOverIdAndUserId($help_id,$user_id);
+			echo json_encode(array('msg'=>'ok'));
 		}
 	}
 

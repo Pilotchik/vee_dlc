@@ -26,6 +26,36 @@
 			$('#formDivChange').fadeIn('fast');
 		}
 	}
+
+	function func_grade(id_q,grade)
+	{
+		if (grade == 1)
+		{
+			$('#grade_td_'+id_q).html('<span class="glyphicon glyphicon-thumbs-up"></span>');
+		}
+		else
+		{
+			$('#grade_td_'+id_q).html('<span class="glyphicon glyphicon-thumbs-down"></span>');	
+		}
+		$.post ('<?= base_url() ?>tutor/add_grade',{help_id:id_q,help_grade:grade},
+					function(data,status)	{if( status != 'success'){alert('В процессе отправки произошла ошибка');}});
+	}
+
+	function func_answer(id_q)
+	{
+		answer = $('#help_answer_text_'+id_q).val();
+		$.post ('<?= base_url() ?>tutor/add_answer',{help_id:id_q,help_answer:answer},
+					function(data,status)	{if( status != 'success'){alert('В процессе отправки произошла ошибка');}});
+		$('#answers_table_'+id_q).append('<tr><td>'+answer+'</td><td>Только что</td><td><small><i>Ваш ответ</i></small></td></tr>'); 
+		$('#answer_'+id_q).collapse('hide');
+	}
+
+	function func_close(id_q)
+	{
+		$.post ('<?= base_url() ?>tutor/close_quest',{help_id:id_q},
+					function(data,status)	{if( status != 'success'){alert('В процессе отправки произошла ошибка');}});
+		$('#answer_group_'+id_q).html('<i>Вопрос закрыт</i>')
+	}
 </script>
 
 
@@ -102,13 +132,13 @@
 						foreach($messages as $key)
 						{
 							?>
-							<div class="panel <?= ($key['help_type'] == 1 ? 'panel-primary' : 'panel-success') ?>">
+							<div class="panel <?= ($key['archive'] == 0 ? 'panel-primary' : 'panel-success') ?>">
 								<div class="panel-heading">
 									<h4 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $key['id'] ?>">
 											<table width="100%">
 												<tr>
-													<td width="50%" style="color:white;"><b><?= $key['help_title'] ?></b></td>
+													<td width="50%" style="color:white;"><b><?= $key['help_title'] ?> <span class="label label-success"><?= (count($answers[$key['id']]) > 0 ? count($answers[$key['id']]) : '') ?></span></b></td>
 													<td align="center">
 														<?php 
 														switch ($key['help_type']) {
@@ -119,7 +149,7 @@
 														?>
 														<small style="color:white;"><?= $type ?></small>
 													</td>
-													<td align="center"><small style="color:white;"><?= (count($answers[$key['id']]) > 0 ? 'Есть ответ' : 'Ответов нет') ?></small></td>
+													<td align="center" width="20%"><small style="color:white;"><?= (count($answers[$key['id']]) > 0 ? 'Есть ответ' : 'Ответов нет') ?></small></td>
 												</tr>
 											</table>
 										</a>
@@ -127,25 +157,77 @@
 								</div>
 								<div id="collapse<?= $key['id'] ?>" class="panel-collapse collapse">
 									<div class="panel-body">
-										<table class="table" width="100%">
+										Вопрос: <span style="font-weight:bold" id="text_<?= $key['id'] ?>"><?= $key['help_text'] ?></span><br><?= $key['data'] ?>
+										<table class="table table-striped" width="100%" style="margin-top:10px;" id="answers_table_<?= $key['id'] ?>">
 											<tbody>
-												<tr>
-													<td width="70%"><?= $key['help_text'] ?></td>
-											  		<td class="type-info"><?= $key['data'] ?></td>
-												</tr>
 												<?php
 												foreach($answers[$key['id']] as $key2)
 												{
 													?>
 													<tr>
 														<td width="70%"><?= $key2['help_text'] ?></td>
-											  			<td class="type-info"><?= $key2['data'] ?></td>
-													</tr>		
+											  			<td><?= $key2['data'] ?></td>
+											  			<?php
+											  			if ($key2['grade'] > 0)
+											  			{
+											  				?>
+											  				<td class="type-info">
+											  					<span class="glyphicon <?= ($key2['grade'] == 1 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down') ?>"></span>
+											  				</td>
+											  				<?php
+											  			}
+											  			else
+											  			{
+											  				if ($key2['user_id'] != $this->session->userdata('user_id'))
+											  				{
+												  				?>
+												  				<td id="grade_td_<?= $key2['id'] ?>">
+												  					<div class="btn-group">
+	  																	<button type="button" class="btn btn-default" onClick="func_grade(<?= $key2['id'] ?>,1)"><span class="glyphicon glyphicon-thumbs-up"></span> </button>
+	  																	<button type="button" class="btn btn-default" onClick="func_grade(<?= $key2['id'] ?>,2)"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+	  																</div>
+												  				</td>
+												  				<?php
+												  			}
+												  			else
+												  			{
+												  				?> <td><small><i>Ваш ответ</i></small></td> <?php
+												  			}
+											  			}
+											  			?>
+											  		</tr>		
 													<?php
 												}
 												?>
 											</tbody>
 										</table>
+										<?php
+										if ($key['archive'] == 0)
+										{
+											?>
+											<div id="answer_group_<?= $key['id'] ?>">
+												<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#answer_<?= $key['id'] ?>">
+		  											<span class="glyphicon glyphicon-check"></span> Ответить
+												</button>
+												<button type="button" class="btn btn-danger" onClick="func_close(<?= $key['id'] ?>)"><span class="glyphicon glyphicon-save"></span> Вопрос закрыт</button>
+												
+												<div id="answer_<?= $key['id'] ?>" class="collapse" style="padding-top:10px;">
+													<div class="form-group">
+														<label>Ваш ответ:</label>
+														<textarea class="form-control" rows="3" name="help_answer" id="help_answer_text_<?= $key['id'] ?>"></textarea>
+		  											</div>
+		  											<div style="width:100%;text-align:right;">
+														<button type="button" class="btn btn-info" onClick="func_answer(<?= $key['id'] ?>)">Ответить</button>
+													</div>
+		  										</div>
+		  									</div>
+	  										<?php
+	  									}
+	  									else
+	  									{
+	  										?> <i>Вопрос закрыт</i> <?php
+	  									}
+	  									?>
 									</div>
 								</div>
 							</div>

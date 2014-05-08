@@ -25,6 +25,7 @@ class Tutor_model extends CI_Model{
 		return $query->result_array();	
 	}
 
+	//Получение всех открытых вопросов, для которых уже были ответы
 	function getAllActiveMessagesWithAnswers()
 	{
 		$sql = "SELECT * FROM `new_feedback` WHERE `to` = '0' AND `id` IN (SELECT `to` FROM `new_feedback`) AND `archive` = '0' ORDER BY `time` DESC";
@@ -32,11 +33,12 @@ class Tutor_model extends CI_Model{
 		return $query->result_array();		
 	}
 
-	function getMessages($time1,$time2)
+	//Получение всех закрытых вопросов
+	function getAllUnActiveMessagesWithAnswers($time1 = 0,$time2 = 0)
 	{
-		$sql = "SELECT * FROM `new_feedback` WHERE time>'$time1' AND time<'$time2' ORDER BY `time` DESC";
+		$sql = "SELECT * FROM `new_feedback` WHERE `to` = '0' AND `id` IN (SELECT `to` FROM `new_feedback`) AND `archive` = '1' AND `time` > '$time1' AND `time` < '$time2' ORDER BY `time` DESC";
 		$query = $this->db->query($sql);
-		return $query->result_array();
+		return $query->result_array();		
 	}
 
 	//Получение всех главных (первых) сообщений пользователя по его идентификатору
@@ -71,6 +73,18 @@ class Tutor_model extends CI_Model{
 		$this->db->query($sql);
 	}
 	
+	function updateMessageGrade($help_id = 1,$help_grade = 0)
+	{
+		$sql = "UPDATE `new_feedback` SET `grade` = '$help_grade' WHERE `id` = '$help_id'";
+		$this->db->query($sql);
+	}
+
+	function archiveMessageOverIdAndUserId($help_id = 1,$user_id = 1)
+	{
+		$sql = "UPDATE `new_feedback` SET `archive` = '1' WHERE `id` = '$help_id' AND `user_id` = '$user_id'";
+		$this->db->query($sql);
+	}
+
 }
 
 ?>

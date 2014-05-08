@@ -189,7 +189,7 @@
 									<div id="collapse<?= $key['id'] ?>" class="panel-collapse collapse">
 										<div class="panel-body">
 											Вопрос: <span style="font-weight:bold" id="text_<?= $key['id'] ?>"><?= $key['help_text'] ?></span>
-											<table class="table table-stripped" width="100%" style="margin-top:10px;">
+											<table class="table table-striped" width="100%" style="margin-top:10px;">
 												<tbody>
 													<?php
 													foreach($answers[$key['id']] as $key2)
@@ -199,15 +199,22 @@
 															<td width="70%"><?= $key2['help_text'] ?></td>
 												  			<td class="type-info"><?= $key2['data'] ?></td>
 												  			<?php
-												  			if ($key2['grade'] > 0)
+												  			if ($key2['user_id'] != $key['user_id'])
 												  			{
-												  				?><td class="type-info"><span class="glyphicon <?= ($key2['grade'] == 1 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down') ?>"></span></td><?php
-												  			}
-												  			else
-												  			{
-												  				?><td>&nbsp;</td><?php
-												  			}
-												  			?>
+													  			if ($key2['grade'] > 0)
+													  			{
+													  				?><td class="type-info"><span class="glyphicon <?= ($key2['grade'] == 1 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down') ?>"></span></td><?php
+													  			}
+													  			else
+													  			{
+													  				?><td><small><i>Оценки нет</i></small></td><?php
+													  			}
+													  		}
+													  		else
+													  		{
+													  			?><td><small><i>Ответ пользователя</i></small></td><?php
+													  		}
+													  			?>
 												  		</tr>		
 														<?php
 													}
