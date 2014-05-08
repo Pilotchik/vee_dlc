@@ -52,8 +52,25 @@ class Tutor extends CI_Controller {
 			$help_title = $this->input->post('help_title');
 			$help_type = $this->input->post('help_type');
 			$user_id = $this->session->userdata('user_id');
-			if ($this->session->userdata('lastname') == "")	{$user_id = 0;}
 			
+			$this->load->library('email');
+			$config['protocol'] = 'mail';
+			$config['mailtype'] = 'html';
+			$config['charset'] = 'utf-8';
+			$this->email->initialize($config);
+			$this->email->from('pilotchik@gmail.com', 'Администратор ВОС');
+			
+			$this->email->to('pilotchik@gmail.com'); 
+			$this->email->subject('Новый вопрос в ВОС');
+			
+			$text = "<H2>Новый вопрос в ВОС!</H2>
+				<br>Зайдите в систему и узнайте, что Вам написали.<br>
+				<a href='http://exam.segrys.ru'>exam.segrys.ru</b><br><br>
+				<i>Виртуальная образовательная среда</i>";	
+			$this->email->message($text);
+			$this->email->send();
+			$error = "Сообщение отправлено на почту пользователя";
+
 			$this->tutor_model->addMessage($user_id,$help_type,$help_title,$help_text);
 			echo json_encode(array('msg'=>$help_type));
 		}

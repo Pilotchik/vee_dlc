@@ -15,135 +15,172 @@
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
 		$(window).load(function()
-      	{
-        	<?php 
-        	if ($block == 1) 
-          	{ 
-          		?> 
-            	$('#myModalBlock').modal('show'); 
-            	<?php 
-          	}
-          	?>
-      	});
+		{
+			<?php 
+			if ($block == 1) 
+			{ 
+				?> 
+				$('#myModalBlock').modal('show'); 
+				<?php 
+			}
 
-      	google.load("visualization", "1", {packages:["corechart"]});
-  		google.setOnLoadCallback(drawChart);
-  		function drawChart() 
-  		{
-    		var data = google.visualization.arrayToDataTable([
-      			['Тест', 'Мой результат','Средний результат'],
-      			<?php 
-      			foreach ($tests as $key)
-      			{
-      				echo "['".$key['name']."', ".$key['proz'].", ".$key['avg']."],";
-      			}
-      			?>
-      			]);
+			if ($mail_status == 0) 
+			{ 
+				?> 
+				$('#myModalMail').modal('show'); 
+				<?php 
+			}
+			
+			?>
+		});
 
-    		var options = {
-    		  title: 'Результаты тестов',
-    		  legend: {position: 'none'},
-          vAxes:[{title:'%',minValue:0,maxValue:100}]
-    		};
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart);
+		function drawChart() 
+		{
+			var data = google.visualization.arrayToDataTable([
+				['Тест', 'Мой результат','Средний результат'],
+				<?php 
+				foreach ($tests as $key)
+				{
+					echo "['".$key['name']."', ".$key['proz'].", ".$key['avg']."],";
+				}
+				?>
+				]);
 
-    		var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-    		chart.draw(data, options);
-  		}
+			var options = {
+			  title: 'Результаты тестов',
+			  legend: {position: 'none'},
+		  vAxes:[{title:'%',minValue:0,maxValue:100}]
+			};
+
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+			chart.draw(data, options);
+		}
 
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(drawChart2);
 
-      	function drawChart2() 
-      	{
-            var data = google.visualization.arrayToDataTable([
+		function drawChart2() 
+		{
+			var data = google.visualization.arrayToDataTable([
 				['Сложность','Уровень 1','Уровень 2','Уровень 3','Уровень 4'],
-                <?php 
-                echo "['Сложность',";
-                for($i = 1; $i < 4; $i++)
-                {
-                  echo $diff[$i].", ";
-                }
-                echo $diff[4]."]";
-                ?>
-                ]);
+				<?php 
+				echo "['Сложность',";
+				for($i = 1; $i < 4; $i++)
+				{
+				  echo $diff[$i].", ";
+				}
+				echo $diff[4]."]";
+				?>
+				]);
 
-            var options = {
-              title: 'Сложность решённых заданий',
-              legend: {position: 'top'},
-              vAxes:[{title:'%',minValue:0,maxValue:100}]
-            };
+			var options = {
+			  title: 'Сложность решённых заданий',
+			  legend: {position: 'top'},
+			  vAxes:[{title:'%',minValue:0,maxValue:100}]
+			};
 
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
-            chart.draw(data, options);
-      	}
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+			chart.draw(data, options);
+		}
 
-  		google.load("visualization", "1", {packages:['annotatedtimeline']});
-  		google.setOnLoadCallback(drawChart4);
+		google.load("visualization", "1", {packages:['annotatedtimeline']});
+		google.setOnLoadCallback(drawChart4);
 
-  		function drawChart4() 
-  		{
-        	var data = google.visualization.arrayToDataTable([
-	        	['Дата', 'ИСРЗ','Прогноз'],
-	        	<?php
-	        	foreach ($reyting as $key) 
-	        	{
-	        		?>
-	        		[new Date(<?= $key['date'] ?>), <?= $key['isrz'] ?>, <?= $key['forecast'] ?>],
-	        		<?php
-	          	}
-	          	?>
-        	]);
+		function drawChart4() 
+		{
+			var data = google.visualization.arrayToDataTable([
+				['Дата', 'ИСРЗ','Прогноз'],
+				<?php
+				foreach ($reyting as $key) 
+				{
+					?>
+					[new Date(<?= $key['date'] ?>), <?= $key['isrz'] ?>, <?= $key['forecast'] ?>],
+					<?php
+				}
+				?>
+			]);
 
-	        var options = {
-              title: 'История рейтинга',
-              vAxis: {title:'Баллы',minValue:0,maxValue:10,direction:1},
-              hAxis: {format:'MMM d, y'}
-            };
+			var options = {
+			  title: 'История рейтинга',
+			  vAxis: {title:'Баллы',minValue:0,maxValue:10,direction:1},
+			  hAxis: {format:'MMM d, y'}
+			};
 
-	        //var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
-	        //chart.draw(data, options);
+			//var chart = new google.visualization.LineChart(document.getElementById('chart_div4'));
+			//chart.draw(data, options);
 
-	        var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div4'));
-  			annotatedtimeline.draw(data, {'displayAnnotations': true});
-      	}
+			var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div4'));
+			annotatedtimeline.draw(data, {'displayAnnotations': true});
+		}
 	</script>
 
-    <?php 
+	<?php 
 	if ($block == 1) 
 	{ 
 		?> 
 		<div class="modal fade" id="myModalBlock" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  		<div class="modal-dialog">
-		    	<div class="modal-content">
-		    		<div class="modal-header">
-		    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		    			<h4 class="modal-title">Разблокировка</h4>
-		    		</div>
-		    		<div class="modal-body">
-		    			<p style="text-align: center;text-indent: 0px;">Вы не поверите, но по каким-то причинам Ваша учётная запись заблокирована. Для разблокировки нажмите кнопку "Разблокировать"</p>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Разблокировка</h4>
+					</div>
+					<div class="modal-body">
+						<p style="text-align: center;text-indent: 0px;">Вы не поверите, но по каким-то причинам Ваша учётная запись заблокирована. Для разблокировки нажмите кнопку "Разблокировать"</p>
 						<form action="<?= base_url() ?>main/unblock" method="get" name="unblock_form">
-		      		</div>
-		      		<div class="modal-footer">
-		      			<button class="btn btn-success" style="width:200px" type="submit"><span class="glyphicon glyphicon-ok"></span> Разблокировать</button>
-		      			</form>
-		        		<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
-		      		</div>
-		 		</div><!-- /.modal-content -->
-	  		</div><!-- /.modal-dialog -->
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" style="width:200px" type="submit"><span class="glyphicon glyphicon-ok"></span> Разблокировать</button>
+						</form>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<?php
+	}
+
+	if ($mail_status == 0) 
+	{ 
+		?> 
+		<div class="modal fade" id="myModalMail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Адрес электронной почты</h4>
+					</div>
+					<div class="modal-body">
+						<p style="text-indent: 0px;">Для того, чтобы мы могли с Вами связаться посредством электронной почты, нам необходимо знать Ваш электронный адрес</p>
+						<form action="<?= base_url() ?>main/mail_update" method="post" name="unblock_form" autocomplete="off">
+							<div class="form-group">
+    						<label>Ваш адрес электронной почты:</label>
+    							<input type="email" class="form-control" placeholder="Введите email" name="user_mail">
+  							</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-ok"></span> Изменить</button>
+						</form>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 		<?php
 	}
 	?>
 
 	<div class="modal fade" id="myModalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  		<div class="modal-dialog">
-	    	<div class="modal-content">
-	    		<div class="modal-header">
-	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	    			<h4 class="modal-title">Изменение параметров учётной записи</h4>
-	    		</div>
-	    		<div class="modal-body">
-	    			<form action="<?= base_url() ?>main/renew_info" method="post" name="adminForm" autocomplete="off" style="margin:0 0;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Изменение параметров учётной записи</h4>
+				</div>
+				<div class="modal-body">
+					<form action="<?= base_url() ?>main/renew_info" method="post" name="adminForm" autocomplete="off" style="margin:0 0;">
 						<div class="form-group">
 							<label>Укажите новый номер Вашей группы:</label>
 							<select class="form-control" name="new_group" style="margin:10px 0 0 0;">
@@ -166,14 +203,14 @@
 								?>
 							</select>
 						</div>
-	      		</div>
-	      		<div class="modal-footer">
-	      			<button class="btn btn-success" style="width:200px" type="submit"><span class="glyphicon glyphicon-ok"></span> Изменить</button>
-	      			</form>
-	        		<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
-	      		</div>
-	 		</div><!-- /.modal-content -->
-  		</div><!-- /.modal-dialog -->
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" style="width:200px" type="submit"><span class="glyphicon glyphicon-ok"></span> Изменить</button>
+					</form>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
 	<div class="row">
@@ -237,7 +274,7 @@
 					<table width="100%" border="0">
 						<tr>
 							<td align="center">
-							 	<small>Индекс<br>меньше<br>у <?= $low_isrz ?>% (<?= $low_isrz_abs ?>)</small>
+								<small>Индекс<br>меньше<br>у <?= $low_isrz ?>% (<?= $low_isrz_abs ?>)</small>
 							</td>
 							<td align="center" width="50%" style="vertical-align:middle;padding-top:20px">
 								<div class="progress">
@@ -250,7 +287,7 @@
 								</div>
 							</td>
 							<td align="center">
-							 	<small>Индекс<br>больше<br>у <?= $high_isrz ?>% (<?= $high_isrz_abs ?>)</small>
+								<small>Индекс<br>больше<br>у <?= $high_isrz ?>% (<?= $high_isrz_abs ?>)</small>
 							</td>
 						</tr>
 					</table>

@@ -40,12 +40,60 @@ class Tutor_admin extends CI_Controller {
 		$data['old_dialogs'] = $this->tutor_model->getAllActiveMessagesWithAnswers();
 		foreach($data['old_dialogs'] as $key)
 		{
+			$data['users'][$key['id']] = $this->main_model->getUserOverId($key['user_id']);
 			//Получить ответы на вопрос
 			$data['answers'][$key['id']] = $this->tutor_model->getAnswerMessagesOverQuestId($key['id']);
 		}
 		$data['title'] = "ВОС.Модерирование вопросов пользователей";
 		$data['error'] = "";
 		$this->load->view('tutor/tutor_admin_index_view',$data);
+	}
+
+	function help_del()
+	{
+		$this->form_validation->set_rules('help_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		if ($this->form_validation->run() == TRUE)
+		{
+			$help_id = $this->input->post('help_id');
+			$this->tutor_model->archiveMessage($help_id);
+			$user_id = $this->session->userdata('user_id');
+			$user_name = $this->session->userdata('lastname')." ".$this->session->userdata('firstname');
+			$this->_add_to_log($user_name." заблокировал сообщение");
+			$error = "Сообщение архивировано";
+		}
+		else
+		{
+			$error = "Необходимые поля заполнены неверно";
+		}
+		$this->index($error);
+	}
+
+	//
+	function help_answer()
+	{
+		$this->form_validation->set_rules('help_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		$this->form_validation->set_rules('helper_id', '', 'trim|xss_clean|required|is_natural_no_zero');
+		$this->form_validation->set_rules('help_answer', '', 'trim|xss_clean|required');
+		if ($this->form_validation->run() == TRUE)
+		{
+			$help_id = $this->input->post('help_id');
+			$helper_id = $this->input->post('helper_id');
+			$help_answer = $this->input->post('help_answer');
+			$user_id = $this->session->userdata('user_id');
+			$this->tutor_model->addAnswerMessage($help_id,$help_answer,$user_id);
+
+			$user_name = $this->session->userdata('lastname')." ".$this->session->userdata('firstname');
+			
+			$this->_add_to_log($user_name." ответил на сообщение пользователя");
+			$mail_status = $this->_send_answer_mail($helper_id, $user_name);
+			
+			$error = "Ответ был записан. ".$mail_status;
+		}
+		else
+		{
+			$error = "Необходимые поля заполнены неверно";
+		}
+		$this->index($error);
 	}
 
 	function all_history()
@@ -77,6 +125,42 @@ class Tutor_admin extends CI_Controller {
 	{
 		$this->load->model('main_model');
 		$this->main_model->createLogRecord($msg,3);
+	}
+
+	//функция отправки письма пользователю, на вопрос которого получен ответ
+	function _send_answer_mail($user_id = 1, $admin_name = "")
+	{
+		//Получить адрес пользователя и если он корректный, то отправить письмо
+		$this->load->model('main_model');
+		$email = $this->main_model->getUserMail($user_id);
+
+		if (filter_var($email, FILTER_VALIDATE_EMAIL)) 
+		{
+			$this->load->library('email');
+			$config['protocol'] = 'mail';
+				
+			$config['mailtype'] = 'html';
+			$config['charset'] = 'utf-8';
+			$this->email-> initialize($config);
+			$this->email->from('pilotchik@gmail.com', 'Администратор ВОС');
+			
+			$this->email->to($email); 
+			$this->email->cc('pilotchik@gmail.com');
+			$this->email->subject('Ответ на Ваш вопрос');
+			
+			$text = "<H2>Администратор $admin_name дал ответ на ваш вопрос!</H2>
+				<br>Зайдите в систему и узнайте, что он Вам ответил.<br>
+				<a href='http://exam.segrys.ru'>exam.segrys.ru</b><br><br>
+				<i>Виртуальная образовательная среда</i>";	
+			$this->email->message($text);
+			$this->email->send();
+			$error = "Сообщение отправлено на почту пользователя";
+		}
+		else
+		{
+			$error = "Неправильный адрес электронной почты пользователя, сообщение отправить не удалось";
+		}
+		return $error;
 	}
 
 }

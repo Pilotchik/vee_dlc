@@ -99,6 +99,21 @@ class Main extends CI_Controller {
 		$data2['block'] = $this->main_model->getBlockOverUserId();
 		$data2['group'] = $this->main_model->getGroupOverUserId();
 		$data2['all_groups'] = $this->persons_model->getAllGroups();
+		//Проверка почты
+		$data2['mail'] = $this->main_model->getUserMail($user_id);
+		$data2['mail_status'] = 0;
+		if (filter_var($data2['mail'], FILTER_VALIDATE_EMAIL)) 
+		{
+			$data2['mail_status'] = 1;
+		}
+		else
+		{
+			if (filter_var($this->session->userdata('login'), FILTER_VALIDATE_EMAIL)) 
+			{
+				$data2['mail_status'] = 1;
+				$this->main_model->updateUserMail($this->session->userdata('login'));
+			}
+		}
 		//$data2['photo'] = $this->main_model->getPhotoOverUserId();
 		//Получение информации о результатах студента
 		$data2['sdano_t'] = $this->main_model->getTestCount();
@@ -275,6 +290,29 @@ class Main extends CI_Controller {
 		$name = $f." ".$f1;
 		$type = "Разблокировка учётной записи";
 		$this->auth_model->addLog($name,$type,2);
+		$this->main_page($error);
+	}
+
+	function mail_update()
+	{
+		$this->form_validation->set_rules('user_mail', ' ', 'trim|required|xss_clean|valid_email');
+		if ($this->form_validation->run() == TRUE)
+		{
+			$mail = $this->input->post('user_mail');
+			$this->load->model('main_model');
+			$this->main_model->updateUserMail($mail);
+			$error = "Адрес обновлён! Спасибо!";
+			$this->load->model('auth_model');
+			$f1 = $this->session->userdata('firstname');
+			$f = $this->session->userdata('lastname');
+			$name = $f." ".$f1;
+			$type = "Указан почтовый адрес: ".$mail;
+			$this->auth_model->addLog($name,$type,2);
+		}
+		else
+		{
+			$error = "Обновить адрес не удалось";
+		}
 		$this->main_page($error);
 	}
 

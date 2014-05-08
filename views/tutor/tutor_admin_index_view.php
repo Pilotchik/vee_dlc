@@ -9,8 +9,72 @@
 			});
 		});
 		
-		function func_filter()	{document.date_picker.submit();}
+		function func_answer(id_q)
+		{
+			$('#answer_title').html($('#title_'+id_q).html());
+			$('#answer_user').html($('#user_'+id_q).html());
+			$('#answer_text').html($('#text_'+id_q).html());
+			$('#answer_helper_id').val($('#helper_'+id_q).html());
+			$('#answer_id').val(id_q);
+			$('#myModalAnswer').modal('show')
+		}
+
+		function func_block(id_q)
+		{
+			$('#del_title').html($('#title_'+id_q).html());
+			$('#del_id').val(id_q);
+			$('#myModalDel').modal('show')
+		}
 	</script>
+
+	<div class="modal fade" id="myModalDel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+	    	<div class="modal-content">
+	    		<div class="modal-header">
+	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    			<h4 class="modal-title">Блокировка сообщения</h4>
+	    		</div>
+	    		<div class="modal-body">
+	    			<p style="text-align: center;text-indent: 0px;">Вы уверены, что хотите удалить вопрос <b>"<span id="del_title"></span>"</b></p>
+					<form action="<?= base_url() ?>tutor_admin/help_del" method="post" role="form">
+						<input type="hidden" id="del_id" value="" name="help_id">
+	      		</div>
+	      		<div class="modal-footer">
+	      			<button class="btn btn-danger" type="submit">Архивировать</button>
+	      			</form>
+	        		<button type="button" class="btn" data-dismiss="modal">Отмена</button>
+	      		</div>
+	 		</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<div class="modal fade" id="myModalAnswer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  		<div class="modal-dialog">
+	    	<div class="modal-content">
+	    		<div class="modal-header">
+	    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	    			<h4 class="modal-title">Ответ на сообщение</h4>
+	    		</div>
+	    		<div class="modal-body">
+	    			<p style="text-indent: 0px;">Пользователь <span style="font-weight:bold;" id="answer_user"></span> указал следующую проблему:</p>
+	    			<p style="text-indent: 0px;"><span style="font-weight:bold;" id="answer_title"></span></p>
+	    			<p style="text-indent: 0px;"><span id="answer_text"></span></p>
+					<form action="<?= base_url() ?>tutor_admin/help_answer" method="post" role="form">
+						<div class="form-group">
+    						<label>Ваш ответ:</label>
+    						<textarea class="form-control" rows="3" name="help_answer"></textarea>
+  						</div>
+						<input type="hidden" id="answer_id" value="" name="help_id">
+						<input type="hidden" id="answer_helper_id" value="" name="helper_id">
+	      		</div>
+	      		<div class="modal-footer">
+	      			<button class="btn btn-success" type="submit">Ответить</button>
+	      			</form>
+	        		<button type="button" class="btn" data-dismiss="modal">Отмена</button>
+	      		</div>
+	 		</div><!-- /.modal-content -->
+  		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	<div id="main">
 
@@ -40,7 +104,7 @@
 						<thead>
 							<tr>
 								<th>Пользователь</th>
-								<th>Вопрос</th>
+								<th style="width:35%">Вопрос</th>
 								<th>Тип вопроса</b></td>
 								<th>Дата</th>
 								<th>Действие</th>
@@ -54,8 +118,8 @@
 								{
 									?>
 									<tr>
-										<td><?= $users[$key['id']] ?></td>
-										<td><b><?= $key['help_title'] ?></b>. <?= $key['help_text'] ?></td>
+										<td><span id="user_<?= $key['id'] ?>"><?= $users[$key['id']] ?></span> <span id="helper_<?= $key['id'] ?>" style="display:none"><?= $key['user_id'] ?></span></td>
+										<td><b><span id="title_<?= $key['id'] ?>"><?= $key['help_title'] ?></span></b> <span style="display:none" id="text_<?= $key['id'] ?>"><?= $key['help_text'] ?></span></td>
 										<?php
 										switch ($key['help_type']) 
 										{
@@ -66,7 +130,12 @@
 										?>
 										<td><?= $type ?></td>
 										<td><?= $key['data'] ?></td>
-										<td>Ответить</td>
+										<td>
+											<div class="btn-group">
+  												<button type="button" class="btn btn-success" onClick="func_answer(<?= $key['id'] ?>)"><span class="glyphicon glyphicon-check"></span> </button>
+  												<button type="button" class="btn btn-warning" onClick="func_block(<?= $key['id'] ?>)"><span class="glyphicon glyphicon-remove"></span></button>
+  											</div>
+										</td>
 									</tr>
 									<?php
 								}
@@ -100,7 +169,7 @@
 											<a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $key['id'] ?>">
 												<table width="100%">
 													<tr>
-														<td width="50%" style="color:white;"><b><?= $key['help_title'] ?></b></td>
+														<td width="50%" style="color:white;"><span id="user_<?= $key['id'] ?>"><?= $users[$key['id']] ?></span> <span id="helper_<?= $key['id'] ?>" style="display:none"><?= $key['user_id'] ?></span>. <b><span id="title_<?= $key['id'] ?>"><?= $key['help_title'] ?></span></b></td>
 														<td align="center">
 															<?php 
 															switch ($key['help_type']) {
@@ -119,8 +188,8 @@
 									</div>
 									<div id="collapse<?= $key['id'] ?>" class="panel-collapse collapse">
 										<div class="panel-body">
-											Вопрос: <b><?= $key['help_text'] ?></b>
-											<table class="table" width="100%" style="margin-top:10px;">
+											Вопрос: <span style="font-weight:bold" id="text_<?= $key['id'] ?>"><?= $key['help_text'] ?></span>
+											<table class="table table-stripped" width="100%" style="margin-top:10px;">
 												<tbody>
 													<?php
 													foreach($answers[$key['id']] as $key2)
@@ -129,13 +198,23 @@
 														<tr>
 															<td width="70%"><?= $key2['help_text'] ?></td>
 												  			<td class="type-info"><?= $key2['data'] ?></td>
-												  			<td class="type-info"><?= $key2['grade'] ?></td>
-														</tr>		
+												  			<?php
+												  			if ($key2['grade'] > 0)
+												  			{
+												  				?><td class="type-info"><span class="glyphicon <?= ($key2['grade'] == 1 ? 'glyphicon-thumbs-up' : 'glyphicon-thumbs-down') ?>"></span></td><?php
+												  			}
+												  			else
+												  			{
+												  				?><td>&nbsp;</td><?php
+												  			}
+												  			?>
+												  		</tr>		
 														<?php
 													}
 													?>
 												</tbody>
 											</table>
+											<button type="button" class="btn btn-success" onClick="func_answer(<?= $key['id'] ?>)"><span class="glyphicon glyphicon-check"></span> Ответить</button>
 										</div>
 									</div>
 								</div>

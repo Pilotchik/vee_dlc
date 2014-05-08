@@ -112,6 +112,21 @@ class Main_model extends CI_Model{
 		return $data;
 	}
 
+	function getUserMail($user_id = 1)
+	{
+		$sql = "SELECT `mail_adr` FROM `new_persons` WHERE `id` = '$user_id' LIMIT 1";
+		$query = $this->db->query($sql);
+		$data = $query->result_array();
+		return $data[0]['mail_adr'];
+	}
+
+	function updateUserMail($mail = "")
+	{
+		$user_id = $this->session->userdata('user_id');
+		$sql = "UPDATE `new_persons` SET `mail_adr` = '$mail' WHERE `id` = '$user_id'";
+		$this->db->query($sql);
+	}
+
 }
 
 ?>

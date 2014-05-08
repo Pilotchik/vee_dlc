@@ -7,14 +7,20 @@ class Tutor_model extends CI_Model{
 		$now_time=time();
 		$date_t=date("H:i d.m.Y");
 		$sql = "INSERT INTO `new_feedback` (`user_id`,`help_text`,`help_title`,`help_type`,`data`,`time`) VALUES ('$user_id','$help_text','$help_title','$help_type','$date_t','$now_time')";
-		echo $sql;
-		$data = $this->db->query($sql);
-		return $data;
+		$this->db->query($sql);
+	}
+
+	function addAnswerMessage($help_id = 1,$help_answer = "",$user_id = 1)
+	{
+		$now_time=time();
+		$date_t=date("H:i d.m.Y");
+		$sql = "INSERT INTO `new_feedback` (`user_id`,`help_text`,`help_title`,`to`,`data`,`time`) VALUES ('$user_id','$help_answer','Ответ','$help_id','$date_t','$now_time')";
+		$this->db->query($sql);
 	}
 
 	function getAllMessagesWithoutAnswers()
 	{
-		$sql = "SELECT * FROM `new_feedback` WHERE `to` = '0' AND `id` NOT IN (SELECT `to` FROM `new_feedback`) ORDER BY `time` DESC";
+		$sql = "SELECT * FROM `new_feedback` WHERE `to` = '0' AND `id` NOT IN (SELECT `to` FROM `new_feedback`) AND `archive` = '0' ORDER BY `time` DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();	
 	}
@@ -57,6 +63,12 @@ class Tutor_model extends CI_Model{
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
 		return $data[0];
+	}
+
+	function archiveMessage($help_id = 1)
+	{
+		$sql = "UPDATE `new_feedback` SET `archive` = '1' WHERE `id` = '$help_id'";
+		$this->db->query($sql);
 	}
 	
 }
