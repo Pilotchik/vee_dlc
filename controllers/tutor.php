@@ -63,7 +63,7 @@ class Tutor extends CI_Controller {
 			$this->email->to('pilotchik@gmail.com'); 
 			$this->email->subject('Новый вопрос в ВОС');
 			
-			$text = "<H2>Новый вопрос в ВОС!</H2>
+			$text = "<H2>Новый вопрос в Виртуальной Образовательной Среде!</H2>
 				<br>Зайдите в систему и узнайте, что Вам написали.<br>
 				<a href='http://exam.segrys.ru'>exam.segrys.ru</b><br><br>
 				<i>Виртуальная образовательная среда</i>";	
@@ -110,7 +110,7 @@ class Tutor extends CI_Controller {
 			$this->email->to('pilotchik@gmail.com'); 
 			$this->email->subject('Новый вопрос в ВОС');
 			
-			$text = "<H2>Новый вопрос в ВОС!</H2>
+			$text = "<H2>Новый вопрос в Виртуальной Образовательной Среде!</H2>
 				<br>Зайдите в систему и узнайте, что Вам написали.<br>
 				<a href='http://exam.segrys.ru'>exam.segrys.ru</b><br><br>
 				<i>Виртуальная образовательная среда</i>";	

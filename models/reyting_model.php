@@ -61,6 +61,14 @@ class Reyting_model extends CI_Model{
 		return $query->result_array();
 	}
 
+	//функция выборки студентов по номеру курса
+	function getFullTopOfIndexOverCourse($groups = "()")
+	{
+		$sql="SELECT `new_persons`.`id`,`new_persons`.`lastname`,`new_persons`.`firstname`,`new_persons`.`isrz`,`new_numbers`.`name_numb` FROM `new_persons`,`new_numbers` WHERE `new_persons`.`numbgr` = `new_numbers`.`id` AND `new_persons`.`numbgr` IN $groups AND `new_persons`.`type_r` = '1' AND `new_persons`.`block` = '0' AND `new_persons`.`isrz` > 0 ORDER BY `isrz` DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 	//Получение последней записи пользователя в истории рейтинга по его идентификатору
 	function getLastReytingRecordOverUserId($user_id = 1)
 	{
@@ -108,6 +116,15 @@ class Reyting_model extends CI_Model{
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
 		return $data[0]['rate_resort'];
+	}
+
+	//Получение списка групп по номеру курса
+	function getGroupsOverKurs($kurs = 1)
+	{
+		$kurs = $kurs."__";
+		$sql = "SELECT `id`,`name_numb` FROM `new_numbers` WHERE `type_r`='1' AND `name_numb` LIKE '$kurs' AND `del` = '0' AND `active` = '1' ORDER BY `name_numb` ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 
 }

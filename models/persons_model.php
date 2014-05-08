@@ -8,11 +8,11 @@ class Persons_model extends CI_Model{
 		$filter_guest=$this->input->post('filter_guest');
 		if ($filter_guest=="" || $filter_guest=="5")
 		{
-			$sql="SELECT id,lastname,firstname,guest,mail FROM `new_persons` where guest>1 AND `block` = '0'";
+			$sql="SELECT id,lastname,firstname,guest,mail_adr FROM `new_persons` where guest>1 AND `block` = '0'";
 		}
 		else
 		{
-			$sql="SELECT id,lastname,firstname,guest,mail FROM `new_persons` where guest='$filter_guest' AND `block`='0'";	
+			$sql="SELECT id,lastname,firstname,guest,mail_adr FROM `new_persons` where guest='$filter_guest' AND `block`='0'";	
 		}
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
@@ -25,14 +25,14 @@ class Persons_model extends CI_Model{
 		$level=$this->input->post('level');
 		$mail=$this->input->post('email');
 		$id_p=$this->input->post('id_p');
-		$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$mail' where `id`='$id_p'";
+		$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$mail' where `id`='$id_p'";
 		$data = $this->db->query($sql);
 		return $data;
 	}
 
 	function getFSPO($numbgr="")
 	{
-		$sql="SELECT `lastname`,`firstname`,`id`,`mail` FROM `new_persons` where numbgr='$numbgr' and `block`=0 AND `guest`<3 ORDER BY `lastname` ASC";
+		$sql="SELECT `lastname`,`firstname`,`id`,`mail_adr` FROM `new_persons` where numbgr='$numbgr' and `block`=0 AND `guest`<3 ORDER BY `lastname` ASC";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;
@@ -118,17 +118,17 @@ class Persons_model extends CI_Model{
 		{
 			if($new_group != 76)
 			{
-				$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$email',`numbgr`='$new_group',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
+				$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$email',`numbgr`='$new_group',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
 			}
 			else
 			{
-				$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$email',`numbgr`='$new_group',`firstname`='$fname',`lastname`='$lname',`block`='1' WHERE `id`='$id_p'";		
+				$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$email',`numbgr`='$new_group',`firstname`='$fname',`lastname`='$lname',`block`='1' WHERE `id`='$id_p'";		
 			}
 
 		}
 		else
 		{
-			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$email',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";		
+			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$email',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";		
 		}
 		$data = $this->db->query($sql);
 		return $data;
@@ -193,11 +193,11 @@ class Persons_model extends CI_Model{
 		$id_p=$this->input->post('id_p');
 		if ($id_gr!='0')
 		{
-			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$email',`numbgr`='$id_gr',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
+			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$email',`numbgr`='$id_gr',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
 		}
 		else
 		{
-			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail`='$email',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
+			$sql = "UPDATE `new_persons` SET `guest` = '$level',`mail_adr`='$email',`firstname`='$fname',`lastname`='$lname' where `id`='$id_p'";	
 		}
 		$data = $this->db->query($sql);
 		return $data;

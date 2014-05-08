@@ -273,7 +273,7 @@ class Main extends CI_Controller {
 			$f = $this->session->userdata('lastname');
 			$name = $f." ".$f1;
 			$type = "Изменение группы";
-			$this->auth_model->addLog($name,$type,2);
+			$this->auth_model->addLog($name,$type,1);
 			
 		}
 		$this->main_page($error);
@@ -289,7 +289,7 @@ class Main extends CI_Controller {
 		$f = $this->session->userdata('lastname');
 		$name = $f." ".$f1;
 		$type = "Разблокировка учётной записи";
-		$this->auth_model->addLog($name,$type,2);
+		$this->auth_model->addLog($name,$type,1);
 		$this->main_page($error);
 	}
 
@@ -307,7 +307,7 @@ class Main extends CI_Controller {
 			$f = $this->session->userdata('lastname');
 			$name = $f." ".$f1;
 			$type = "Указан почтовый адрес: ".$mail;
-			$this->auth_model->addLog($name,$type,2);
+			$this->auth_model->addLog($name,$type,1);
 		}
 		else
 		{

@@ -2,6 +2,7 @@
 
 class Tutor_model extends CI_Model{
 	
+	//Функция добавления в БД информации о вопросе пользователя
 	function addMessage($user_id = 1, $help_type = 1, $help_title = "", $help_text = "")
 	{
 		$now_time=time();
@@ -10,6 +11,7 @@ class Tutor_model extends CI_Model{
 		$this->db->query($sql);
 	}
 
+	//Функция добавления в БД информации об ответе на пользовательский запрос
 	function addAnswerMessage($help_id = 1,$help_answer = "",$user_id = 1)
 	{
 		$now_time=time();
@@ -18,6 +20,7 @@ class Tutor_model extends CI_Model{
 		$this->db->query($sql);
 	}
 
+	//Функция выборки сообщений, на которые ещё не были даны ответы
 	function getAllMessagesWithoutAnswers()
 	{
 		$sql = "SELECT * FROM `new_feedback` WHERE `to` = '0' AND `id` NOT IN (SELECT `to` FROM `new_feedback`) AND `archive` = '0' ORDER BY `time` DESC";
@@ -67,18 +70,21 @@ class Tutor_model extends CI_Model{
 		return $data[0];
 	}
 
+	//Функция изменения статуса архивации сообщения по его идентификатору
 	function archiveMessage($help_id = 1)
 	{
 		$sql = "UPDATE `new_feedback` SET `archive` = '1' WHERE `id` = '$help_id'";
 		$this->db->query($sql);
 	}
 	
+	//Функция изменения оценки ответа на вопрос администратором
 	function updateMessageGrade($help_id = 1,$help_grade = 0)
 	{
 		$sql = "UPDATE `new_feedback` SET `grade` = '$help_grade' WHERE `id` = '$help_id'";
 		$this->db->query($sql);
 	}
 
+	//Функция изменения статуса архивации вопроса
 	function archiveMessageOverIdAndUserId($help_id = 1,$user_id = 1)
 	{
 		$sql = "UPDATE `new_feedback` SET `archive` = '1' WHERE `id` = '$help_id' AND `user_id` = '$user_id'";

@@ -80,7 +80,7 @@ class Persons extends CI_Controller {
 				$data['persons'][$key['id']][$key2['id']]['lastname']=$key2['lastname'];
 				$data['persons'][$key['id']][$key2['id']]['firstname']=$key2['firstname'];
 				$data['persons'][$key['id']][$key2['id']]['id']=$key2['id'];
-				$data['persons'][$key['id']][$key2['id']]['mail']=$key2['mail'];
+				$data['persons'][$key['id']][$key2['id']]['mail']=$key2['mail_adr'];
 			}
 		}
 		$data['error'] = $error;
@@ -132,7 +132,7 @@ class Persons extends CI_Controller {
 				$data['plosh_name'][$key['id']]['plosh']=$key2['name_plosh'];
 				$data['persons'][$key['id']][$key2['id']]['lastname']=$key2['lastname'];
 				$data['persons'][$key['id']][$key2['id']]['firstname']=$key2['firstname'];
-				$data['persons'][$key['id']][$key2['id']]['mail']=$key2['mail'];
+				$data['persons'][$key['id']][$key2['id']]['mail']=$key2['mail_adr'];
 				$data['persons'][$key['id']][$key2['id']]['id']=$key2['id'];
 			}
 		}

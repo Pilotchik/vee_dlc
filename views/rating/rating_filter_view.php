@@ -3,10 +3,9 @@
 	<?php require_once(APPPATH.'views/require_main_menu_bs3.php');?>
 
 	<ul class="breadcrumb">
-		<li class="active">Общий рейтинг <?= $type_r_name ?></li>
+		<li><a href="<?= base_url() ?>rating?type=1">Общий рейтинг <?= $type_r_name ?></a></li>
+		<li class="active"><?= $type_r_name ?>. Рейтинг по <?= $filter_type ?></li>
 	</ul>
-
-	<h4>Последняя пересортировка рейтинга проводилась: <span class="label label-success"><?= $rate_resort ?></span></h4>
 
 	<table class="table table-hover table-bordered" id="groups" style="font-size:12px;width:80%;margin:10 auto;margin-top: 20px;">
 		<thead style="font-size:14px;">
