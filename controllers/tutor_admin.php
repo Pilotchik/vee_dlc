@@ -46,6 +46,36 @@ class Tutor_admin extends CI_Controller {
 		}
 		$data['title'] = "ВОС.Модерирование вопросов пользователей";
 		$data['error'] = "";
+
+		//Сформировать облако тегов наиболее часто встречаемых слов
+		$data['faqs'] = array();
+		$garbage = array("я","он","ты","мы","вот","как","что","1","2");
+		$quest_array = $this->tutor_model->getAllQuestText();
+		$i = 0;
+		foreach ($quest_array as $key) 
+		{
+			$text = str_replace('.', '', $key['help_text']);
+			$text = str_replace(',', '', $text);
+			$text = str_replace('-', '', $text);
+			$text = str_replace('?', '', $text);
+			$text = str_replace('!', '', $text);
+			$text = mb_strtolower($text);
+			$words = explode(" ", $text);
+			foreach ($words as $key) {
+				if (!in_array($key, $garbage))
+				{
+					if (isset($data['faqs'][$key]))
+					{
+						$data['faqs'][$key]++;
+					}
+					else 
+					{
+						$data['faqs'][$key] = 1;
+					}	
+				}
+				
+			}
+		}
 		$this->load->view('tutor/tutor_admin_index_view',$data);
 	}
 

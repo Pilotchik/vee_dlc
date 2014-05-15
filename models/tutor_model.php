@@ -91,6 +91,14 @@ class Tutor_model extends CI_Model{
 		$this->db->query($sql);
 	}
 
+	//Получение текста всех вопросов пользователей
+	function getAllQuestText()
+	{
+		$sql = "SELECT `help_text` FROM `new_feedback` WHERE `to` = '0'";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 }
 
 ?>

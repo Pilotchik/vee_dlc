@@ -1,5 +1,7 @@
 <?php require_once(APPPATH.'views/require_modal_metrika_bs3.php');?>
 
+	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>css/jqcloud.css"/>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#exampleRange').attachDatepicker({
@@ -92,7 +94,7 @@
 				<a href="#old_dialogs" data-toggle="tab"><span class="glyphicon glyphicon-pause"></span> Незавершённые диалоги (<?= count($old_dialogs) ?>)</a>
 			</li>
 			<li>
-				<a href="<? base_url() ?>tutor_admin/all_history"><span class="glyphicon glyphicon-stop"></span> Завершёные диалоги</a>
+				<a href="<?= base_url() ?>tutor_admin/all_history"><span class="glyphicon glyphicon-stop"></span> Завершёные диалоги</a>
 			</li>
 		</ul>
 
@@ -125,7 +127,7 @@
 										{
 											case 1:	$type = "Работа со средой";	break;
 											case 2:	$type = "Образовательный контент";	break;
-											case 2:	$type = "Обший вопрос";	break;
+											case 3:	$type = "Обший вопрос";	break;
 										}
 										?>
 										<td><?= $type ?></td>
@@ -175,7 +177,7 @@
 															switch ($key['help_type']) {
 																case 1:	$type = "Работа со средой";	break;
 																case 2:	$type = "Образовательный контент";	break;
-	        													case 2:	$type = "Обший вопрос";	break;
+	        													case 3:	$type = "Обший вопрос";	break;
 															}
 															?>
 															<small style="color:white;"><?= $type ?></small>
@@ -239,10 +241,25 @@
 					
 				</div>
 			</div>
-
-
 		</div>
-		
+
+		<script type="text/javascript" src="<?= base_url() ?>js/jqcloud.js"></script>
+
+		<script type="text/javascript">
+				// создание массива тегов
+				var word_list = [
+					<?php
+					foreach($faqs as $key=>$value)
+					{
+						?>{text: "<?= $key ?>", weight: <?= $value ?>},<?php
+					}
+					?>
+				];
+				$(function () {
+					$("#example").jQCloud(word_list);
+				});
+		</script>
+		<div id="example" style="width: 100%; height: 350px; border: 0px solid #ccc;"></div>
 	</div>
 
 <?php require_once(APPPATH.'views/require_header.php');?>

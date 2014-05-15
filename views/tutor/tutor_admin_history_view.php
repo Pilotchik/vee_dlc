@@ -4,7 +4,7 @@
 		$(document).ready(function(){
 			$('#exampleRange').attachDatepicker({
 			rangeSelect: true,
-			yearRange: '2011:2015',
+			yearRange: '2011:2016',
 			firstDay: 1
 			});
 		});
@@ -60,7 +60,7 @@
 													switch ($key['help_type']) {
 														case 1:	$type = "Работа со средой";	break;
 														case 2:	$type = "Образовательный контент";	break;
-														case 2:	$type = "Обший вопрос";	break;
+														case 3:	$type = "Обший вопрос";	break;
 													}
 													?>
 													<small style="color:white;"><?= $type ?></small>
