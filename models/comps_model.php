@@ -141,7 +141,7 @@ class Comps_model extends CI_Model{
 	//Выбор всех студентов, которые хоть что-то сдавали в этой дисциплине
 	function getDiscUniqStudents($disc_id="")
 	{
-		$sql="SELECT DISTINCT `user` FROM `new_results` WHERE `razd_id` in (SELECT `id` FROM `new_razd` WHERE `test_id`='$disc_id') AND `timeend`!='0'";
+		$sql="SELECT DISTINCT `user` FROM `new_results` WHERE `razd_id` in (SELECT `id` FROM `new_razd` WHERE `test_id`='$disc_id') AND `timeend`!='0' AND `user` IN (SELECT `id` FROM `new_persons` WHERE `block` = '0')";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;
@@ -184,7 +184,7 @@ class Comps_model extends CI_Model{
 	//Получение студентов, для которых составлены портреты
 	function getUniqStudents()
 	{
-		$sql="SELECT DISTINCT `user_id` FROM `new_comps_image`";
+		$sql="SELECT DISTINCT `user_id` FROM `new_comps_image` WHERE `user_id` IN (SELECT `id` FROM `new_persons` WHERE `block` = '0')";
 		$query = $this->db->query($sql);
 		$data=$query->result_array();
 		return $data;
@@ -198,6 +198,8 @@ class Comps_model extends CI_Model{
 		$data=$query->result_array();
 		return $data;
 	}
+
+	
 
 }
 

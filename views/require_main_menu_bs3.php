@@ -108,6 +108,10 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>tests/dest_view/psih">Универсальные тесты</a></li>
 							<li class="dropdown-header">Управление опросами</li>
 							<li><a href="<?= base_url() ?>forms_admin">Управление опросами</a></li>
+							<li class="dropdown-header">Менеджер компетенций</li>
+							<li><a href="<?= base_url() ?>comps_admin/comps_menage">Управление компетенциями</a></li>
+							<li><a href="<?= base_url() ?>comps_admin/vklad_admin">Связь компетенций и дисциплин</a></li>
+							<li><a href="<?= base_url() ?>comps_admin/comps_images">Компетентностные портреты</a></li>
 							<li class="dropdown-header">Дистанционные курсы</li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/fspo">Курсы ФСПО</a></li>
 							<li><a href="<?= base_url() ?>de_admin/disc_view/segrys">Курсы НОУ "СЕГРИС-ИИТ"</a></li>

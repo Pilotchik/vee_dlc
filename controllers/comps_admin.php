@@ -11,69 +11,57 @@ class Comps_admin extends CI_Controller {
 	function _remap($method)
 	{
 		$guest=$this->session->userdata('guest');
-		if ($guest == '')
+		if (($guest == '') || ($guest < 2))
 		{
-			$data['error']="Время сессии истекло. Необходима авторизация";
-			$this->load->view('main_view',$data);
-		}
+			redirect('/', 'refresh');
+		}	
 		else
 		{
-			if ($guest<2)
-			{
-				redirect('/main/auth/', 'refresh');
-			}	
-			else
-			{
-				$this->load->model('comps_model');
-				$this->load->model('attest_model');
-				$this->load->model('forms_model');
-				$this->$method();
-			}
+			$this->load->model('comps_model');
+			$this->load->model('attest_model');
+			$this->load->model('forms_model');
+			$this->$method();
 		}
 	}
 
-
-	//Функция отображения главной страницы администрирования опросов
 	function index()
 	{
-		$data['firstname']=$this->session->userdata('firstname');;
-		$data['guest']=$this->session->userdata('guest');
-		$data['error']="Ошибочка";
-		$this->load->view('index_view',$data);	
+		redirect('/', 'refresh');
 	}
 
-	function comps_menage()
+
+	function comps_menage($error = "")
 	{
 		$data['all_comps'] = $this->comps_model->getAllComps();
-		$data['error']="";
-		$this->load->view('comps_menage_view',$data);	
+		$data['error'] = $error;
+		$data['title'] = "ВОС.Управление компетенциями";
+		$this->load->view('comps/comps_menage_view',$data);	
 	}
 
 	function comps_create()
 	{
-		$this->form_validation->set_rules('c_title', 'Текст', 'trim|xss_clean|required');
-		$this->form_validation->set_rules('c_desc', 'Описание', 'trim|xss_clean|required');
-		$this->form_validation->set_rules('c_prof', 'Доступ', 'trim|xss_clean');
-		$this->form_validation->set_rules('c_type', 'ОУ', 'trim|xss_clean|required');
+		$this->form_validation->set_rules('c_title', ' ', 'trim|xss_clean|required');
+		$this->form_validation->set_rules('c_desc', ' ', 'trim|xss_clean|required');
+		$this->form_validation->set_rules('c_prof', ' ', 'trim|xss_clean');
+		$this->form_validation->set_rules('c_type', ' ', 'trim|xss_clean|required');
 		if ($this->form_validation->run() == FALSE)
 		{
-			$data['error']="Создать компетенцию не удалось";
+			$error = "Создать компетенцию не удалось";
 		}
 		else
 		{
 			$this->comps_model->createComp();
-			$data['error']="Компетенция создана";
+			$error = "Компетенция создана";
 		}
-		$data['all_comps'] = $this->comps_model->getAllComps();
-		$this->load->view('comps_menage_view',$data);
+		$this->comps_menage($error);
 	}
 
 	function comps_del()
 	{
 		$this->comps_model->delComp();
-		$data['error']="Компетенция удалена";
+		$error = "Компетенция удалена";
 		$data['all_comps'] = $this->comps_model->getAllComps();
-		$this->load->view('comps_menage_view',$data);
+		$this->comps_menage($error);
 	}
 
 	function comps_edit()
@@ -81,18 +69,17 @@ class Comps_admin extends CI_Controller {
 		$this->form_validation->set_rules('c_value', 'Параметр', 'trim|xss_clean|required');
 		if ($this->form_validation->run() == FALSE)
 		{
-			$data['error']="Изменить параметры компетенции не удалось";
+			$error ="Изменить параметры компетенции не удалось";
 		}
 		else
 		{
 			$this->comps_model->editComp();
-			$data['error']="Компетенция обновлена";
+			$error = "Компетенция обновлена";
 		}
-		$data['all_comps'] = $this->comps_model->getAllComps();
-		$this->load->view('comps_menage_view',$data);
+		$this->comps_menage($error);
 	}
 
-	function vklad_admin()
+	function vklad_admin($error = "")
 	{
 		$data['all_comps'] = $this->comps_model->getAllComps();
 		$data['all_disciplines'] = $this->attest_model->getDisciplines(1);
@@ -104,7 +91,7 @@ class Comps_admin extends CI_Controller {
 			$compet_record = $this->comps_model->getCompVklad($key['compet_id']);
 			foreach($compet_record as $key2)
 			{
-				$summ+=$key2['contribution'];
+				$summ += $key2['contribution'];
 			}
 			$data['proz'][$key['id']] = round(($data['proz'][$key['id']]/$summ)*100,2);
 			$this->comps_model->updateContrProz($key['id'],$data['proz'][$key['id']]);
@@ -112,8 +99,9 @@ class Comps_admin extends CI_Controller {
 			$data['comp'][$key['id']] = $this->comps_model->getComp($key['compet_id']);
 			$data['disc'][$key['id']] = $this->comps_model->getDiscParams($key['discipline_id']);
 		}
-		$data['error']="";
-		$this->load->view('comps_contribution_view',$data);
+		$data['error'] = $error;
+		$data['title'] = "ВОС.Связь дисциплин и компетенций";
+		$this->load->view('comps/comps_contribution_view',$data);
 	}
 
 	function vklad_create()
@@ -124,57 +112,21 @@ class Comps_admin extends CI_Controller {
 		$this->form_validation->set_rules('c_comm', 'Комментарий', 'trim|xss_clean');
 		if ($this->form_validation->run() == FALSE)
 		{
-			$data['error']="Создать связь не удалось";
+			$error = "Создать связь не удалось";
 		}
 		else
 		{
 			$this->comps_model->createVklad();
-			$data['error']="Связь создана";
+			$error = "Связь создана";
 		}
-		$data['all_comps'] = $this->comps_model->getAllComps();
-		$data['all_disciplines'] = $this->attest_model->getDisciplines(1);
-		$data['all_contributions'] = $this->comps_model->getAllContributions();
-		foreach ($data['all_contributions'] as $key)
-		{
-			$data['proz'][$key['id']] = $key['contribution'];
-			$summ = 0;
-			$compet_record = $this->comps_model->getCompVklad($key['compet_id']);
-			foreach($compet_record as $key2)
-			{
-				$summ+=$key2['contribution'];
-			}
-			$data['proz'][$key['id']] = round(($data['proz'][$key['id']]/$summ)*100,2);
-			$this->comps_model->updateContrProz($key['id'],$data['proz'][$key['id']]);
-			$data['expert'][$key['id']] = $this->forms_model->getUser($key['expert_id']);
-			$data['comp'][$key['id']] = $this->comps_model->getComp($key['compet_id']);
-			$data['disc'][$key['id']] = $this->comps_model->getDiscParams($key['discipline_id']);
-		}
-		$this->load->view('comps_contribution_view',$data);
+		$this->vklad_admin($error);
 	}
 
 	function vklad_del()
 	{
 		$this->comps_model->delVklad();
-		$data['error']="Связь удалена";
-		$data['all_comps'] = $this->comps_model->getAllComps();
-		$data['all_disciplines'] = $this->attest_model->getDisciplines(1);
-		$data['all_contributions'] = $this->comps_model->getAllContributions();
-		foreach ($data['all_contributions'] as $key)
-		{
-			$data['proz'][$key['id']] = $key['contribution'];
-			$summ = 0;
-			$compet_record = $this->comps_model->getCompVklad($key['compet_id']);
-			foreach($compet_record as $key2)
-			{
-				$summ+=$key2['contribution'];
-			}
-			$data['proz'][$key['id']] = round(($data['proz'][$key['id']]/$summ)*100,2);
-			$this->comps_model->updateContrProz($key['id'],$data['proz'][$key['id']]);
-			$data['expert'][$key['id']] = $this->forms_model->getUser($key['expert_id']);
-			$data['comp'][$key['id']] = $this->comps_model->getComp($key['compet_id']);
-			$data['disc'][$key['id']] = $this->comps_model->getDiscParams($key['discipline_id']);
-		}
-		$this->load->view('comps_contribution_view',$data);
+		$error = "Связь удалена";
+		$this->vklad_admin($error);
 	}
 
 	function vklad_edit()
@@ -182,32 +134,14 @@ class Comps_admin extends CI_Controller {
 		$this->form_validation->set_rules('c_value', 'Параметр', 'trim|xss_clean|required');
 		if ($this->form_validation->run() == FALSE)
 		{
-			$data['error']="Изменить параметры не удалось";
+			$error = "Изменить параметры не удалось";
 		}
 		else
 		{
 			$this->comps_model->editVklad();
-			$data['error']="Связь обновлена";
+			$error = "Связь обновлена";
 		}
-		$data['all_comps'] = $this->comps_model->getAllComps();
-		$data['all_disciplines'] = $this->attest_model->getDisciplines(1);
-		$data['all_contributions'] = $this->comps_model->getAllContributions();
-		foreach ($data['all_contributions'] as $key)
-		{
-			$data['proz'][$key['id']] = $key['contribution'];
-			$summ = 0;
-			$compet_record = $this->comps_model->getCompVklad($key['compet_id']);
-			foreach($compet_record as $key2)
-			{
-				$summ+=$key2['contribution'];
-			}
-			$data['proz'][$key['id']] = round(($data['proz'][$key['id']]/$summ)*100,2);
-			$this->comps_model->updateContrProz($key['id'],$data['proz'][$key['id']]);
-			$data['expert'][$key['id']] = $this->forms_model->getUser($key['expert_id']);
-			$data['comp'][$key['id']] = $this->comps_model->getComp($key['compet_id']);
-			$data['disc'][$key['id']] = $this->comps_model->getDiscParams($key['discipline_id']);
-		}
-		$this->load->view('comps_contribution_view',$data);
+		$this->vklad_admin($error);
 	}
 
 	//Генерация портретов
@@ -286,13 +220,14 @@ class Comps_admin extends CI_Controller {
 			}
 		}
 		$data['error'] = "$rec портретов составлено, $upd портретов обновлено";
-		$this->load->view('comps_images_view',$data);
+		$data['title'] = "ВОС.Компетентностные портреты пользователей";
+		$this->load->view('comps/comps_images_view',$data);
 	}
 
 	//Формирование диаграммы с компетентностным портретом
 	function view_popup_stud()
 	{
-		$user_id=$this->input->post('user_id');
+		$user_id = $this->input->post('user_id');
 		//Получение информации о студенте
 		$this->load->model('private_model');
 		$user_info = $this->private_model->getStudReyt($user_id);
@@ -307,19 +242,8 @@ class Comps_admin extends CI_Controller {
 		<script type="text/javascript" src="<?php echo base_url()?>plugins/jqplot.categoryAxisRenderer.min.js"></script>
 		<script type="text/javascript" src="<?php echo base_url()?>plugins/jqplot.barRenderer.min.js"></script>
 		<?php
-		if (strlen($user_info['photo'])>5)
-		{
-			echo "<table class=\"sortable\" border=\"1\" id=\"groups\" width=\"100%\">
-				<tr>
-					<td align=center width=10%><img src=\"".$user_info['photo']."\"></td>
-					<td align=center><h1>".$user_info['lastname']."<br />".$user_info['firstname']."</h1></td>
-				</tr>
-			</table><br />";	
-		}
-		else
-		{
-			echo "<h1>".$user_info['lastname']." ".$user_info['firstname']."</h1><br />";	
-		}
+		echo "<h1>".$user_info['lastname']." ".$user_info['firstname']."</h1><br />";	
+		
 		//Получение информации о компетенциях
 		$comps = $this->comps_model->getAllUserBalls($user_id);
 		?>
