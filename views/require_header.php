@@ -85,6 +85,14 @@
 						</td>
 					</tr>
 					<tr>
+						<td align="center">
+							<span rel="tooltip" data-toggle="tooltip" data-placement="top" title="Динамическое формирование отчётов">Гурин Андрей</span>
+						</td>
+						<td align="center">
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
 						<td align="center" colspan="2">
 							<a href="https://github.com/Pilotchik/vee_dlc" target="blank">Мы на GitHub</a>
 						</td>

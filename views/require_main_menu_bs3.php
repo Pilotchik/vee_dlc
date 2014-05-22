@@ -147,6 +147,8 @@ if($guest >= 2)
 							<li><a href="<?= base_url() ?>persons/guest">Гости системы</a></li>
 							<li role="presentation" class="divider"></li>
 							<li><a href="<?= base_url() ?>persons/accounts">Аккаунты</a></li>
+							<li role="presentation" class="divider"></li>
+							<li><a href="<?= base_url() ?>docs_construct">Генерация отчётов</a></li>
 						</ul>
 					</li>
 					<?php
@@ -157,7 +159,7 @@ if($guest >= 2)
 			if($guest > 2)
 			{
 				?>
-		  		<form class="navbar-form navbar-left" role="search" action="<?php echo base_url()?>results/all_user_results" method="post" name="searchUserForm"  autocomplete="off" style="margin:0 0;">
+		  		<form class="navbar-form navbar-left" role="search" action="<?= base_url() ?>results/all_user_results" method="post" name="searchUserForm"  autocomplete="off" style="margin:0 0;">
 					<div class="form-group">
 						<input id="search_user" type="text" placeholder="Фамилия, имя или логин" name="name" style="width:200px;height: 30px;min-width: 100%;margin-top:10px;margin-bottom:0px;font-size:14px" data-provide="typeahead" data-items="10" data-original-title="" title=""  class="form-control">
 				  		<input id="hidden_user_id" type="hidden" name="user_id" value="">

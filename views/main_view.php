@@ -567,6 +567,8 @@
 						<li data-target="#testimonials-slider" data-slide-to="6"></li>
 						<li data-target="#testimonials-slider" data-slide-to="7"></li>
 						<li data-target="#testimonials-slider" data-slide-to="8"></li>
+						<li data-target="#testimonials-slider" data-slide-to="9"></li>
+						<li data-target="#testimonials-slider" data-slide-to="10"></li>
 					</ol>
 					
 					<!-- Carousel items -->
@@ -705,9 +707,7 @@
 
 						<!-- Testimonial 9 -->
 						<div class="item">
-
 							<div class="col-md-2 col-md-offset-1">
-
 								<div class="quote-icon">
 									<img src="<?= base_url() ?>images/icons/dude.svg" alt="" />
 								</div>
@@ -717,7 +717,32 @@
 								<p class="lead">Никитин Герман</p>
 								<cite>Модуль каталогизации и подбора рекомендуемых материалов</cite>
 							</div>
+						</div>
 
+						<div class="item">
+							<div class="col-md-2 col-md-offset-1">
+								<div class="quote-icon">
+									<img src="<?= base_url() ?>images/icons/dude.svg" alt="" />
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<p class="lead">Волхонов Денис</p>
+								<cite>Модуль формирования рейтинга пользователей</cite>
+							</div>
+						</div>
+
+						<div class="item">
+							<div class="col-md-2 col-md-offset-1">
+								<div class="quote-icon">
+									<img src="<?= base_url() ?>images/icons/dude.svg" alt="" />
+								</div>
+							</div>
+
+							<div class="col-md-8">
+								<p class="lead">Гурин Андрей</p>
+								<cite>Модуль динамического формирования отчётов</cite>
+							</div>
 						</div>
 
 					</div>
