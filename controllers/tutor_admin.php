@@ -49,7 +49,7 @@ class Tutor_admin extends CI_Controller {
 
 		//Сформировать облако тегов наиболее часто встречаемых слов
 		$data['faqs'] = array();
-		$garbage = array("я","он","ты","мы","вот","как","что","1","2");
+		$garbage = array("я","он","ты","мы","вот","как","что","1","2","почему","не","если","на","и","это","в","c","мне","ли","а");
 		$quest_array = $this->tutor_model->getAllQuestText();
 		$i = 0;
 		foreach ($quest_array as $key) 
@@ -60,6 +60,7 @@ class Tutor_admin extends CI_Controller {
 			$text = str_replace('?', '', $text);
 			$text = str_replace('!', '', $text);
 			$text = mb_strtolower($text);
+			$text = str_replace(array("\t", "\n"), "", $text);
 			$words = explode(" ", $text);
 			foreach ($words as $key) {
 				if (!in_array($key, $garbage))
