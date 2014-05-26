@@ -217,11 +217,27 @@ class Tests extends CI_Controller {
 		$this->_test_nabor_run($error);
 	}
 
+	function test_full_view()
+	{
+		$data['error'] = "";
+		$data['disciplin'] = $this->plans_model->getDisciplin($this->uri->segment(4));
+		$data['razdel'] = $this->tests_model->getRazdel($this->uri->segment(5));
+		$data['questions'] = $this->tests_model->getQuests($this->uri->segment(5));
+		foreach ($data['questions'] as $key) {
+			$data['answers'][$key['id']] = $this->tests_model->getAnswers($key['id']);
+		}
+		$data['themes'] = $this->plans_model->getThemes($this->uri->segment(4));
+    	$data['id_disc'] = $this->uri->segment(4);
+    	$data['id_test'] = $this->uri->segment(5);
+		$data['dest'] = $this->uri->segment(3);
+		$this->load->view('tests/tests_full_view',$data);
+	}
+
 	function answers_view($error = "")
 	{
 		$data['error'] = $error;
 		$data['quest']=$this->tests_model->getQuest($this->uri->segment(6));
-		$data['answers']=$this->tests_model->getAnswers($this->uri->segment(6));
+		$data['answers'] = $this->tests_model->getAnswers($this->uri->segment(6));
 		$data['id_disc']=$this->uri->segment(4);
     	$data['id_test']=$this->uri->segment(5);
     	$data['id_quest']=$this->uri->segment(6);
