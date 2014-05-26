@@ -15,9 +15,8 @@
 		$ch = 1;
 		foreach ($questions as $key)
 		{
-			$id_q = $key['id'];
 			?>
-			<h3 style="margin-top:30px;margin-bottom:5px;">Задание <?= $ch ?>.<?= $key['variant'] ?></h3>
+			<h3 style="margin-top:30px;margin-bottom:5px;text-decoration: underline;">Задание <?= $ch ?>.<?= $key['variant'] ?></h3>
 			<b>Тема:</b> <?= $key['name_th'] ?><br>
 			<b>Вопрос:</b> <?= $key['text'] ?><br>
 			<?php
@@ -53,9 +52,51 @@
 			}
 			$ans_str = substr($ans_str, 0, -2);
 			?>
-			<b>Ответ: <?= $ans_str ?></b>
+			<b>Ответ: </b><?= $ans_str ?>
 			<?php
 			$ch++;
+		}
+		?>
+
+		<h3>ТАБЛИЦА ПРАВИЛЬНЫХ ОТВЕТОВ</h3>
+		<table border=1 cellspacing = "0" cellpadding=3 style="border: 1px solid black;border-collapse: collapse;">
+		<?php 
+		$ch = 1;
+
+		foreach ($questions as $key)
+		{
+			if (($ch - 1) % 5 == 0)
+			{
+				?>
+				<tr>
+				<?php
+			}
+			?>
+			
+			<td><b><?= $ch ?>.<?= $key['variant'] ?></b></td>
+			
+			<?php
+			$ans_numb = 1;
+			$ans_str = "";
+			foreach($answers[$key['id']] as $key2)
+			{
+				if ($key2['true'] == 1) $ans_str .= $ans_numb.", ";
+				$ans_numb++;
+			}
+			$ans_str = substr($ans_str, 0, -2);
+			?>
+			
+			<td><?= $ans_str ?></td>
+			
+			<?php
+			$ch++;
+			if (($ch-1) % 5 == 0)
+			{
+				?>
+				</tr>
+				<?php
+			}
+
 		}
 		?>
 		</div>
