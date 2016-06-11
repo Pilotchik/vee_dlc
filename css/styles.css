@@ -1,0 +1,243 @@
+table.sortable
+{  
+	border: 			2px solid black;
+	font-size: 			11px;
+	font-family: 		Lucida Grande, Verdana, Sans-serif;
+	background-color: 	white;
+	border-collapse: 	collapse;
+}
+
+table.sortable thead 
+{
+	background-color:	black;
+	color:			white;
+	font-weight: 		bold;
+	cursor: 		pointer;
+}
+
+table.sortable td
+{
+	padding: 		3px;
+	text-align: 		center;	
+}
+
+.hoverRow, .clickedRow
+{
+	background-color: 	#708090;
+	color:			white;
+}
+
+
+
+#datepicker_div, .datepicker_inline {
+	font-family: "Trebuchet MS", Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	padding: 0;
+	margin: 0;
+	background: white;
+	width: 185px;
+}
+#datepicker_div {
+	display: none;
+	z-index: 10;
+}
+.datepicker_inline {
+	float: left;
+	display: block;
+	border: 0;
+}
+.datepicker_dialog {
+	padding: 5px !important;
+	border: 4px ridge #DDD !important;
+}
+button.datepicker_trigger {
+	width: 25px;
+}
+img.datepicker_trigger {
+	margin: 2px;
+	vertical-align: middle;
+}
+.datepicker_prompt {
+	float: left;
+	padding: 2px;
+	background: #DDD;
+	color: #000;
+}
+*html .datepicker_prompt {
+	width: 185px;
+}
+.datepicker_control, .datepicker_links, .datepicker_header, .datepicker {
+	clear: both;
+	float: left;
+	width: 100%;
+	color: #FFF;
+}
+.datepicker_control {
+	background: #e6e6e6;
+	padding: 2px 0px;
+}
+.datepicker_links {
+	background: #c0c0c0;
+	padding: 2px 0px;
+}
+.datepicker_control, .datepicker_links {
+	font-weight: bold;
+	font-size: 80%;
+	letter-spacing: 1px;
+}
+.datepicker_links label {
+	padding: 2px 5px;
+	color: #888;
+}
+.datepicker_clear, .datepicker_prev {
+	float: left;
+	width: 34%;
+}
+.datepicker_current {
+	float: left;
+	width: 30%;
+	text-align: center;
+}
+.datepicker_close, .datepicker_next {
+	float: right;
+	width: 34%;
+	text-align: right;
+}
+.datepicker_header {
+	padding: 1px 0 3px;
+	text-align: center;
+	font-weight: bold;
+	height: 1.3em;
+}
+.datepicker_header select {
+	color: #000;
+	border: 0px;
+	font-weight: bold;
+}
+.datepicker {
+	margin: 5px 0 0 0;
+	background: white;
+	text-align: center;
+	font-size: 100%;
+}
+.datepicker a {
+	display: block;
+	width: 100%;
+}
+.datepicker .datepicker_titleRow {
+	background: white;
+	color: #000;
+}
+.datepicker .datepicker_daysRow {
+	background: #FFF;
+	color: #666;
+}
+.datepicker_weekCol {
+	background: #B1DB87;
+	color: #000;
+}
+.datepicker .datepicker_daysCell {
+	color: #000;
+	border: 1px solid #DDD;
+}
+#datepicker .datepicker_daysCell a {
+	display: block;
+}
+.datepicker .datepicker_weekEndCell {
+	background: #c0c0c0;
+}
+.datepicker .datepicker_daysCellOver {
+	background: #FFF;
+	border: 1px solid #777;
+}
+.datepicker .datepicker_unselectable {
+	color: #888;
+}
+.datepicker_today {
+	background: #708090 !important;
+}
+.datepicker_currentDay {
+	background: #99958c !important;
+}
+#datepicker_div a, .datepicker_inline a {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	background: none;
+	color: #000;
+}
+.datepicker_inline .datepicker_links a {
+	padding: 0 5px !important;
+}
+.datepicker_control a, .datepicker_links a {
+	padding: 2px 5px !important;
+	color: #000 !important;
+}
+.datepicker_titleRow a {
+	color: #000 !important;
+}
+.datepicker_control a:hover {
+	background: #FDD !important;
+	color: #333 !important;
+}
+.datepicker_links a:hover, .datepicker_titleRow a:hover {
+	background: #FFF !important;
+	color: #333 !important;
+}
+.datepicker_multi .datepicker {
+	border: 1px solid #83C948;
+}
+.datepicker_oneMonth {
+	float: left;
+	width: 185px;
+}
+.datepicker_newRow {
+	clear: left;
+}
+.datepicker_cover {
+	display: none;
+	display/**/: block;
+	position: absolute;
+	z-index: -1;
+	filter: mask();
+	top: -4px;
+	left: -4px;
+	width: 193px;
+	height: 200px;
+}
+/* Стили для jQuery UI Datepicker */
+
+#exampleRange 
+{
+  background-color: white;
+  position:relative;
+  width:185px;
+  right:10px;
+}
+
+#fl_menu {position:absolute; top:76px; left:-10px; z-index:9998; width:170px; height:70px;border-radius:10px;}
+#fl_menu .label{padding-left:20px; border-radius:10px; line-height:50px; font-family:"Arial Black", Arial, Helvetica, sans-serif; font-size:16px; font-weight:bold; background:#000; color:white; letter-spacing:7px;}
+#fl_menu .menu{display:none;}
+#fl_menu .menu .menu_item{display:block; background:#000; color:#bbb; border-top:1px solid #333; padding:5px 5px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; font-size:12px; text-decoration:none;}
+#fl_menu .menu a.menu_item:hover{background:#333; color:#fff;}
+
+#fl_menu2 {position:absolute; top:25px; left:0px; z-index:9999; width:160px; height:50px;}
+#fl_menu2 .label{padding-left:20px; line-height:50px; font-family:"Arial Black", Arial, Helvetica, sans-serif; font-size:14px; font-weight:bold; background:#000; color:#ffcc00; letter-spacing:7px;}
+
+#fl_menu3
+{
+	position:absolute; 
+	top:150px; 
+	left:-10px; 
+	z-index:9999; 
+	width:170px; 
+	padding:10px;
+	border-radius: 10px;
+	height:50px;
+	text-align:center;
+	font-size:14px;
+	color: white;
+	background: black;
+	font-family:verdana, arial;
+	letter-spacing:7px;
+}

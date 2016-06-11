@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|images|files|py|js|css|plugins|tinymce|ckeditor|robots\.txt|yandex_64c4e59c92f692ff\.html)
+RewriteRule ^(.*)$ /ci_new/index.php/$1 [L]

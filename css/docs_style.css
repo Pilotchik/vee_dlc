@@ -1,0 +1,420 @@
+html,body{margin:0;padding:0}
+body{font: 76% arial,sans-serif}
+p{margin:0 10px 10px}
+
+
+div#header{ 
+margin: 5px;
+	background: linear-gradient(to top, Grey, Silver);
+	width: 818px; 
+	border: groove 5px Silver; 
+    color: #000;
+	border-radius: 12px;
+	position : relative; 
+	
+   
+    top : 2px
+}
+h2 {height:40px;
+    line-height:40px;
+    margin:0;
+    padding-left:30%;
+    
+    color: #fff;
+    font-size:15pt;
+	
+}
+}
+
+div#footer{
+    background: #686868;
+    color: #FFF
+}
+
+p{ 
+	
+    padding:5px 600px;
+    font-size:8pt;
+}
+
+
+
+
+
+
+
+
+
+div#maket{
+	/* position : absolute; 
+    left : 750px; 
+    top : 47px; 
+    width : 720px; 
+	height : 200px;
+    background: #FFF;
+    border-left: 5px double #056; 
+	border-top: 5px double #056; 
+    padding: 5px*/
+}
+
+div#form{
+	margin: 5px;
+	
+	background: linear-gradient(to top, #B8B8B8, #B8B8B8 );
+	width: 818px; 
+	border: groove 5px #B8B8B8 ; 
+    color: #000;border-radius: 12px;
+}	
+
+div#content{
+	margin: 5px;
+}	
+	
+	
+div#BlockPoleOtcheta{ 
+    
+	width: 775px; 
+	border: groove 3px MediumSeaGreen   ; 
+   
+	border-radius: 12px;
+	color: #fff; /* цвет текста */
+    text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select: none; /* убирать выделение текста */
+  background: MediumSeaGreen   ; /* фон кнопки */
+  padding: .7em 1.5em; /* отступ от текста */
+  outline: none; /* убирать контур в Mozilla */
+ 
+}
+div#BlockUslovieFiltra{
+    background: SandyBrown ;
+	width: 775px; 
+	border: groove 3px SandyBrown ; 
+    color: #FFF;border-radius: 12px;
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select:none;
+  padding: .7em 1.5em; /* отступ от текста */
+  outline: none; 
+	
+}	
+div#BlockVichPole{
+    background: lightseagreen ;
+	width: 775px; 
+	border: groove 3px lightseagreen; 
+    color: #FFF;border-radius: 12px;
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+    user-select:none;
+    padding: .7em 1.5em; /* отступ от текста */
+    outline: none; 
+}	
+div#BlockDiagram{
+    background: #eead0e ;
+	width: 775px; 
+	border: groove 3px #eead0e ; 
+    color: #FFF;border-radius: 12px;
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+    user-select:none;
+    padding: .7em 1.5em; /* отступ от текста */
+    outline: none; 
+}	
+	
+div#line{
+	height : 2px
+}	
+	
+input#sendata{
+	margin : 5px;
+	width : 445px;
+	color: #fff; /* цвет текста */
+    text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select: none; /* убирать выделение текста */
+  background: rgb(212,75,56); /* фон кнопки */
+  padding: .7em 1.5em; /* отступ от текста */
+  outline: none; /* убирать контур в Mozilla */
+  border : #fff;border-radius: 5px;
+	 }
+input#sendata:hover{ background: rgb(232,95,76);}
+	 
+input#sendata:active{background: rgb(152,15,0);} 
+input#savedata{
+	margin: 0px;
+
+	width : 355px;
+	color: #fff; /* цвет текста */
+    text-decoration: none; /* убирать подчёркивание у ссылок */
+  user-select: none; /* убирать выделение текста */
+  background: rgb(212,75,56); /* фон кнопки */
+  padding: .7em 1.5em; /* отступ от текста */
+  outline: none; /* убирать контур в Mozilla */
+  border : #fff;border-radius: 5px;
+}	
+input#savedata:hover{ background: rgb(232,95,76);}
+	 
+input#savedata:active{background: rgb(152,15,0);}
+
+
+div#pagination{
+ position : relative; 
+  top : 15px;
+  }
+  
+
+
+
+
+
+
+
+div#content{
+    background:  Linen  ;
+	width: 1250px; 
+	border: groove 5px Linen  ; 
+    color: #000;
+	border-radius: 5px
+	
+	
+
+
+	
+}	
+	
+big{
+position : absolute; 
+    left : 560px; 
+    top : 20px; 
+
+}	
+
+big#deld{
+position : absolute; 
+    left : 560px; 
+    top : 38px; 
+}
+
+#annul{
+position : absolute; 
+    left : 540px; 
+    top : 19px; 
+
+}		
+	
+#deleted{
+position : absolute; 
+    left : 540px; 
+    top : 37px; 
+
+}	
+
+ul#pagination{
+    margin-left: 10px;
+    margin-top: 0px;
+    padding:0;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+}
+
+ul#pagination li{
+    display: inline;
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid gray;
+	background:  linear-gradient(to top, DimGrey, Grey);
+    color:#FFFFFF;
+}
+
+ul#pagination li.active{
+    background:  salmon;
+    color:#FFFFFF;
+}
+
+textarea.textusl{ position: relative;
+	top : 7px;
+	width : 250px
+}
+
+	
+textarea{ position: relative;
+	top : 7px;
+	width : 155px
+}
+a:hover{
+text-decoration:  none;
+}
+
+a{   color:#FFFFFF;}
+
+
+
+
+
+
+
+
+
+.tableOtchet{
+    font-family:Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:12px;
+    text-shadow: 1px 1px 0px #fff;
+    background:#eaebec;
+    margin:0px;
+    border:#ccc 1px solid;
+    border-collapse:separate;
+ 
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+ 
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+}
+ 
+.tableOtchet th {
+    font-weight:bold;
+    padding:15px 10px 15px 10px;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+ 
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+    background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+
+.tableOtchet tr{
+    text-align: center;
+    padding-left:20px;
+}
+
+.tableOtchet tr td {
+    padding:0px;   
+    background: #fafafa;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+    background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+.tableOtchet tr:nth-child(even) td{
+    background: #f6f6f6;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+    background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+
+.tableOtchet tr:hover td{
+    background: #f2f2f2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+    background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);    
+}
+
+
+
+
+.white{
+ color: #F0F8FF ;
+ 
+}
+
+
+
+.tableOtchetV{
+    font-family:Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:12px;
+   
+    background:#eaebec;
+    margin:0px;
+    border:#ccc 1px solid;
+    border-collapse:separate;
+ 
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+ 
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+}
+ 
+.tableOtchetV td:first-child{
+    font-weight:bold;
+    padding:1px 1px 1px 1px;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+  text-shadow: 1px 1px 0px #fff;
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+    background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+
+.tableOtchetV tr{
+    text-align: center;
+    padding-left:20px;
+}
+
+.tableOtchetV tr td {
+    padding: 2px 2px 2px 2px;
+ 
+    background: #fafafa;
+    background: -webkit-gradient(linear, left top, left bottom, from(#87CEFA), to(#87CEFA));
+    background: -moz-linear-gradient(top,  #87CEFA,  #87CEFA);
+}
+.tableOtchetV tr:nth-child(even) td{
+    background: #f6f6f6;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+    background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+
+
+
+
+#maletp{
+   margin:5px;
+}
+
+
+
+
+
+#maket{
+margin:5px;
+  
+}
+
+.maket{
+    font-family:Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:15px;
+     border-color :  red;
+    background:#eaebec;
+    margin:5px;
+    border:#ccc 3px solid;
+    border-collapse:separate;
+ 
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+
+    font-weight:bold;
+    padding:1px 1px 1px 1px;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+ 
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+    background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+	 background: grey ;
+	
+	border: groove 3px rgb(232,95,76) ; 
+    color: #FFF;border-radius: 12px;
+	text-decoration: none; /* убирать подчёркивание у ссылок */
+    user-select:none;
+        border-radius:5px;
+
+    outline: none; 
+}
+ 
+ .maket td{  border: 1px dotted #FFF;     border-radius:5px;
+}
+
+
