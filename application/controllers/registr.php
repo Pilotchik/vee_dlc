@@ -120,7 +120,7 @@ class Registr extends CI_Controller {
 					$sign .= ($key.'='.$value); 
 	  			}
 			}
-			$sign .= 'LXGYFTULRHhxoYQ5vExI'; 
+			$sign .= ''; 
 			$sign = md5($sign);
 			if ($session['sig'] == $sign && $session['expire'] > time()) 
 			{ 
