@@ -12,22 +12,16 @@ class Stat extends CI_Controller {
 	function _remap($method)
 	{
 		$guest=$this->session->userdata('guest');
-		if ($guest=='')
-		{
+		if ($guest=='')	{
 			$data['error']="Время сессии истекло. Необходима авторизация";
 			$this->load->view('main_view',$data);
-		}
-		else
-		{
-			if ($guest<2)
-			{
-				$data['firstname']=$this->session->userdata('firstname');;
-				$data['guest']=$guest;
-				$data['error']="У вас недостаточно прав";
+		} else {
+			if ($guest < 2)	{
+				$data['firstname'] = $this->session->userdata('firstname');
+				$data['guest'] = $guest;
+				$data['error'] = "У вас недостаточно прав";
 				$this->load->view('index_view',$data);	
-			}	
-			else
-			{
+			} else {
 				$this->load->model('results_model');
 				$this->load->model('stat_model');
 				$this->load->model('de_model');
@@ -37,22 +31,24 @@ class Stat extends CI_Controller {
 	}
 
 
-	//Функция отображения страницы статистики
-	function index()
-	{
-		$data['fspo']=$this->results_model->getDisciplines('1');
-		$data['count_results']=array();
-		foreach ($data['fspo'] as $key) 
-		{
+	/**
+	 * Функция отображения страницы статистики
+	 */
+	function index() {
+		$data['fspo'] = $this->results_model->getDisciplines('1');
+		$data['count_results'] = array();
+		foreach ($data['fspo'] as $key) {
 			$count=$this->stat_model->getTestCount($key['id']);
 			$data['count_results'][$key['id']] = $count[0]['COUNT(*)'];
 		}
+
 		$data['segrys']=$this->results_model->getDisciplines('2');
 		foreach ($data['segrys'] as $key) 
 		{
 			$count=$this->stat_model->getTestCount($key['id']);
 			$data['count_results'][$key['id']] = $count[0]['COUNT(*)'];
 		}
+
 		$data['univers']=$this->results_model->getDisciplines('3');
 		foreach ($data['univers'] as $key) 
 		{
@@ -63,31 +59,33 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_disc_view',$data);
 	}
 
-	//Формирование данных для интерфейса со списком всех тестов образовательного учреждения
-	function view_tests($error = "")
-	{
+
+	/**
+	 * Формирование данных для интерфейса со списком всех тестов образовательного учреждения
+	 */
+	function view_tests($error = "") {
 		$data['tests']=$this->results_model->getDisciplin($this->uri->segment(3));
 		$data['tests_results']=array();
-		foreach ($data['tests'] as $key) 
-		{
+		foreach ($data['tests'] as $key) {
 			$results=$this->stat_model->getTestResult($key['id']);
-			$summ=0;
-			$summ_t=0;
-			$summ_corr=0;
-			foreach ($results as $key2)
-			{
-				$summ+=$key2['proz'];
-				$summ_corr+=$key2['proz_corr'];
-				$summ_t+=$key2['timeend']-$key2['timebeg'];
+			$summ = $summ_t = $summ_corr = 0;
+			foreach ($results as $key2) {
+				$summ += $key2['proz'];
+				$summ_corr += $key2['proz_corr'];
+				$summ_t += $key2['timeend'] - $key2['timebeg'];
 			}
-			$data['tests_results'][$key['id']]['count']=count($results);
-			$data['tests_results'][$key['id']]['abs']=round($summ/count($results),2);
-			$data['tests_results'][$key['id']]['abs_corr']=round($summ_corr/count($results),2);
-			//Расчёт среднего времени выполнения теста
-			$data['tests_results'][$key['id']]['time_avg']=ceil($summ_t/count($results));
+
+			$data['tests_results'][$key['id']] = array(
+				'count' => count($results),
+				'abs' => round($summ/count($results),2),
+				'abs_corr' => round($summ_corr/count($results),2),
+				//Расчёт среднего времени выполнения теста
+				'time_avg' = ceil(ceil($summ_t/count($results))/60)
+			);
+
 			//Обновление сложности теста и времени выполнения
 			$this->stat_model->updateTestMultiplicity($key['id'],$data['tests_results'][$key['id']]['abs_corr'],$data['tests_results'][$key['id']]['time_avg']);
-			$data['tests_results'][$key['id']]['time_avg']=ceil($data['tests_results'][$key['id']]['time_avg']/60);
+			
 		}
 		$data['disc_name'] = $this->de_model->getDiscNameOverID($this->uri->segment(3));
 		$data['disc_id']=$this->uri->segment(3);
@@ -635,33 +633,28 @@ class Stat extends CI_Controller {
 			$min=100;
 			$max=0;
 			$data['tests_results'][$key['id']]['name']=$key['name_test'].". ".$key['name_razd'];
-			$data['tests_results'][$key['id']]['max']=0;
-			$data['tests_results'][$key['id']]['min']=0;
-			$data['tests_results'][$key['id']]['avg']=0;
-			$data['tests_results'][$key['id']]['disp'] = 0;
+			$data['tests_results'][$key['id']]['max'] = $data['tests_results'][$key['id']]['min'] = 0;
+			$data['tests_results'][$key['id']]['avg'] = $data['tests_results'][$key['id']]['disp'] = 0;
 			$data['tests_results'][$key['id']]['count']=0;
-			foreach ($data['students'] as $key2) 
-			{
+			foreach ($data['students'] as $key2) {
 				//getOneStudResults(ID студента,ID теста);
-				$temp=$this->results_model->getOneStudResults($key2['id'],$key['id']);
-				if (isset($temp['proz_corr']))
-				{
+				$temp = $this->results_model->getOneStudResults($key2['id'],$key['id']);
+				if (isset($temp['proz_corr'])) {
 					$proz_corr=$temp['proz_corr'];
-					if ($proz_corr>0)
-					{
+					if ($proz_corr>0) {
 						$data['tests_results'][$key['id']]['count']++;
 						$data['tests_results'][$key['id']]['avg']+=$proz_corr;
 						$data['tests_results'][$key['id']]['students'][$key2['id']]=$proz_corr;
-						if ($proz_corr>$max)
-						{
+						if ($proz_corr>$max) {
 							$data['tests_results'][$key['id']]['max']=$proz_corr;
 							$max=$proz_corr;
 						}
-						if ($proz_corr<$min)
-						{
+
+						if ($proz_corr < $min) {
 							$data['tests_results'][$key['id']]['min']=$proz_corr;
 							$min=$proz_corr;
 						}
+
 					}
 				}
 			}
@@ -701,27 +694,28 @@ class Stat extends CI_Controller {
 		$this->load->view('stat/stat_groups_one_view',$data);
 	}
 
-	//Формирование данных для интерфейса с отчётом по результатам статистической обработки теста
-	function view_test_report()
-	{
-		$data['quests']=array();
+
+	/**
+	 * Формирование данных для интерфейса с отчётом по результатам статистической обработки теста
+	 */
+	function view_test_report()	{
 		$data['quests']=$this->stat_model->getQuestsTestReport($this->uri->segment(3));
-		if (count($data['quests'])>0)
-		{
-			foreach($data['quests'] as $key)
-			{
+		if (count($data['quests']))	{
+			foreach($data['quests'] as $key) {
 				$data['answers'][$key['id']]['info']=$this->stat_model->getQuestsAnswers($key['id']);
 			}
+
 			$data['test_name'] = $this->input->post('test_name');
 			$data['disc_id'] = $this->uri->segment(4);
 			$data['disc_name'] = $this->de_model->getDiscNameOverID($this->uri->segment(4));
 			$data['test_id'] = $this->uri->segment(3);
-			$data['error']="";
+			$data['error'] = "";
 			$this->load->view('stat/stat_tests_report_view',$data);	
-		}
-		else
-		{
+
+		} else {
+
 			$this->view_tests("В тесте приняло участие менее 1 студента. Отчёт не может быть составлен");
+
 		}
 	}
 
